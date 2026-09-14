@@ -1,1 +1,25 @@
 @import "tailwindcss";
+
+/* Escul theme's hero-11 layout reserves large top padding (150px on
+   .hero-inner + 120px on .hero-style11 at desktop) for a tall decorative
+   hero graphic. Trimmed down — the gap read as excessive dead space above
+   the header on this site. !important is required here: Next.js always
+   hoists its own bundled stylesheet (this file) to the front of <head>,
+   ahead of the vendor style.css <link> tag loaded in layout.tsx, so on an
+   equal-specificity tie the vendor rule wins the cascade unless we force it. */
+.hero-11 .hero-inner {
+  padding-top: 80px !important;
+}
+.hero-style11 {
+  padding-top: 30px !important;
+}
+
+/* The homepage trust-strip stat cards reuse the theme's .counter-card
+   markup, whose .box-text label is hardcoded white (--white-color) since
+   it's normally only used inside a dark .bg-theme section (see the stats
+   counter bar further down the page, which keeps that dark background).
+   This strip sits on the light hero background instead, so the white
+   labels were invisible — force a dark, readable color here only. */
+.stat-strip .counter-card .box-text {
+  color: var(--title-color) !important;
+}

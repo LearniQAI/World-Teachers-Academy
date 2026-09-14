@@ -7,7 +7,7 @@ export default function Footer() {
                         <div className="subscribe-box">
                             <div className="row gy-40 align-items-center justify-content-center">
                                 <div className="col-xl-6">
-                                    <h3 className="subscribe-box_title text-title th-text-perspective">Get Updated the latest newsletter</h3>
+                                    <h3 className="subscribe-box_title text-title th-text-perspective">Get Updated on New Courses & Job Openings</h3>
                                 </div>
                                 <div className="col-xl-6 col-lg-8">
                                     <form className="newsletter-form th_fade_anim" data-delay=".3">
@@ -39,9 +39,12 @@ export default function Footer() {
                                 <div className="widget footer-widget th_fade_anim" data-delay=".3">
                                     <div className="th-widget-about">
                                         <div className="about-logo">
-                                            <a href="index.html"><img src="/assets/img/logo4.svg" alt="Escul" /></a>
+                                            <a href="/" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                                                <img src="/assets/img/world-teachers-logo.jpeg" alt="World Teachers Academy" style={{ height: '64px', width: 'auto' }} />
+                                                <span style={{ fontFamily: 'var(--title-font)', fontWeight: 800, fontSize: '24px', lineHeight: 1.1, letterSpacing: '0.2px', color: 'var(--title-color)' }}>World Teachers Academy</span>
+                                            </a>
                                         </div>
-                                        <p className="about-text"> University education is the foundation for shaping skilled, knowledgeable, and responsible individuals who contribute meaningfully to society.</p>
+                                        <p className="about-text"> World Teachers Academy helps educators get certified and get hired — training and real teaching opportunities, in one place.</p>
                                         <a href="contact.html" className="th-btn style2 btn-sm">Enroll Now<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"  />
                                             </svg>
@@ -54,13 +57,10 @@ export default function Footer() {
                                     <h3 className="widget_title">Quick Links</h3>
                                     <div className="menu-all-pages-container">
                                         <ul className="menu">
-                                            <li><a href="about.html">About Us</a></li>
-                                            <li><a href="about.html">Life Coach</a></li>
-                                            <li><a href="about.html">Business School</a></li>
-                                            <li><a href="course.html">Free Courses</a></li>
-                                            <li><a href="contact.html">Admission</a></li>
-                                            <li><a href="about.html">Become a Teacher</a></li>
-                                            <li><a href="contact.html">Contact Us</a></li>
+                                            <li><a href="/about">About Us</a></li>
+                                            <li><a href="/courses">Courses</a></li>
+                                            <li><a href="/job-portal">Job Portal</a></li>
+                                            <li><a href="/contact">Contact Us</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -70,13 +70,10 @@ export default function Footer() {
                                     <h3 className="widget_title">Resources</h3>
                                     <div className="menu-all-pages-container">
                                         <ul className="menu">
-                                            <li><a href="contact.html">Resource Center</a></li>
-                                            <li><a href="contact.html">Community</a></li>
-                                            <li><a href="contact.html">Support</a></li>
-                                            <li><a href="contact.html">Video Library</a></li>
-                                            <li><a href="contact.html">Security Policy </a></li>
-                                            <li><a href="contact.html">Faqs </a></li>
-                                            <li><a href="contact.html">Teams & Conditions </a></li>
+                                            <li><a href="/#faqAccordion">FAQs</a></li>
+                                            <li><a href="/contact">Support</a></li>
+                                            <li><a href="/terms">Terms of Service</a></li>
+                                            <li><a href="/privacy">Privacy Policy</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -93,8 +90,8 @@ export default function Footer() {
                                                 </svg>
                                             </div>
                                             <div className="box-details">
-                                                <p className="box-text">789 Inner Lane, Holy park,</p>
-                                                <p className="box-text">California, USA</p>
+                                                <p className="box-text">[Street Address],</p>
+                                                <p className="box-text">[City, Country]</p>
                                             </div>
                                         </div>
                                         <div className="info-box">
@@ -112,8 +109,8 @@ export default function Footer() {
                                                 </svg>
                                             </div>
                                             <div className="box-details">
-                                                <p className="box-text"><a href="tel:+0123456789" className="box-link">+01 234 567 890</a></p>
-                                                <p className="box-text"><a href="tel:+09876543210" className="box-link">+09 876 543 210</a></p>
+                                                <p className="box-text"><a href="tel:" className="box-link">[Phone Number]</a></p>
+                                                <p className="box-text"><a href="tel:" className="box-link">[Phone Number]</a></p>
                                             </div>
                                         </div>
                                         <div className="info-box">
@@ -124,8 +121,8 @@ export default function Footer() {
                                                 </svg>
                                             </div>
                                             <div className="box-details">
-                                                <p className="box-text"><a href="mailto:mailinfo00@realar.com" className="box-link">mailinfo@escul.com</a></p>
-                                                <p className="box-text"><a href="mailto:support24@realar.com" className="box-link">support24@escul.com</a></p>
+                                                <p className="box-text"><a href="mailto:" className="box-link">[email@worldteachersacademy.com]</a></p>
+                                                <p className="box-text"><a href="mailto:" className="box-link">[email@worldteachersacademy.com]</a></p>
                                             </div>
                                         </div>
                                         <div className="th-social style6">
@@ -146,7 +143,7 @@ export default function Footer() {
                         <div className="row gy-2 align-items-center">
                             <div className="col-lg-6">
                                 <p className="copyright-text">Copyright
-                                    <i className="fal fa-copyright"></i> 2026 <a href="index.html">Escul</a>, All rights reserved.
+                                    <i className="fal fa-copyright"></i> 2026 <a href="index.html">World Teachers Academy</a>, All rights reserved.
                                 </p>
                             </div>
                             <div className="col-lg-6 text-center text-lg-end">

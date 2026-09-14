@@ -5,7 +5,7 @@ export default function MobileMenu() {
             <button className="th-menu-toggle"><i className="fal fa-times"></i></button>
             <div className="th-menu-content">
                 <div className="mobile-logo">
-                    <a href="index.html"><img src="/assets/img/logo.svg" alt="Escul" /></a>
+                    <a href="/"><img src="/assets/img/world-teachers-logo.jpeg" alt="World Teachers Academy" style={{ height: '80px', width: 'auto' }} /></a>
                 </div>
                 <div className="th-mobile-menu-bottom">
 
@@ -34,92 +34,10 @@ export default function MobileMenu() {
                 </div>
                 <div className="th-mobile-menu">
                     <ul>
-                        <li className="menu-item-has-children">
-                            <a href="index.html">Home</a>
-                            <ul className="sub-menu">
-                                <li className="menu-item-has-children">
-                                    <a href="#">Multipage</a>
-                                    <ul className="sub-menu">
-                                        <li><a href="index.html">Home I (University)</a></li>
-                                        <li><a href="home-2.html">Home II (Online Education)</a></li>
-                                        <li><a href="home-3.html">Home III (Digital Education)</a></li>
-                                        <li><a href="home-4.html">Home IV (University Admission)</a></li>
-                                        <li><a href="home-5.html">Home V (Online Academy)</a></li>
-                                        <li><a href="home-6.html">Home VI (Online Training)</a></li>
-                                        <li><a href="home-7.html">Home VII (Online Mentor)</a></li>
-                                        <li><a href="home-8.html">Home VIII (Online Courses)</a></li>
-                                        <li><a href="home-9.html">Home IX (Kindergarden)</a></li>
-                                        <li><a href="home-10.html">Home X (Online Trainer)</a></li>
-                                        <li><a href="home-11.html">Home XI (Skill Development)</a></li>
-                                    </ul>
-                                </li>
-                                <li className="menu-item-has-children">
-                                    <a href="#">Onepage</a>
-                                    <ul className="sub-menu">
-                                        <li><a href="home-1-op.html">Home I (University)</a></li>
-                                        <li><a href="home-2-op.html">Home II (Online Education)</a></li>
-                                        <li><a href="home-3-op.html">Home III (Digital Education)</a></li>
-                                        <li><a href="home-4-op.html">Home IV (University Admission)</a></li>
-                                        <li><a href="home-5-op.html">Home V (Online Academy)</a></li>
-                                        <li><a href="home-6-op.html">Home VI (Online Training)</a></li>
-                                        <li><a href="home-7-op.html">Home VII (Online Mentor)</a></li>
-                                        <li><a href="home-8-op.html">Home VIII (Online Courses)</a></li>
-                                        <li><a href="home-9-op.html">Home IX (Kindergarden)</a></li>
-                                        <li><a href="home-10-op.html">Home X (Online Trainer)</a></li>
-                                        <li><a href="home-11-op.html">Home XI (Skill Development)</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                        <li><a href="about.html">About Us</a></li>
-                        <li className="menu-item-has-children">
-                            <a href="#">Courses</a>
-                            <ul className="sub-menu">
-                                <li><a href="course.html">Courses</a></li>
-                                <li><a href="course-details.html">Course Details</a></li>
-                                <li><a href="course-categories.html">Course Categories</a></li>
-                            </ul>
-                        </li>
-                        <li className="menu-item-has-children">
-                            <a href="#">Events</a>
-                            <ul className="sub-menu">
-                                <li><a href="event.html">Events</a></li>
-                                <li><a href="event-details.html">Event Details</a></li>
-                            </ul>
-                        </li>
-                        <li className="menu-item-has-children">
-                            <a href="#">Pages</a>
-                            <ul className="sub-menu">
-                                <li className="menu-item-has-children">
-                                    <a href="#">Shop</a>
-                                    <ul className="sub-menu">
-                                        <li><a href="shop.html">Shop</a></li>
-                                        <li><a href="shop-details.html">Shop Details</a></li>
-                                        <li><a href="cart.html">Cart Page</a></li>
-                                        <li><a href="checkout.html">Checkout</a></li>
-                                        <li><a href="wishlist.html">Wishlist</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="team.html">Instructor</a></li>
-                                <li><a href="team-details.html">Instructor Details</a></li>
-                                <li><a href="pricing.html">Pricing Plans</a></li>
-                                <li><a href="gallery.html">Gallery Showcase </a></li>
-                                <li><a href="faq.html">FAQS</a></li>
-                                <li><a href="testimonial.html">Testimonials</a></li>
-                                <li><a href="error.html">Error Page</a></li>
-                            </ul>
-                        </li>
-                        <li className="menu-item-has-children">
-                            <a href="#">Blog</a>
-                            <ul className="sub-menu">
-                                <li><a href="blog.html">Blog Standard</a></li>
-                                <li><a href="blog-2.html">Blog Grid</a></li>
-                                <li><a href="blog-details.html">Blog Details</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="contact.html">Contact Us</a>
-                        </li>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/resources">Resources</a></li>
+                        <li><a href="/courses">Courses</a></li>
+                        <li><a href="/job-portal">Job Portal</a></li>
                     </ul>
                 </div>
 

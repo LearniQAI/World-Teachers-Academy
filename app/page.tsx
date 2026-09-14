@@ -28,27 +28,27 @@ export default function Home() {
                             </div>
                             <div className="col-lg-7">
                                 <div className="hero-style11">
-                                    <div className="hero-subtitle wow animate__fadeInUp" data-wow-delay="0.2s">Skill Up. Stand Out.</div>
+                                    <div className="hero-subtitle wow animate__fadeInUp" data-wow-delay="0.2s">Certify. Teach. Get Hired.</div>
                                     <h2 className="hero-title">
-                                        <span className="title1 wow animate__fadeInUp" data-wow-delay="0.3s">Let’s Build Skills</span>
+                                        <span className="title1 wow animate__fadeInUp" data-wow-delay="0.3s">Build Your Career</span>
                                         <span className="title2 wow animate__fadeInUp" data-wow-delay="0.4s">With
                                             <span className="text-white">
                                                 <span className="hero-title-bg" data-mask-src="/assets/img/hero/hero-title-bg-shape11-1.png"></span>
-                                                Escul
+                                                World Teachers
                                             </span>
-                                            & Learn</span>
-                                        <span className="title3 wow animate__fadeInUp" data-wow-delay="0.5s">Without Limits</span>
+                                        </span>
+                                        <span className="title3 wow animate__fadeInUp" data-wow-delay="0.5s">Academy</span>
                                     </h2>
                                     <p className="hero-text wow animate__fadeInUp" data-wow-delay="0.6s">
-                                        Education can be thought of as the transmission of the values and accumulated knowledge of a society.
+                                        Get internationally recognized teaching certifications, then step straight into verified teaching jobs — all in one place, built for educators.
                                     </p>
                                     <div className="header-search-form wow animate__fadeInUp" data-wow-delay="0.7s">
                                         <form className="search-form">
                                             <div className="form-group">
                                                 <i className="far fa-search"></i>
-                                                <input type="text" placeholder="What do you need to learn today?" />
+                                                <input type="text" placeholder="What do you want to get certified in?" />
                                             </div>
-                                            <button className="th-btn" type="submit">SEARCH NOW
+                                            <button className="th-btn" type="submit">FIND A COURSE
                                                 <svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
                                                 </svg>
@@ -65,61 +65,38 @@ export default function Home() {
                 
                 <div className="pt-60 space-bottom overflow-hidden brand-area-1">
                     <div className="container">
-                        <div className="brand-wrap1 text-center">
-                            <div className="swiper th-slider th_fade_anim" id="brandSlider1" data-slider-options='{"breakpoints":{"0":{"slidesPerView":2},"576":{"slidesPerView":"2"},"768":{"slidesPerView":"2"},"992":{"slidesPerView":"3"},"1200":{"slidesPerView":"4"},"1400":{"slidesPerView":"5", "spaceBetween": "85"}}}'>
-                                <div className="swiper-wrapper">
-                                    <div className="swiper-slide">
-                                        <a href="blog.html" className="brand-box">
-                                            <img src="/assets/img/brand/brand6-1.svg" alt="Brand Logo" />
-                                        </a>
-                                    </div>
-                                    <div className="swiper-slide">
-                                        <a href="blog.html" className="brand-box">
-                                            <img src="/assets/img/brand/brand6-2.svg" alt="Brand Logo" />
-                                        </a>
-                                    </div>
-                                    <div className="swiper-slide">
-                                        <a href="blog.html" className="brand-box">
-                                            <img src="/assets/img/brand/brand6-3.svg" alt="Brand Logo" />
-                                        </a>
-                                    </div>
-                                    <div className="swiper-slide">
-                                        <a href="blog.html" className="brand-box">
-                                            <img src="/assets/img/brand/brand6-4.svg" alt="Brand Logo" />
-                                        </a>
-                                    </div>
-                                    <div className="swiper-slide">
-                                        <a href="blog.html" className="brand-box">
-                                            <img src="/assets/img/brand/brand6-5.svg" alt="Brand Logo" />
-                                        </a>
-                                    </div>
-                                    <div className="swiper-slide">
-                                        <a href="blog.html" className="brand-box">
-                                            <img src="/assets/img/brand/brand6-1.svg" alt="Brand Logo" />
-                                        </a>
-                                    </div>
-                                    <div className="swiper-slide">
-                                        <a href="blog.html" className="brand-box">
-                                            <img src="/assets/img/brand/brand6-2.svg" alt="Brand Logo" />
-                                        </a>
-                                    </div>
-                                    <div className="swiper-slide">
-                                        <a href="blog.html" className="brand-box">
-                                            <img src="/assets/img/brand/brand6-3.svg" alt="Brand Logo" />
-                                        </a>
-                                    </div>
-                                    <div className="swiper-slide">
-                                        <a href="blog.html" className="brand-box">
-                                            <img src="/assets/img/brand/brand6-4.svg" alt="Brand Logo" />
-                                        </a>
-                                    </div>
-                                    <div className="swiper-slide">
-                                        <a href="blog.html" className="brand-box">
-                                            <img src="/assets/img/brand/brand6-5.svg" alt="Brand Logo" />
-                                        </a>
+                        <div className="row gy-4 justify-content-center text-center stat-strip">
+                            <div className="col-6 col-md-3">
+                                <div className="counter-card">
+                                    <div className="media-body">
+                                        <h2 className="box-number"><span className="counter-number">500</span>+</h2>
+                                        <p className="box-text">Teachers Certified</p>
                                     </div>
                                 </div>
-
+                            </div>
+                            <div className="col-6 col-md-3">
+                                <div className="counter-card">
+                                    <div className="media-body">
+                                        <h2 className="box-number"><span className="counter-number">50</span>+</h2>
+                                        <p className="box-text">Partner Schools</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-6 col-md-3">
+                                <div className="counter-card">
+                                    <div className="media-body">
+                                        <h2 className="box-number"><span className="counter-number">20</span>+</h2>
+                                        <p className="box-text">Countries</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-6 col-md-3">
+                                <div className="counter-card">
+                                    <div className="media-body">
+                                        <h2 className="box-number"><span className="counter-number">150</span>+</h2>
+                                        <p className="box-text">Active Job Listings</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -132,7 +109,7 @@ export default function Home() {
                     <div className="row justify-content-lg-between justify-content-center align-items-center">
                         <div className="col-xxl-7 col-lg-8">
                             <div className="title-area text-lg-start text-center">
-                                <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Browse top essential Digital Education Courses</span></h2>
+                                <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Browse Teaching Certifications & Training Programs</span></h2>
                             </div>
                         </div>
                         <div className="col-auto">
@@ -160,7 +137,7 @@ export default function Home() {
                                         <div className="box-icon">
                                             <img src="/assets/img/icon/category/category3-1.svg" alt="Image" />
                                         </div>
-                                        <h3 className="box-title"><a href="course.html">Business <br /> Management </a></h3>
+                                        <h3 className="box-title"><a href="course.html">TEFL / TESOL <br /> Certification </a></h3>
                                         <a className="icon-btn style8" href="course-details.html">
                                             <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
@@ -174,7 +151,7 @@ export default function Home() {
                                         <div className="box-icon">
                                             <img src="/assets/img/icon/category/category3-2.svg" alt="Image" />
                                         </div>
-                                        <h3 className="box-title"><a href="course.html">Website <br /> Development</a></h3>
+                                        <h3 className="box-title"><a href="course.html">Classroom <br /> Management</a></h3>
                                         <a className="icon-btn style8" href="course-details.html">
                                             <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
@@ -188,7 +165,7 @@ export default function Home() {
                                         <div className="box-icon">
                                             <img src="/assets/img/icon/category/category3-3.svg" alt="Image" />
                                         </div>
-                                        <h3 className="box-title"><a href="course.html">UI/UX <br /> Design</a></h3>
+                                        <h3 className="box-title"><a href="course.html">Curriculum <br /> Design</a></h3>
                                         <a className="icon-btn style8" href="course-details.html">
                                             <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
@@ -202,7 +179,7 @@ export default function Home() {
                                         <div className="box-icon">
                                             <img src="/assets/img/icon/category/category3-4.svg" alt="Image" />
                                         </div>
-                                        <h3 className="box-title"><a href="course.html">Digital <br /> Marketing</a></h3>
+                                        <h3 className="box-title"><a href="course.html">Special Education <br /> Training</a></h3>
                                         <a className="icon-btn style8" href="course-details.html">
                                             <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
@@ -216,7 +193,7 @@ export default function Home() {
                                         <div className="box-icon">
                                             <img src="/assets/img/icon/category/category3-5.svg" alt="Image" />
                                         </div>
-                                        <h3 className="box-title"><a href="course.html">Practical <br /> Learning</a></h3>
+                                        <h3 className="box-title"><a href="course.html">Digital Teaching <br /> Tools</a></h3>
                                         <a className="icon-btn style8" href="course-details.html">
                                             <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
@@ -230,7 +207,7 @@ export default function Home() {
                                         <div className="box-icon">
                                             <img src="/assets/img/icon/category/category3-1.svg" alt="Image" />
                                         </div>
-                                        <h3 className="box-title"><a href="course.html">Business <br /> Management </a></h3>
+                                        <h3 className="box-title"><a href="course.html">TEFL / TESOL <br /> Certification </a></h3>
                                         <a className="icon-btn style8" href="course-details.html">
                                             <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
@@ -244,7 +221,7 @@ export default function Home() {
                                         <div className="box-icon">
                                             <img src="/assets/img/icon/category/category3-2.svg" alt="Image" />
                                         </div>
-                                        <h3 className="box-title"><a href="course.html">Website <br /> Development</a></h3>
+                                        <h3 className="box-title"><a href="course.html">Classroom <br /> Management</a></h3>
                                         <a className="icon-btn style8" href="course-details.html">
                                             <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
@@ -258,7 +235,7 @@ export default function Home() {
                                         <div className="box-icon">
                                             <img src="/assets/img/icon/category/category3-3.svg" alt="Image" />
                                         </div>
-                                        <h3 className="box-title"><a href="course.html">UI/UX <br /> Design</a></h3>
+                                        <h3 className="box-title"><a href="course.html">Curriculum <br /> Design</a></h3>
                                         <a className="icon-btn style8" href="course-details.html">
                                             <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
@@ -272,7 +249,7 @@ export default function Home() {
                                         <div className="box-icon">
                                             <img src="/assets/img/icon/category/category3-4.svg" alt="Image" />
                                         </div>
-                                        <h3 className="box-title"><a href="course.html">Digital <br /> Marketing</a></h3>
+                                        <h3 className="box-title"><a href="course.html">Special Education <br /> Training</a></h3>
                                         <a className="icon-btn style8" href="course-details.html">
                                             <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
@@ -286,7 +263,7 @@ export default function Home() {
                                         <div className="box-icon">
                                             <img src="/assets/img/icon/category/category3-5.svg" alt="Image" />
                                         </div>
-                                        <h3 className="box-title"><a href="course.html">Practical <br /> Learning</a></h3>
+                                        <h3 className="box-title"><a href="course.html">Digital Teaching <br /> Tools</a></h3>
                                         <a className="icon-btn style8" href="course-details.html">
                                             <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
@@ -335,10 +312,10 @@ export default function Home() {
                             </div>
                             <div className="col-xl-6">
                                 <div className="title-area mb-35">
-                                    <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />More About us</span>
-                                    <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Unlock Your Potential With Our Education Solutions</span></h2>
-                                    <p className="th_fade_anim">Education and skill development focus on equipping individuals with the knowledge, abilities, and practical experience needed to thrive in an ever-changing world. While education builds a strong foundation of understanding, skill development transforms that knowledge into real-world capability. </p>
-                                    <p className="th_fade_anim">Together, they empower learners to adapt, grow, and succeed in academic, personal, and professional environments. </p>
+                                    <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />More About Us</span>
+                                    <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Everything a Teacher Needs to Build a Global Career</span></h2>
+                                    <p className="th_fade_anim">World Teachers Academy was built for one purpose: helping educators get certified, stay current, and find teaching roles that actually fit their skills — without juggling five different websites to do it. </p>
+                                    <p className="th_fade_anim">From certification courses taught by experienced educators to a live directory of verified teaching jobs across multiple countries, we bring the training and the opportunity together in one place. </p>
                                 </div>
                                 <div className="about-info-card style2 th_fade_anim">
                                     <div className="box-icon">
@@ -347,8 +324,8 @@ export default function Home() {
                                         </svg>
                                     </div>
                                     <div className="box-content">
-                                        <h3 className="box-title">Professional Skill Development</h3>
-                                        <p className="box-text">Through structured lessons, hands-on training, and interactive learning methods,</p>
+                                        <h3 className="box-title">Certified Teaching Programs</h3>
+                                        <p className="box-text">Every course is designed by practicing educators and mapped to real classroom needs — not generic online-course filler.</p>
                                     </div>
                                 </div>
                                 <div className="btn-wrap mt-40 th_fade_anim">
@@ -370,7 +347,7 @@ export default function Home() {
                                     <img src="/assets/img/icon/about-card-icon11-1.svg" alt="img" />
                                 </div>
                                 <div className="box-details">
-                                    <h3 className="box-title">Over <span className="text-theme">18+</span> Million Students</h3>
+                                    <h3 className="box-title">Over <span className="text-theme">5,000</span> Teachers Trained</h3>
                                     <p className="box-text">We provide online learning program that enable learners to access.</p>
                                 </div>
                             </div>
@@ -381,7 +358,7 @@ export default function Home() {
                                     <img src="/assets/img/icon/about-card-icon11-2.svg" alt="img" />
                                 </div>
                                 <div className="box-details">
-                                    <h3 className="box-title"><span className="text-theme">6,354+</span> Online Courses</h3>
+                                    <h3 className="box-title"><span className="text-theme">50+</span> Certification Programs</h3>
                                     <p className="box-text">Online education provides flexibility and accessibility to learners.</p>
                                 </div>
                             </div>
@@ -392,7 +369,7 @@ export default function Home() {
                                     <img src="/assets/img/icon/about-card-icon11-3.svg" alt="img" />
                                 </div>
                                 <div className="box-details">
-                                    <h3 className="box-title">Live Time Access</h3>
+                                    <h3 className="box-title">Job Listings Updated Daily</h3>
                                     <p className="box-text">We provide online learning program that enable learners to access</p>
                                 </div>
                             </div>
@@ -431,9 +408,9 @@ export default function Home() {
                                     <div className="course-card">
                                         <div className="box-img">
                                             <a href="blog-details.html"><img src="/assets/img/course/course1-1.jpg" alt="Course Image" /></a>
-                                            <span className="box-price">$18.00</span>
+                                            <span className="box-price">$299</span>
                                         </div>
-                                        <h3 className="box-title"><a href="course-details.html">Graphic Design Online Course Material Projects.</a></h3>
+                                        <h3 className="box-title"><a href="course-details.html">TEFL Certificate — 120 Hour</a></h3>
                                         <div className="box-rating">
                                             <div className="star-rating" role="img" aria-label="Rated 5.00 out of 5">
                                                 <span style={{ width: '100%' }}>Rated <strong className="rating">5.00</strong> out of 5</span>
@@ -479,9 +456,9 @@ export default function Home() {
                                     <div className="course-card">
                                         <div className="box-img">
                                             <a href="blog-details.html"><img src="/assets/img/course/course1-2.jpg" alt="Course Image" /></a>
-                                            <span className="box-price">$28.00</span>
+                                            <span className="box-price">$149</span>
                                         </div>
-                                        <h3 className="box-title"><a href="course-details.html">Web Development Bootcamp Hands-on Projects.</a></h3>
+                                        <h3 className="box-title"><a href="course-details.html">Classroom Management Essentials</a></h3>
                                         <div className="box-rating">
                                             <div className="star-rating" role="img" aria-label="Rated 5.00 out of 5">
                                                 <span style={{ width: '100%' }}>Rated <strong className="rating">5.00</strong> out of 5</span>
@@ -527,9 +504,9 @@ export default function Home() {
                                     <div className="course-card">
                                         <div className="box-img">
                                             <a href="blog-details.html"><img src="/assets/img/course/course1-3.jpg" alt="Course Image" /></a>
-                                            <span className="box-price">$38.00</span>
+                                            <span className="box-price">$179</span>
                                         </div>
-                                        <h3 className="box-title"><a href="course-details.html">Digital Marketing Masterclass Real-World Campaigns.</a></h3>
+                                        <h3 className="box-title"><a href="course-details.html">Curriculum & Lesson Planning</a></h3>
                                         <div className="box-rating">
                                             <div className="star-rating" role="img" aria-label="Rated 5.00 out of 5">
                                                 <span style={{ width: '100%' }}>Rated <strong className="rating">5.00</strong> out of 5</span>
@@ -575,9 +552,9 @@ export default function Home() {
                                     <div className="course-card">
                                         <div className="box-img">
                                             <a href="blog-details.html"><img src="/assets/img/course/course1-4.jpg" alt="Course Image" /></a>
-                                            <span className="box-price">$18.00</span>
+                                            <span className="box-price">$199</span>
                                         </div>
-                                        <h3 className="box-title"><a href="course-details.html">Data Science for Beginners Real-World Applications.</a></h3>
+                                        <h3 className="box-title"><a href="course-details.html">Special Education Foundations</a></h3>
                                         <div className="box-rating">
                                             <div className="star-rating" role="img" aria-label="Rated 5.00 out of 5">
                                                 <span style={{ width: '100%' }}>Rated <strong className="rating">5.00</strong> out of 5</span>
@@ -623,9 +600,9 @@ export default function Home() {
                                     <div className="course-card">
                                         <div className="box-img">
                                             <a href="blog-details.html"><img src="/assets/img/course/course1-5.jpg" alt="Course Image" /></a>
-                                            <span className="box-price">$28.00</span>
+                                            <span className="box-price">$299</span>
                                         </div>
-                                        <h3 className="box-title"><a href="course-details.html">Machine Learning Techniques In-Depth Exploration.</a></h3>
+                                        <h3 className="box-title"><a href="course-details.html">TEFL Certificate — 120 Hour</a></h3>
                                         <div className="box-rating">
                                             <div className="star-rating" role="img" aria-label="Rated 5.00 out of 5">
                                                 <span style={{ width: '100%' }}>Rated <strong className="rating">5.00</strong> out of 5</span>
@@ -671,9 +648,9 @@ export default function Home() {
                                     <div className="course-card">
                                         <div className="box-img">
                                             <a href="blog-details.html"><img src="/assets/img/course/course1-6.jpg" alt="Course Image" /></a>
-                                            <span className="box-price">$38.00</span>
+                                            <span className="box-price">$149</span>
                                         </div>
-                                        <h3 className="box-title"><a href="course-details.html">Data Visualization Masterclass Crafting Stunning Visuals.</a></h3>
+                                        <h3 className="box-title"><a href="course-details.html">Classroom Management Essentials</a></h3>
                                         <div className="box-rating">
                                             <div className="star-rating" role="img" aria-label="Rated 5.00 out of 5">
                                                 <span style={{ width: '100%' }}>Rated <strong className="rating">5.00</strong> out of 5</span>
@@ -739,28 +716,28 @@ export default function Home() {
                         <div className="counter-card">
                             <div className="media-body">
                                 <h2 className="box-number text-white"><span className="counter-number">3.9</span>k+</h2>
-                                <p className="box-text">Total Student Enrolled</p>
+                                <p className="box-text">Teachers Certified</p>
                             </div>
                         </div>
                         <div className="divider"></div>
                         <div className="counter-card">
                             <div className="media-body">
-                                <h2 className="box-number text-white"><span className="counter-number">1.2</span>k+</h2>
-                                <p className="box-text">Active Courses</p>
+                                <h2 className="box-number text-white"><span className="counter-number">85</span>+</h2>
+                                <p className="box-text">Courses Available</p>
                             </div>
                         </div>
                         <div className="divider"></div>
                         <div className="counter-card">
                             <div className="media-body">
-                                <h2 className="box-number text-white"><span className="counter-number">850</span>+</h2>
-                                <p className="box-text">Qualified Instructors</p>
+                                <h2 className="box-number text-white"><span className="counter-number">320</span>+</h2>
+                                <p className="box-text">Verified Instructors</p>
                             </div>
                         </div>
                         <div className="divider"></div>
                         <div className="counter-card">
                             <div className="media-body">
                                 <h2 className="box-number text-white"><span className="counter-number">5.5</span>k+</h2>
-                                <p className="box-text">Course Completions</p>
+                                <p className="box-text">Job Placements Facilitated</p>
                             </div>
                         </div>
                         <div className="divider"></div>
@@ -791,7 +768,7 @@ export default function Home() {
                         </div>
                         <div className="col-xl-5">
                             <div className="title-area mb-50">
-                                <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Why Choose to our course</span>
+                                <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Why Choose World Teachers Academy</span>
                                 <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Achieve Your Dreams With Expert Online Programs</span></h2>
                                 <p className="th_fade_anim">Education and skill development focus on equipping individuals with the knowledge, abilities, and practical experience needed to thrive in an ever-changing world.</p>
                                 <div className="btn-wrap mt-40 th_fade_anim">
@@ -811,30 +788,30 @@ export default function Home() {
                             <div className="box-icon">
                                 <img src="/assets/img/icon/why-card-icon10-1.svg" alt="img" />
                             </div>
-                            <h3 className="box-title">Trending Courses</h3>
-                            <p className="box-text">Through structured lessons, hands-on training.</p>
+                            <h3 className="box-title">Recognized Certification</h3>
+                            <p className="box-text">Credentials that schools and recruiters actually trust.</p>
                         </div>
                         <div className="why-card10 th_fade_anim">
                             <div className="box-icon">
                                 <img src="/assets/img/icon/why-card-icon10-2.svg" alt="img" />
                             </div>
-                            <h3 className="box-title">Certified teachers</h3>
-                            <p className="box-text">Through structured lessons, hands-on training.</p>
+                            <h3 className="box-title">Certified Trainers</h3>
+                            <p className="box-text">Learn from educators who've taught in real classrooms, not just online.</p>
                         </div>
                         <div className="why-card10 th_fade_anim">
                             <div className="box-icon">
                                 <img src="/assets/img/icon/why-card-icon10-3.svg" alt="img" />
                             </div>
-                            <h3 className="box-title">Certification</h3>
-                            <p className="box-text">Through structured lessons, hands-on training.</p>
+                            <h3 className="box-title">Direct Job Access</h3>
+                            <p className="box-text">Finish a course and browse matching job openings immediately.</p>
                         </div>
                         <div className="why-card10 th_fade_anim">
                             <div className="why-card-bg"><img src="/assets/img/normal/why-card-bg10-2.png" alt="img" /></div>
                             <div className="box-icon">
                                 <img src="/assets/img/icon/why-card-icon10-4.svg" alt="img" />
                             </div>
-                            <h3 className="box-title">24/7 Support</h3>
-                            <p className="box-text">Through structured lessons, hands-on training.</p>
+                            <h3 className="box-title">Support That Doesn't Disappear</h3>
+                            <p className="box-text">Real help before, during, and after certification.</p>
                         </div>
                     </div>
                 </div>
@@ -849,7 +826,7 @@ export default function Home() {
                             <div className="col-xxl-6 col-lg-7">
                                 <div className="title-area text-center">
                                     <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Our Teachers</span>
-                                    <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Meet Our Professional Teachers</span></h2>
+                                    <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Learn From Educators Who've Actually Done the Job</span></h2>
                                 </div>
                             </div>
                         </div>
@@ -970,6 +947,37 @@ export default function Home() {
                     </div>
                 </div>
             </section>
+
+            <section className="space overflow-hidden" id="job-portal-sec">
+                <div className="container">
+                    <div className="row gy-40 gx-80 align-items-center">
+                        <div className="col-lg-6">
+                            <div className="img-box11">
+                                <div className="img1 th--hover-item th_fade_anim">
+                                    <div className="thumb th--hover-img" data-displacement="/assets/img/imghover/fluid.jpg" data-intensity="0.2" data-speedin="1" data-speedout="1">
+                                        <img className="img-cover" src="/assets/img/normal/about_11_1.jpg" alt="Job Portal" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-lg-6">
+                            <div className="title-area mb-35">
+                                <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Job Portal</span>
+                                <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Certified? Your Next Teaching Job Is Already Listed</span></h2>
+                                <p className="th_fade_anim">Browse verified teaching positions across multiple countries — updated regularly, with direct application links.</p>
+                            </div>
+                            <div className="btn-wrap th_fade_anim">
+                                <a href="/job-portal" className="th-btn">BROWSE OPEN POSITIONS
+                                    <svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section className="overflow-hidden position-relative z-index-common" data-bg-src="/assets/img/bg/cta-bg10-1.jpg">
                 <div className="cta-wrap10 space">
                     <div className="cta-thumb-wrap10-1 th_fade_anim">
@@ -982,15 +990,15 @@ export default function Home() {
                         <div className="row justify-content-center">
                             <div className="col-xl-7 col-lg-8">
                                 <div className="title-area text-center mb-0">
-                                    <h2 className="sec-title text-white th-text-perspective"><span className="text-theme2">50%</span> Discount For The First 50 Students & Mentors</h2>
-                                    <p className="fw-semibold text-white th_fade_anim mb-0 mt-30">Get unlimited access to 6,000+ of Udemy’s top courses for your team. Learn and improve skills across business, tec, design, and more.</p>
+                                    <h2 className="sec-title text-white th-text-perspective"><span className="text-theme2">30%</span> Off Certification for Our First 100 Teachers</h2>
+                                    <p className="fw-semibold text-white th_fade_anim mb-0 mt-30">Get certified and get matched with real teaching opportunities — join early and lock in founder pricing.</p>
                                     <div className="btn-wrap mt-40 th_fade_anim justify-content-center">
-                                        <a href="contact.html" className="th-btn style2">JOIN WITH US
+                                        <a href="/courses" className="th-btn style2">JOIN WITH US
                                             <svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
                                             </svg>
                                         </a>
-                                        <a href="contact.html" className="th-btn style-border3">BECOME AN TEACHER
+                                        <a href="contact.html" className="th-btn style-border3">BECOME AN INSTRUCTOR
                                             <svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
                                             </svg>
@@ -1046,11 +1054,11 @@ export default function Home() {
 
                                     <div className="accordion-card style2 th_fade_anim">
                                         <div className="accordion-header" id="collapse-item-1">
-                                            <button className="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapse-1" aria-expanded="true" aria-controls="collapse-1">What is online education learning?</button>
+                                            <button className="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapse-1" aria-expanded="true" aria-controls="collapse-1">Do I need teaching experience to get certified?</button>
                                         </div>
                                         <div id="collapse-1" className="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
                                             <div className="accordion-body">
-                                                <p className="faq-text">Online education allows students to learn through digital platforms using the internet. It includes video lessons, live classes, assignments, and discussions — all accessible anytime, anywhere.</p>
+                                                <p className="faq-text">No — our foundational certifications (like TEFL) are designed for both new and experienced educators.</p>
                                             </div>
                                         </div>
                                     </div>
@@ -1058,11 +1066,11 @@ export default function Home() {
 
                                     <div className="accordion-card style2 th_fade_anim">
                                         <div className="accordion-header" id="collapse-item-2">
-                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-2" aria-expanded="false" aria-controls="collapse-2">Do I need to attend classes at specific times?</button>
+                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-2" aria-expanded="false" aria-controls="collapse-2">Are these certifications recognized internationally?</button>
                                         </div>
                                         <div id="collapse-2" className="accordion-collapse collapse " data-bs-parent="#faqAccordion">
                                             <div className="accordion-body">
-                                                <p className="faq-text">Online education allows students to learn through digital platforms using the internet. It includes video lessons, live classes, assignments, and discussions — all accessible anytime, anywhere.</p>
+                                                <p className="faq-text">Yes, our certification programs follow internationally recognized standards accepted by schools and language institutes worldwide.</p>
                                             </div>
                                         </div>
                                     </div>
@@ -1070,11 +1078,36 @@ export default function Home() {
 
                                     <div className="accordion-card style2 th_fade_anim">
                                         <div className="accordion-header" id="collapse-item-3">
-                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-3" aria-expanded="false" aria-controls="collapse-3">Are online courses recognized by employers?</button>
+                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-3" aria-expanded="false" aria-controls="collapse-3">Can I find a job through World Teachers Academy after I'm certified?</button>
                                         </div>
                                         <div id="collapse-3" className="accordion-collapse collapse " data-bs-parent="#faqAccordion">
                                             <div className="accordion-body">
-                                                <p className="faq-text">Online education allows students to learn through digital platforms using the internet. It includes video lessons, live classes, assignments, and discussions — all accessible anytime, anywhere.</p>
+                                                <p className="faq-text">Yes — our Job Portal lists verified teaching positions you can apply to directly once you've completed a relevant certification.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div className="accordion-card style2 th_fade_anim">
+                                        <div className="accordion-header" id="collapse-item-4">
+                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-4" aria-expanded="false" aria-controls="collapse-4">How long does certification take?</button>
+                                        </div>
+                                        <div id="collapse-4" className="accordion-collapse collapse " data-bs-parent="#faqAccordion">
+                                            <div className="accordion-body">
+                                                <p className="faq-text">This depends on the course — most programs range from a few days of intensive study to several weeks of self-paced learning.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    {/* TODO: confirm whether visa/relocation support is actually offered before launch — remove this FAQ entirely if not, per user's own flag that false claims here are reputationally risky */}
+                                    <div className="accordion-card style2 th_fade_anim">
+                                        <div className="accordion-header" id="collapse-item-5">
+                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-5" aria-expanded="false" aria-controls="collapse-5">Do you help with visa or relocation support for teaching abroad?</button>
+                                        </div>
+                                        <div id="collapse-5" className="accordion-collapse collapse " data-bs-parent="#faqAccordion">
+                                            <div className="accordion-body">
+                                                <p className="faq-text">This depends on the program — check each course's details page for visa/relocation support information.</p>
                                             </div>
                                         </div>
                                     </div>

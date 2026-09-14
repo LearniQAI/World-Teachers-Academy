@@ -7,7 +7,7 @@ export default function SideMenu() {
             <div className="widget  ">
                 <div className="th-widget-about">
                     <div className="about-logo">
-                        <a href="index.html"><img src="/assets/img/logo.svg" alt="Escul" /></a>
+                        <a href="/"><img src="/assets/img/world-teachers-logo.jpeg" alt="World Teachers Academy" style={{ height: '70px', width: 'auto' }} /></a>
                     </div>
                     <p className="about-text"> University education is the foundation for shaping skilled, knowledgeable, and responsible individuals who contribute meaningfully to society.</p>
                     <a href="contact.html" className="th-btn btn-sm">Enroll Now<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -48,6 +48,23 @@ export default function ThemeScripts() {
                 // via next/script, so those handlers never ran. Re-dispatch
                 // it now that every listener is in place.
                 window.dispatchEvent(new Event('load'));
+
+                // GSAP's ScrollTrigger computed every .th_fade_anim trigger
+                // position (see 27.Fade-class-active in main.js) as soon as
+                // main.js executed — but web fonts and large images (e.g. the
+                // ~1MB hero background) can still be loading/reflowing the
+                // page at that moment, especially for elements far down the
+                // page like the footer, leaving their trigger start point
+                // calculated against a shorter, not-yet-final document height.
+                // That makes them permanently unreachable by scroll, so they
+                // stay stuck at the animation's opacity:0 "from" state.
+                // Force ScrollTrigger to recompute against the real, final
+                // layout once fonts/images actually settle.
+                const refresh = () =>
+                  (window as unknown as { ScrollTrigger?: { refresh: () => void } }).ScrollTrigger?.refresh();
+                refresh();
+                document.fonts?.ready.then(refresh);
+                window.setTimeout(refresh, 1000);
               } else {
                 setLoadedCount((c) => Math.min(c + 1, scripts.length));
               }
