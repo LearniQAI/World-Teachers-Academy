@@ -1010,7 +1010,9 @@ export default function Home() {
                     </div>
                 </div>
             </section>
-            
+
+            {/* FAQ section — commented out (disabled via `false &&`) rather than deleted, in case it's needed again later */}
+            {false && (
             <div className="space overflow-hidden">
                 <div className="faq-bg-shape4-1 d-xxl-block d-none shape-mockup th_fade_anim" data-speed="0.9" data-left="4%" data-top="10%">
                     <img src="/assets/img/shape/faq_shape1_1.png" alt="img" />
@@ -1117,6 +1119,7 @@ export default function Home() {
                     </div>
                 </div>
             </div>
+            )}
 
 
             {/* Featured Events section — commented out (disabled via `false &&`) rather than deleted, in case it's needed again later */}
