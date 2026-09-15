@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import MagicCursor from "@/components/layout/MagicCursor";
+import Preloader from "@/components/layout/Preloader";
 import SideMenu from "@/components/layout/SideMenu";
 import MobileMenu from "@/components/layout/MobileMenu";
-import ColorSwitcher from "@/components/layout/ColorSwitcher";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import ThemeScripts from "@/components/layout/ThemeScripts";
@@ -40,12 +40,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <link rel="stylesheet" href="/assets/css/magnific-popup.min.css" />
         <link rel="stylesheet" href="/assets/css/swiper-bundle.min.css" />
         <link rel="stylesheet" href="/assets/css/style.css" />
+        {/* WTA brand color override — loaded after style.css so it wins the
+            cascade without needing !important. See the file for the full
+            variable mapping. */}
+        <link rel="stylesheet" href="/assets/css/wta-brand.css" />
       </head>
       <body className="th-magic-cursor theme-style4">
         <MagicCursor />
+        <Preloader />
         <SideMenu />
         <MobileMenu />
-        <ColorSwitcher />
         <Header />
         {children}
         <Footer />

@@ -455,7 +455,7 @@ Cta Area
                   </div>
                 </div>
                 <div className="col-lg-6">
-                  <div className="cta-card2 bg-theme2" data-bg-src="/assets/img/bg/cta-card-bg2-1.png">
+                  <div className="cta-card2 bg-black3" data-bg-src="/assets/img/bg/cta-card-bg2-1.png">
                     <div className="title-area mb-0">
                       <span className="sub-title th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-3.svg" alt="img" />POPULAR COURSES</span>
                       <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Get The Best Courses &amp; Upgrade Your Skills</span></h2>

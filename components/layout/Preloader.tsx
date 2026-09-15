@@ -7,8 +7,8 @@ export default function Preloader() {
                 <img src="/assets/img/world-teachers-logo.jpeg" alt="World Teachers Academy" style={{ width: '90px', height: 'auto' }} />
             </div>
             <span className="loader">
-                Escul
-                <span className="loading-text">Escul</span>
+                World Teachers Academy
+                <span className="loading-text">World Teachers Academy</span>
             </span>
         </div>
     </div>

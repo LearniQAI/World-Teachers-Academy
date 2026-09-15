@@ -110,7 +110,7 @@ export default function JobPortal() {
                     className="th-btn btn-sm style-border2"
                     style={
                       category === cat
-                        ? { background: "var(--theme-color)", color: "var(--white-color)", borderColor: "var(--theme-color)" }
+                        ? { background: "#0D9488", color: "var(--white-color)", borderColor: "#0D9488" }
                         : undefined
                     }
                   >
@@ -145,7 +145,7 @@ export default function JobPortal() {
                       <div className="thumb">
                         <img src={job.image} alt={job.title} />
                       </div>
-                      <span className="box-date" data-theme-color="">
+                      <span className="box-date" data-theme-color="#14B8A6">
                         <span style={{ fontSize: "11px", lineHeight: 1.2 }}>{job.type}</span>
                       </span>
                     </div>
@@ -287,7 +287,7 @@ function ApplyModal({ job, onClose }: { job: Job; onClose: () => void }) {
                       Please agree to be contacted before submitting.
                     </p>
                   )}
-                  <button type="submit" className="th-btn w-100">
+                  <button type="submit" className="th-btn style5 w-100">
                     SUBMIT APPLICATION
                   </button>
                 </form>

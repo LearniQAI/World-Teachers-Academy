@@ -133,7 +133,7 @@ export default function Home() {
                         <div className="swiper th-slider has-shadow" id="categorySlider3" data-slider-options='{"breakpoints":{"0":{"slidesPerView":"1"},"526":{"slidesPerView":"2"},"768":{"slidesPerView":"3"},"991":{"slidesPerView":"4"},"1200":{"slidesPerView":"5"},"1400":{"slidesPerView":"5"}}}'>
                             <div className="swiper-wrapper">
                                 <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#1CB098 " data-border="#4EE4CC ">
+                                    <div className="category-card3" data-theme-color="#4F46E5" data-border="#A5B4FC">
                                         <div className="box-icon">
                                             <img src="/assets/img/icon/category/category3-1.svg" alt="Image" />
                                         </div>
@@ -147,7 +147,7 @@ export default function Home() {
                                 </div>
 
                                 <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#947DFF" data-border="#AC9AFF">
+                                    <div className="category-card3" data-theme-color="#14B8A6" data-border="#5EEAD4">
                                         <div className="box-icon">
                                             <img src="/assets/img/icon/category/category3-2.svg" alt="Image" />
                                         </div>
@@ -161,7 +161,7 @@ export default function Home() {
                                 </div>
 
                                 <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#F66D96" data-border="#FF8AB6">
+                                    <div className="category-card3" data-theme-color="#334155" data-border="#CBD5E1">
                                         <div className="box-icon">
                                             <img src="/assets/img/icon/category/category3-3.svg" alt="Image" />
                                         </div>
@@ -175,7 +175,7 @@ export default function Home() {
                                 </div>
 
                                 <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#63D3EF" data-border="#85E3FC">
+                                    <div className="category-card3" data-theme-color="#0F766E" data-border="#5EEAD4">
                                         <div className="box-icon">
                                             <img src="/assets/img/icon/category/category3-4.svg" alt="Image" />
                                         </div>
@@ -189,7 +189,7 @@ export default function Home() {
                                 </div>
 
                                 <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#FDAC4C" data-border="#FFCD98">
+                                    <div className="category-card3" data-theme-color="#F97316" data-border="#FDBA74">
                                         <div className="box-icon">
                                             <img src="/assets/img/icon/category/category3-5.svg" alt="Image" />
                                         </div>
@@ -203,7 +203,7 @@ export default function Home() {
                                 </div>
 
                                 <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#1CB098 " data-border="#4EE4CC ">
+                                    <div className="category-card3" data-theme-color="#4F46E5" data-border="#A5B4FC">
                                         <div className="box-icon">
                                             <img src="/assets/img/icon/category/category3-1.svg" alt="Image" />
                                         </div>
@@ -217,7 +217,7 @@ export default function Home() {
                                 </div>
 
                                 <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#947DFF" data-border="#AC9AFF">
+                                    <div className="category-card3" data-theme-color="#14B8A6" data-border="#5EEAD4">
                                         <div className="box-icon">
                                             <img src="/assets/img/icon/category/category3-2.svg" alt="Image" />
                                         </div>
@@ -231,7 +231,7 @@ export default function Home() {
                                 </div>
 
                                 <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#F66D96" data-border="#FF8AB6">
+                                    <div className="category-card3" data-theme-color="#334155" data-border="#CBD5E1">
                                         <div className="box-icon">
                                             <img src="/assets/img/icon/category/category3-3.svg" alt="Image" />
                                         </div>
@@ -245,7 +245,7 @@ export default function Home() {
                                 </div>
 
                                 <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#63D3EF" data-border="#85E3FC">
+                                    <div className="category-card3" data-theme-color="#0F766E" data-border="#5EEAD4">
                                         <div className="box-icon">
                                             <img src="/assets/img/icon/category/category3-4.svg" alt="Image" />
                                         </div>
@@ -259,7 +259,7 @@ export default function Home() {
                                 </div>
 
                                 <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#FDAC4C" data-border="#FFCD98">
+                                    <div className="category-card3" data-theme-color="#F97316" data-border="#FDBA74">
                                         <div className="box-icon">
                                             <img src="/assets/img/icon/category/category3-5.svg" alt="Image" />
                                         </div>
@@ -993,7 +993,7 @@ export default function Home() {
                                     <h2 className="sec-title text-white th-text-perspective"><span className="text-theme2">30%</span> Off Certification for Our First 100 Teachers</h2>
                                     <p className="fw-semibold text-white th_fade_anim mb-0 mt-30">Get certified and get matched with real teaching opportunities — join early and lock in founder pricing.</p>
                                     <div className="btn-wrap mt-40 th_fade_anim justify-content-center">
-                                        <a href="/courses" className="th-btn style2">JOIN WITH US
+                                        <a href="/courses" className="th-btn style5">JOIN WITH US
                                             <svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
                                             </svg>
@@ -1010,117 +1010,6 @@ export default function Home() {
                     </div>
                 </div>
             </section>
-
-            {/* FAQ section — commented out (disabled via `false &&`) rather than deleted, in case it's needed again later */}
-            {false && (
-            <div className="space overflow-hidden">
-                <div className="faq-bg-shape4-1 d-xxl-block d-none shape-mockup th_fade_anim" data-speed="0.9" data-left="4%" data-top="10%">
-                    <img src="/assets/img/shape/faq_shape1_1.png" alt="img" />
-                </div>
-                <div className="faq-bg-shape4-2 d-xxl-block d-none shape-mockup th_fade_anim" data-speed="0.9" data-right="0%" data-bottom="5%">
-                    <img src="/assets/img/shape/faq_shape4_1.png" alt="img" />
-                </div>
-                <div className="container">
-                    <div className="row gy-40">
-                        <div className="col-xl-6">
-                            <div className="faq-img-box1">
-                                <div className="img1 th--hover-item th_fade_anim">
-                                    <div className="thumb th--hover-img" data-displacement="/assets/img/imghover/fluid.jpg" data-intensity="0.2" data-speedin="1" data-speedout="1">
-                                        <img className="img-cover" src="/assets/img/normal/faq_4_1.jpg" alt="img" />
-                                    </div>
-                                </div>
-                                <div className="img2 th--hover-item th_fade_anim">
-                                    <div className="thumb th--hover-img" data-displacement="/assets/img/imghover/fluid.jpg" data-intensity="0.2" data-speedin="1" data-speedout="1">
-                                        <img className="img-cover" src="/assets/img/normal/faq_4_2.jpg" alt="img" />
-                                    </div>
-                                </div>
-                                <div className="faq-counter-wrap jump">
-                                    <div className="thumb">
-                                        <img src="/assets/img/normal/volunteer-group2.png" alt="img" />
-                                    </div>
-                                    <div className="box-details">
-                                        <h3 className="box-title"><span className="counter-number">10</span>K +</h3>
-                                        <p className="box-text">Active students</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-xl-6">
-                            <div className="faq-wrap1">
-                                <div className="title-area">
-                                    <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Faq’s</span>
-                                    <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Frequently Asked have any questions?</span></h2>
-                                </div>
-                                <div className="accordion" id="faqAccordion">
-
-
-                                    <div className="accordion-card style2 th_fade_anim">
-                                        <div className="accordion-header" id="collapse-item-1">
-                                            <button className="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapse-1" aria-expanded="true" aria-controls="collapse-1">Do I need teaching experience to get certified?</button>
-                                        </div>
-                                        <div id="collapse-1" className="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
-                                            <div className="accordion-body">
-                                                <p className="faq-text">No — our foundational certifications (like TEFL) are designed for both new and experienced educators.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div className="accordion-card style2 th_fade_anim">
-                                        <div className="accordion-header" id="collapse-item-2">
-                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-2" aria-expanded="false" aria-controls="collapse-2">Are these certifications recognized internationally?</button>
-                                        </div>
-                                        <div id="collapse-2" className="accordion-collapse collapse " data-bs-parent="#faqAccordion">
-                                            <div className="accordion-body">
-                                                <p className="faq-text">Yes, our certification programs follow internationally recognized standards accepted by schools and language institutes worldwide.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div className="accordion-card style2 th_fade_anim">
-                                        <div className="accordion-header" id="collapse-item-3">
-                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-3" aria-expanded="false" aria-controls="collapse-3">Can I find a job through World Teachers Academy after I'm certified?</button>
-                                        </div>
-                                        <div id="collapse-3" className="accordion-collapse collapse " data-bs-parent="#faqAccordion">
-                                            <div className="accordion-body">
-                                                <p className="faq-text">Yes — our Job Portal lists verified teaching positions you can apply to directly once you've completed a relevant certification.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div className="accordion-card style2 th_fade_anim">
-                                        <div className="accordion-header" id="collapse-item-4">
-                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-4" aria-expanded="false" aria-controls="collapse-4">How long does certification take?</button>
-                                        </div>
-                                        <div id="collapse-4" className="accordion-collapse collapse " data-bs-parent="#faqAccordion">
-                                            <div className="accordion-body">
-                                                <p className="faq-text">This depends on the course — most programs range from a few days of intensive study to several weeks of self-paced learning.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    {/* TODO: confirm whether visa/relocation support is actually offered before launch — remove this FAQ entirely if not, per user's own flag that false claims here are reputationally risky */}
-                                    <div className="accordion-card style2 th_fade_anim">
-                                        <div className="accordion-header" id="collapse-item-5">
-                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-5" aria-expanded="false" aria-controls="collapse-5">Do you help with visa or relocation support for teaching abroad?</button>
-                                        </div>
-                                        <div id="collapse-5" className="accordion-collapse collapse " data-bs-parent="#faqAccordion">
-                                            <div className="accordion-body">
-                                                <p className="faq-text">This depends on the program — check each course's details page for visa/relocation support information.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            )}
-
 
             {/* Featured Events section — commented out (disabled via `false &&`) rather than deleted, in case it's needed again later */}
             {false && (
@@ -1535,6 +1424,116 @@ Video Testimonials Area
                     </div>
                 </div>
             </section>
+
+            {/*==============================
+FAQ Area
+==============================*/}
+            <div className="space overflow-hidden">
+                <div className="faq-bg-shape4-1 d-xxl-block d-none shape-mockup th_fade_anim" data-speed="0.9" data-left="4%" data-top="10%">
+                    <img src="/assets/img/shape/faq_shape1_1.png" alt="img" />
+                </div>
+                <div className="faq-bg-shape4-2 d-xxl-block d-none shape-mockup th_fade_anim" data-speed="0.9" data-right="0%" data-bottom="5%">
+                    <img src="/assets/img/shape/faq_shape4_1.png" alt="img" />
+                </div>
+                <div className="container">
+                    <div className="row gy-40">
+                        <div className="col-xl-6">
+                            <div className="faq-img-box1">
+                                <div className="img1 th--hover-item th_fade_anim">
+                                    <div className="thumb th--hover-img" data-displacement="/assets/img/imghover/fluid.jpg" data-intensity="0.2" data-speedin="1" data-speedout="1">
+                                        <img className="img-cover" src="/assets/img/normal/faq_4_1.jpg" alt="img" />
+                                    </div>
+                                </div>
+                                <div className="img2 th--hover-item th_fade_anim">
+                                    <div className="thumb th--hover-img" data-displacement="/assets/img/imghover/fluid.jpg" data-intensity="0.2" data-speedin="1" data-speedout="1">
+                                        <img className="img-cover" src="/assets/img/normal/faq_4_2.jpg" alt="img" />
+                                    </div>
+                                </div>
+                                <div className="faq-counter-wrap jump">
+                                    <div className="thumb">
+                                        <img src="/assets/img/normal/volunteer-group2.png" alt="img" />
+                                    </div>
+                                    <div className="box-details">
+                                        <h3 className="box-title"><span className="counter-number">10</span>K +</h3>
+                                        <p className="box-text">Active students</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-xl-6">
+                            <div className="faq-wrap1">
+                                <div className="title-area">
+                                    <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Faq’s</span>
+                                    <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Frequently Asked have any questions?</span></h2>
+                                </div>
+                                <div className="accordion" id="faqAccordion">
+
+
+                                    <div className="accordion-card style2 th_fade_anim">
+                                        <div className="accordion-header" id="collapse-item-1">
+                                            <button className="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapse-1" aria-expanded="true" aria-controls="collapse-1">Do I need teaching experience to get certified?</button>
+                                        </div>
+                                        <div id="collapse-1" className="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                                            <div className="accordion-body">
+                                                <p className="faq-text">No — our foundational certifications (like TEFL) are designed for both new and experienced educators.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div className="accordion-card style2 th_fade_anim">
+                                        <div className="accordion-header" id="collapse-item-2">
+                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-2" aria-expanded="false" aria-controls="collapse-2">Are these certifications recognized internationally?</button>
+                                        </div>
+                                        <div id="collapse-2" className="accordion-collapse collapse " data-bs-parent="#faqAccordion">
+                                            <div className="accordion-body">
+                                                <p className="faq-text">Yes, our certification programs follow internationally recognized standards accepted by schools and language institutes worldwide.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div className="accordion-card style2 th_fade_anim">
+                                        <div className="accordion-header" id="collapse-item-3">
+                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-3" aria-expanded="false" aria-controls="collapse-3">Can I find a job through World Teachers Academy after I'm certified?</button>
+                                        </div>
+                                        <div id="collapse-3" className="accordion-collapse collapse " data-bs-parent="#faqAccordion">
+                                            <div className="accordion-body">
+                                                <p className="faq-text">Yes — our Job Portal lists verified teaching positions you can apply to directly once you've completed a relevant certification.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div className="accordion-card style2 th_fade_anim">
+                                        <div className="accordion-header" id="collapse-item-4">
+                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-4" aria-expanded="false" aria-controls="collapse-4">How long does certification take?</button>
+                                        </div>
+                                        <div id="collapse-4" className="accordion-collapse collapse " data-bs-parent="#faqAccordion">
+                                            <div className="accordion-body">
+                                                <p className="faq-text">This depends on the course — most programs range from a few days of intensive study to several weeks of self-paced learning.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    {/* TODO: confirm whether visa/relocation support is actually offered before launch — remove this FAQ entirely if not, per user's own flag that false claims here are reputationally risky */}
+                                    <div className="accordion-card style2 th_fade_anim">
+                                        <div className="accordion-header" id="collapse-item-5">
+                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-5" aria-expanded="false" aria-controls="collapse-5">Do you help with visa or relocation support for teaching abroad?</button>
+                                        </div>
+                                        <div id="collapse-5" className="accordion-collapse collapse " data-bs-parent="#faqAccordion">
+                                            <div className="accordion-body">
+                                                <p className="faq-text">This depends on the program — check each course's details page for visa/relocation support information.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
     </>
   );
 }
