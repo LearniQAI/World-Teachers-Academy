@@ -11,7 +11,7 @@ export default function Home() {
                             <div className="col-lg-5">
                                 <div className="hero-thumb11-1 wow animate__fadeInUp">
                                     <div className="thumb">
-                                        <img src="/assets/img/hero/hero_thumb11_1.png" alt="About" />
+                                        <img src="/assets/img/hero/hero-student.png" alt="World Teachers Academy student" />
                                     </div>
                                     <div className="about-tag">
                                         <div className="about-experience-tag">
@@ -1118,7 +1118,9 @@ export default function Home() {
                 </div>
             </div>
 
-            
+
+            {/* Featured Events section — commented out (disabled via `false &&`) rather than deleted, in case it's needed again later */}
+            {false && (
             <section className="space bg-smoke3 overflow-hidden">
                 <div className="event-bg-shape3-1 shape-mockup th_fade_anim d-xxl-block d-none" data-speed="0.9" data-left="4%" data-top="10%">
                     <img src="/assets/img/shape/event_shape2_1.png" alt="img" />
@@ -1252,7 +1254,55 @@ export default function Home() {
                     </div>
                 </div>
             </section>
-            
+            )}
+
+            {/*==============================
+Video Testimonials Area
+==============================*/}
+            <section className="space overflow-hidden" id="video-testi-sec">
+                <div className="container">
+                    <div className="title-area text-center">
+                        <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-1.svg" alt="img" />Student Stories</span>
+                        <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Don&apos;t Take Our Word For It — Hear From Our Students</span></h2>
+                    </div>
+                    <div className="row gy-4 justify-content-center">
+                        <div className="col-md-4">
+                            <div className="video-testi-card th_fade_anim" data-delay=".3">
+                                <img className="img-cover" src="/assets/img/testimonial/testi_6_1.jpg" alt="Student testimonial" />
+                                {/* TODO: replace href with a real student testimonial video URL */}
+                                <a href="#" className="play-btn popup-video"><i className="fas fa-solid fa-play"></i></a>
+                                <div className="video-testi-caption">
+                                    <h4 className="box-name">TEFL Graduate</h4>
+                                    <span className="box-desig">Certified 2026</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-4">
+                            <div className="video-testi-card th_fade_anim" data-delay=".5">
+                                <img className="img-cover" src="/assets/img/testimonial/testi_6_2.jpg" alt="Student testimonial" />
+                                {/* TODO: replace href with a real student testimonial video URL */}
+                                <a href="#" className="play-btn popup-video"><i className="fas fa-solid fa-play"></i></a>
+                                <div className="video-testi-caption">
+                                    <h4 className="box-name">Classroom Management Graduate</h4>
+                                    <span className="box-desig">Certified 2026</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-4">
+                            <div className="video-testi-card th_fade_anim" data-delay=".7">
+                                <img className="img-cover" src="/assets/img/testimonial/testi_6_3.jpg" alt="Student testimonial" />
+                                {/* TODO: replace href with a real student testimonial video URL */}
+                                <a href="#" className="play-btn popup-video"><i className="fas fa-solid fa-play"></i></a>
+                                <div className="video-testi-caption">
+                                    <h4 className="box-name">Special Education Graduate</h4>
+                                    <span className="box-desig">Certified 2026</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section className="testi-area-1 space overflow-hidden" id="testi-sec">
                 <div className="testi-bg-shape8-1 shape-mockup th_fade_anim d-xxl-block d-none" data-speed="0.9" data-left="6%" data-top="7%">
                     <img src="/assets/img/shape/testi_shape8_1.png" alt="img" />

@@ -39,9 +39,8 @@ export default function Footer() {
                                 <div className="widget footer-widget th_fade_anim" data-delay=".3">
                                     <div className="th-widget-about">
                                         <div className="about-logo">
-                                            <a href="/" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                                                <img src="/assets/img/world-teachers-logo.jpeg" alt="World Teachers Academy" style={{ height: '64px', width: 'auto' }} />
-                                                <span style={{ fontFamily: 'var(--title-font)', fontWeight: 800, fontSize: '24px', lineHeight: 1.1, letterSpacing: '0.2px', color: 'var(--title-color)' }}>World Teachers Academy</span>
+                                            <a href="/">
+                                                <img src="/assets/img/world-teachers-logo.jpeg" alt="World Teachers Academy" style={{ height: '96px', width: 'auto' }} />
                                             </a>
                                         </div>
                                         <p className="about-text"> World Teachers Academy helps educators get certified and get hired — training and real teaching opportunities, in one place.</p>

@@ -8,9 +8,8 @@ export default function Header() {
                     <div className="row align-items-center justify-content-between">
                         <div className="col-auto">
                             <div className="header-logo">
-                                <a href="/" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                    <img src="/assets/img/world-teachers-logo.jpeg" alt="World Teachers Academy" style={{ height: '56px', width: 'auto' }} />
-                                    <span style={{ fontFamily: 'var(--title-font)', fontWeight: 800, fontSize: '22px', lineHeight: 1.1, letterSpacing: '0.2px' }}>World Teachers Academy</span>
+                                <a href="/">
+                                    <img src="/assets/img/world-teachers-logo.jpeg" alt="World Teachers Academy" style={{ height: '84px', width: 'auto' }} />
                                 </a>
                             </div>
                         </div>

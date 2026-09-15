@@ -14,6 +14,41 @@
   padding-top: 30px !important;
 }
 
+/* The theme's hero-thumb11-1 has no width/height/object-fit rules at all —
+   the original template image was pre-cropped by the designer to exactly
+   the right proportions, so an <img> with no sizing "just worked". Our
+   replacement photo is a full-body cutout with a lot of blank margin
+   around the subject, so without an explicit crop it rendered tiny and
+   off-center relative to the decorative ring/shapes built around the
+   original image's box. Force a fixed portrait frame and crop into it. */
+.hero-11 .hero-inner .hero-thumb11-1 {
+  display: block !important;
+  width: 100% !important;
+}
+.hero-11 .hero-inner .hero-thumb11-1 .thumb {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  transform: scale(1.15);
+  transform-origin: center;
+}
+.hero-11 .hero-inner .hero-thumb11-1 .thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 8%;
+}
+/* The decorative rotating-text ring (.about-tag) is centered via a fixed-px
+   anchor (top:-23px; left:15px, further overridden at several breakpoints)
+   tuned for the theme's original, much narrower template image. Now that
+   the photo fills the full column width, that fixed anchor no longer lines
+   up with the subject's face — recenter it with percentages instead so it
+   tracks the image at any viewport width. !important is needed to beat the
+   theme's own breakpoint-specific `left` overrides. */
+.hero-11 .hero-inner .hero-thumb11-1 .about-tag {
+  left: 13% !important;
+  top: -8% !important;
+}
+
 /* The homepage trust-strip stat cards reuse the theme's .counter-card
    markup, whose .box-text label is hardcoded white (--white-color) since
    it's normally only used inside a dark .bg-theme section (see the stats
@@ -22,4 +57,46 @@
    labels were invisible — force a dark, readable color here only. */
 .stat-strip .counter-card .box-text {
   color: var(--title-color) !important;
+}
+
+/* New "student video testimonials" card — not part of the original theme,
+   built from the theme's existing .play-btn (centered play button) and
+   .img-cover conventions used elsewhere, so it matches the rest of the
+   site's visual language instead of introducing a new style. */
+.video-testi-card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+}
+.video-testi-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.video-testi-card .play-btn {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.video-testi-card .video-testi-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 20px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  color: var(--white-color);
+  text-align: left;
+}
+.video-testi-card .video-testi-caption .box-name {
+  color: var(--white-color);
+  font-size: 18px;
+  margin-bottom: 2px;
+}
+.video-testi-card .video-testi-caption .box-desig {
+  color: var(--white-color);
+  opacity: 0.85;
+  font-size: 14px;
 }
