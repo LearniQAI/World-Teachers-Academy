@@ -292,12 +292,12 @@ export default function Home() {
                                 <div className="img-box11">
                                     <div className="img1 th--hover-item th_fade_anim">
                                         <div className="thumb th--hover-img" data-displacement="/assets/img/imghover/fluid.jpg" data-intensity="0.2" data-speedin="1" data-speedout="1">
-                                            <img className="img-cover" src="/assets/img/normal/about_11_1.jpg" alt="About" />
+                                            <img className="img-cover" src="/assets/img/normal/more-aboutus-1.jpg" alt="World Teachers Academy team" />
                                         </div>
                                     </div>
                                     <div className="img2 th--hover-item th_fade_anim">
                                         <div className="thumb th--hover-img" data-displacement="/assets/img/imghover/fluid.jpg" data-intensity="0.2" data-speedin="1" data-speedout="1">
-                                            <img className="img-cover" src="/assets/img/normal/about_11_2.jpg" alt="About" />
+                                            <img className="img-cover" src="/assets/img/normal/more-aboutus-2.jpg" alt="World Teachers Academy team" />
                                         </div>
                                     </div>
                                     <div className="about-tag th_fade_anim">
@@ -755,7 +755,7 @@ export default function Home() {
                                         <div className="why-img-shape-line" data-mask-src="/assets/img/normal/why-thumb-mask10-1.png"></div>
                                     </div>
                                     <div className="thumb" data-mask-src="/assets/img/normal/why-thumb-mask10-1.png">
-                                        <img src="/assets/img/normal/why-thumb10-1.jpg" alt="img" />
+                                        <img src="/assets/img/normal/why-choose-section.jpg" alt="Student holding books" />
                                     </div>
                                     <div className="why-info-card11-1 jump">
                                         <img src="/assets/img/hero/hero_thumb-info3_1.png" alt="img" />
@@ -784,7 +784,7 @@ export default function Home() {
                     </div>
                     <div className="why-wrap10">
                         <div className="why-card10 th_fade_anim">
-                            <div className="why-card-bg"><img src="/assets/img/normal/why-card-bg10-1.png" alt="img" /></div>
+                            <div className="why-card-bg"><img src="/assets/img/normal/certification-card-image.jpg" alt="Certified student" /></div>
                             <div className="box-icon">
                                 <img src="/assets/img/icon/why-card-icon10-1.svg" alt="img" />
                             </div>
@@ -806,7 +806,7 @@ export default function Home() {
                             <p className="box-text">Finish a course and browse matching job openings immediately.</p>
                         </div>
                         <div className="why-card10 th_fade_anim">
-                            <div className="why-card-bg"><img src="/assets/img/normal/why-card-bg10-2.png" alt="img" /></div>
+                            <div className="why-card-bg"><img src="/assets/img/normal/support-card-image.jpg" alt="Supported student" /></div>
                             <div className="box-icon">
                                 <img src="/assets/img/icon/why-card-icon10-4.svg" alt="img" />
                             </div>
