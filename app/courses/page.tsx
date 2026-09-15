@@ -71,6 +71,13 @@ Course Area
               <div className="th-course-row columns-3">
                 {courseCards.map((card, i) => {
                   const course = courses[i % courses.length];
+                  // Only the TEFL Certificate card has a real details page built so
+                  // far; the other three course titles still point at the
+                  // unbuilt "/course-details" placeholder.
+                  const detailsHref =
+                    course.title === "TEFL Certificate — 120 Hour"
+                      ? "/courses/tefl-certificate-120-hour"
+                      : "/course-details";
                   return (
                     <div className="th-course-single th_fade_anim" data-delay={card.delay} key={i}>
                       <div className="course-card">
@@ -78,7 +85,7 @@ Course Area
                           <a href="/blog-details"><img src={card.img} alt="Course Image" /></a>
                           <span className="box-price">$[TBD]</span>
                         </div>
-                        <h2 className="box-title"><a href="/course-details">{course.title}</a></h2>
+                        <h2 className="box-title"><a href={detailsHref}>{course.title}</a></h2>
                         <div className="box-rating">
                           <div className="star-rating" role="img" aria-label="Rated 5.00 out of 5">
                             <span style={{ width: "100%" }}>Rated <strong className="rating">5.00</strong> out of 5</span>
@@ -114,7 +121,7 @@ Course Area
                               <h3 className="box-name"><a href="/team">{card.instructor}</a></h3>
                             </div>
                           </div>
-                          <a href="/course-details" className="th-btn btn-sm style-border2">VIEW DETAILS<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <a href={detailsHref} className="th-btn btn-sm style-border2">VIEW DETAILS<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
                           </svg></a>
                         </div>

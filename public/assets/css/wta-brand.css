@@ -66,3 +66,15 @@ body.theme-style5 {
   --theme-color: #4F46E5;
   --theme-color2: #F97316;
 }
+
+/* Course Details page (app/courses/[slug]/page.tsx): the "25% Off" discount
+   badge next to the price (.widget_course_info .course-price .tag) inherits
+   var(--theme-color) = Signal Indigo from the vendor stylesheet by default.
+   Semantically this is a small informational tag, not a CTA or brand mark,
+   so per the palette's "Growth Teal -> tags" rule it is remapped here
+   instead of left on Indigo. The star-rating fill (var(--yellow-color),
+   unrelated to --theme-color/--theme-color2) is left as its conventional
+   gold, since it isn't part of the brand palette to begin with. */
+.widget_course_info .course-price .tag {
+  background: #14B8A6;
+}

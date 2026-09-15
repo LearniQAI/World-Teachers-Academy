@@ -100,3 +100,17 @@
   opacity: 0.85;
   font-size: 14px;
 }
+
+/* The preloader's "text fill" animation overlays two copies of the same
+   text: a static outline layer (.loader, 80px) and an absolutely-positioned
+   solid-color layer (.loading-text) that wipes across it via keyframes.
+   This only works when the text renders as a single line — the template's
+   original word ("Escul") was short enough to fit at 80px, but "World
+   Teachers Academy" is long enough to wrap, and because .loading-text's
+   width:100% is resolved against .loader's own auto-computed (wrapped)
+   width, the two layers can wrap at different points and drift apart
+   (the garbled/doubled look). Force one line at a size that actually fits. */
+.preloader .loader {
+  white-space: nowrap;
+  font-size: clamp(28px, 6.5vw, 58px);
+}

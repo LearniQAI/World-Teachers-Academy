@@ -40,7 +40,7 @@ export default function Footer() {
                                     <div className="th-widget-about">
                                         <div className="about-logo">
                                             <a href="/">
-                                                <img src="/assets/img/world-teachers-logo.jpeg" alt="World Teachers Academy" style={{ height: '96px', width: 'auto' }} />
+                                                <img src="/assets/img/world-teachers-logo.png" alt="World Teachers Academy" style={{ height: '96px', width: 'auto' }} />
                                             </a>
                                         </div>
                                         <p className="about-text"> World Teachers Academy helps educators get certified and get hired — training and real teaching opportunities, in one place.</p>
