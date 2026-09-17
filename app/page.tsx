@@ -11,7 +11,7 @@ export default function Home() {
                             <div className="col-lg-5">
                                 <div className="hero-thumb11-1 wow animate__fadeInUp">
                                     <div className="thumb">
-                                        <img src="/assets/img/hero/hero-student.png" alt="World Teachers Academy student" />
+                                        <img src="/assets/hero-teacher1.png" alt="World Teachers Academy student" />
                                     </div>
                                     <div className="about-tag">
                                         <div className="about-experience-tag">
@@ -22,31 +22,25 @@ export default function Home() {
                                         <img src="/assets/img/hero/hero_thumb3_2.png" alt="img" />
                                     </div>
                                     <div className="hero-thumb-info jump">
+                                        {/* TODO: confirm real teacher-trained count — suggested replacement "320+ Teachers Trained" pending confirmation, or remove badge entirely if it crowds the image. */}
                                         <img src="/assets/img/hero/hero_thumb-info11_1.png" alt="img" />
                                     </div>
                                 </div>
                             </div>
                             <div className="col-lg-7">
                                 <div className="hero-style11">
-                                    <div className="hero-subtitle wow animate__fadeInUp" data-wow-delay="0.2s">Certify. Teach. Get Hired.</div>
+                                    <div className="hero-subtitle wow animate__fadeInUp" data-wow-delay="0.2s">CERTIFY. TEACH. GET HIRED.</div>
                                     <h2 className="hero-title">
-                                        <span className="title1 wow animate__fadeInUp" data-wow-delay="0.3s">Build Your Career</span>
-                                        <span className="title2 wow animate__fadeInUp" data-wow-delay="0.4s">With
-                                            <span className="text-white">
-                                                <span className="hero-title-bg" data-mask-src="/assets/img/hero/hero-title-bg-shape11-1.png"></span>
-                                                World Teachers
-                                            </span>
-                                        </span>
-                                        <span className="title3 wow animate__fadeInUp" data-wow-delay="0.5s">Academy</span>
+                                        <span className="title1 wow animate__fadeInUp" data-wow-delay="0.3s">Get Certified. Get Placed. Go Teach the World.</span>
                                     </h2>
                                     <p className="hero-text wow animate__fadeInUp" data-wow-delay="0.6s">
-                                        Get internationally recognized teaching certifications, then step straight into verified teaching jobs — all in one place, built for educators.
+                                        Internationally recognised teaching certifications and a live directory of verified teaching jobs, in one place — so you&apos;re never juggling five different sites to build your career.
                                     </p>
                                     <div className="header-search-form wow animate__fadeInUp" data-wow-delay="0.7s">
                                         <form className="search-form">
                                             <div className="form-group">
                                                 <i className="far fa-search"></i>
-                                                <input type="text" placeholder="What do you want to get certified in?" />
+                                                <input type="text" placeholder="Search TEFL, TESOL, Classroom Management..." />
                                             </div>
                                             <button className="th-btn" type="submit">FIND A COURSE
                                                 <svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -57,46 +51,23 @@ export default function Home() {
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
-
-                
                 <div className="pt-60 space-bottom overflow-hidden brand-area-1">
                     <div className="container">
                         <div className="row gy-4 justify-content-center text-center stat-strip">
                             <div className="col-6 col-md-3">
-                                <div className="counter-card">
-                                    <div className="media-body">
-                                        <h2 className="box-number"><span className="counter-number">500</span>+</h2>
-                                        <p className="box-text">Teachers Certified</p>
-                                    </div>
-                                </div>
+                                <div className="counter-card"><div className="media-body"><h2 className="box-number"><span className="counter-number">500</span>+</h2><p className="box-text">Teachers Certified</p></div></div>
                             </div>
                             <div className="col-6 col-md-3">
-                                <div className="counter-card">
-                                    <div className="media-body">
-                                        <h2 className="box-number"><span className="counter-number">50</span>+</h2>
-                                        <p className="box-text">Partner Schools</p>
-                                    </div>
-                                </div>
+                                <div className="counter-card"><div className="media-body"><h2 className="box-number"><span className="counter-number">50</span>+</h2><p className="box-text">Partner Schools</p></div></div>
                             </div>
                             <div className="col-6 col-md-3">
-                                <div className="counter-card">
-                                    <div className="media-body">
-                                        <h2 className="box-number"><span className="counter-number">20</span>+</h2>
-                                        <p className="box-text">Countries</p>
-                                    </div>
-                                </div>
+                                <div className="counter-card"><div className="media-body"><h2 className="box-number"><span className="counter-number">20</span>+</h2><p className="box-text">Countries</p></div></div>
                             </div>
                             <div className="col-6 col-md-3">
-                                <div className="counter-card">
-                                    <div className="media-body">
-                                        <h2 className="box-number"><span className="counter-number">150</span>+</h2>
-                                        <p className="box-text">Active Job Listings</p>
-                                    </div>
-                                </div>
+                                <div className="counter-card"><div className="media-body"><h2 className="box-number"><span className="counter-number">150</span>+</h2><p className="box-text">Active Job Listings</p></div></div>
                             </div>
                         </div>
                     </div>
@@ -130,6 +101,7 @@ export default function Home() {
                         </div>
                     </div>
                     <div className="category-slider3 th_fade_anim">
+                        {/* TODO: add one supporting line per certification card once course names are finalized (e.g. under "TEFL / TESOL Certification": "Your first step to teaching abroad or online") */}
                         <div className="swiper th-slider has-shadow" id="categorySlider3" data-slider-options='{"breakpoints":{"0":{"slidesPerView":"1"},"526":{"slidesPerView":"2"},"768":{"slidesPerView":"3"},"991":{"slidesPerView":"4"},"1200":{"slidesPerView":"5"},"1400":{"slidesPerView":"5"}}}'>
                             <div className="swiper-wrapper">
                                 <div className="swiper-slide th_fade_anim">
@@ -305,6 +277,7 @@ export default function Home() {
                                             <span className="circle-title-anime">Years Of Experience ** Years Of Experience **</span>
                                         </div>
                                         <div className="year-counter">
+                                            {/* TODO: confirm exact founding/relaunch year or preferred years-of-operation figure before changing this badge (candidates discussed: "Founded 2018" or "Established Since 2018") */}
                                             <div className="box-title"><span className="counter-number">16</span></div>
                                         </div>
                                     </div>
@@ -314,8 +287,8 @@ export default function Home() {
                                 <div className="title-area mb-35">
                                     <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />More About Us</span>
                                     <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Everything a Teacher Needs to Build a Global Career</span></h2>
-                                    <p className="th_fade_anim">World Teachers Academy was built for one purpose: helping educators get certified, stay current, and find teaching roles that actually fit their skills — without juggling five different websites to do it. </p>
-                                    <p className="th_fade_anim">From certification courses taught by experienced educators to a live directory of verified teaching jobs across multiple countries, we bring the training and the opportunity together in one place. </p>
+                                    <p className="th_fade_anim">World Teachers Academy was built for one purpose: helping educators get certified, stay current, and find teaching roles that genuinely fit their skills — without juggling five different websites to do it.</p>
+                                    <p className="th_fade_anim">From certification courses taught by educators who actually teach, to a live directory of verified teaching jobs across multiple countries, we bring the training and the opportunity together in one place.</p>
                                 </div>
                                 <div className="about-info-card style2 th_fade_anim">
                                     <div className="box-icon">
@@ -325,7 +298,7 @@ export default function Home() {
                                     </div>
                                     <div className="box-content">
                                         <h3 className="box-title">Certified Teaching Programs</h3>
-                                        <p className="box-text">Every course is designed by practicing educators and mapped to real classroom needs — not generic online-course filler.</p>
+                                        <p className="box-text">Every course is designed around real classroom needs, not generic online-course filler — built by people who&apos;ve actually stood in front of a class.</p>
                                     </div>
                                 </div>
                                 <div className="btn-wrap mt-40 th_fade_anim">
@@ -340,6 +313,7 @@ export default function Home() {
                     </div>
                 </div>
                 <div className="container">
+                    {/* TODO: confirm these three stats are real numbers before publishing — 320 Teachers Trained and 200 Partner Schools are proposed figures pending confirmation, not verified data. Also confirm job listings are updated daily specifically — if updates are weekly or ad hoc, change wording to "Listings Updated Regularly" instead. */}
                     <div className="row gy-4 justify-content-center">
                         <div className="col-xl-4 col-md-6 th_fade_anim">
                             <div className="about-info-wrap11">
@@ -397,6 +371,7 @@ export default function Home() {
                             <div className="title-area text-center">
                                 <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Our Courses</span>
                                 <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Our Featured Courses</span></h2>
+                                {/* TODO: course cards need real data — course name, real price, real hours/access period, and instructor name only if I confirm crediting one (e.g. Naomi Venter) — do NOT re-add star ratings or review counts unless there are genuine reviews to back them. */}
                             </div>
                         </div>
                     </div>
@@ -408,14 +383,10 @@ export default function Home() {
                                     <div className="course-card">
                                         <div className="box-img">
                                             <a href="blog-details.html"><img src="/assets/img/course/course1-1.jpg" alt="Course Image" /></a>
-                                            <span className="box-price">$299</span>
+                                            <span className="box-price">[Price TBD]</span>
                                         </div>
                                         <h3 className="box-title"><a href="course-details.html">TEFL Certificate — 120 Hour</a></h3>
-                                        <div className="box-rating">
-                                            <div className="star-rating" role="img" aria-label="Rated 5.00 out of 5">
-                                                <span style={{ width: '100%' }}>Rated <strong className="rating">5.00</strong> out of 5</span>
-                                            </div><span className="ms-2">4.9 (10k)</span>
-                                        </div>
+                                        {/* Star rating and review count withheld until genuine reviews exist. */}
                                         <div className="box-content">
                                             <div className="course-info">
                                                 <div className="box-icon">
@@ -442,7 +413,7 @@ export default function Home() {
                                                     <img src="/assets/img/course/course-thumb1-1.png" alt="avater" />
                                                 </div>
                                                 <div className="media-body">
-                                                    <h5 className="box-name"><a href="team.html">Michel Shon</a></h5>
+                                                    <h5 className="box-name"><a href="team.html">[Instructor TBD]</a></h5>
                                                 </div>
                                             </div>
                                             <a href="course-details.html" className="th-btn btn-sm style-border2">VIEW DETAILS<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -456,14 +427,10 @@ export default function Home() {
                                     <div className="course-card">
                                         <div className="box-img">
                                             <a href="blog-details.html"><img src="/assets/img/course/course1-2.jpg" alt="Course Image" /></a>
-                                            <span className="box-price">$149</span>
+                                            <span className="box-price">[Price TBD]</span>
                                         </div>
                                         <h3 className="box-title"><a href="course-details.html">Classroom Management Essentials</a></h3>
-                                        <div className="box-rating">
-                                            <div className="star-rating" role="img" aria-label="Rated 5.00 out of 5">
-                                                <span style={{ width: '100%' }}>Rated <strong className="rating">5.00</strong> out of 5</span>
-                                            </div><span className="ms-2">4.9 (10k)</span>
-                                        </div>
+                                        {/* Star rating and review count withheld until genuine reviews exist. */}
                                         <div className="box-content">
                                             <div className="course-info">
                                                 <div className="box-icon">
@@ -490,7 +457,7 @@ export default function Home() {
                                                     <img src="/assets/img/course/course-thumb1-1.png" alt="avater" />
                                                 </div>
                                                 <div className="media-body">
-                                                    <h5 className="box-name"><a href="team.html">Sarah Lee</a></h5>
+                                                    <h5 className="box-name"><a href="team.html">[Instructor TBD]</a></h5>
                                                 </div>
                                             </div>
                                             <a href="course-details.html" className="th-btn btn-sm style-border2">VIEW DETAILS<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -504,14 +471,10 @@ export default function Home() {
                                     <div className="course-card">
                                         <div className="box-img">
                                             <a href="blog-details.html"><img src="/assets/img/course/course1-3.jpg" alt="Course Image" /></a>
-                                            <span className="box-price">$179</span>
+                                            <span className="box-price">[Price TBD]</span>
                                         </div>
                                         <h3 className="box-title"><a href="course-details.html">Curriculum & Lesson Planning</a></h3>
-                                        <div className="box-rating">
-                                            <div className="star-rating" role="img" aria-label="Rated 5.00 out of 5">
-                                                <span style={{ width: '100%' }}>Rated <strong className="rating">5.00</strong> out of 5</span>
-                                            </div><span className="ms-2">4.9 (10k)</span>
-                                        </div>
+                                        {/* Star rating and review count withheld until genuine reviews exist. */}
                                         <div className="box-content">
                                             <div className="course-info">
                                                 <div className="box-icon">
@@ -538,7 +501,7 @@ export default function Home() {
                                                     <img src="/assets/img/course/course-thumb1-1.png" alt="avater" />
                                                 </div>
                                                 <div className="media-body">
-                                                    <h5 className="box-name"><a href="team.html">John Doe</a></h5>
+                                                    <h5 className="box-name"><a href="team.html">[Instructor TBD]</a></h5>
                                                 </div>
                                             </div>
                                             <a href="course-details.html" className="th-btn btn-sm style-border2">VIEW DETAILS<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -552,14 +515,10 @@ export default function Home() {
                                     <div className="course-card">
                                         <div className="box-img">
                                             <a href="blog-details.html"><img src="/assets/img/course/course1-4.jpg" alt="Course Image" /></a>
-                                            <span className="box-price">$199</span>
+                                            <span className="box-price">[Price TBD]</span>
                                         </div>
                                         <h3 className="box-title"><a href="course-details.html">Special Education Foundations</a></h3>
-                                        <div className="box-rating">
-                                            <div className="star-rating" role="img" aria-label="Rated 5.00 out of 5">
-                                                <span style={{ width: '100%' }}>Rated <strong className="rating">5.00</strong> out of 5</span>
-                                            </div><span className="ms-2">4.9 (10k)</span>
-                                        </div>
+                                        {/* Star rating and review count withheld until genuine reviews exist. */}
                                         <div className="box-content">
                                             <div className="course-info">
                                                 <div className="box-icon">
@@ -586,7 +545,7 @@ export default function Home() {
                                                     <img src="/assets/img/course/course-thumb1-1.png" alt="avater" />
                                                 </div>
                                                 <div className="media-body">
-                                                    <h5 className="box-name"><a href="team.html">Lisa Wong</a></h5>
+                                                    <h5 className="box-name"><a href="team.html">[Instructor TBD]</a></h5>
                                                 </div>
                                             </div>
                                             <a href="course-details.html" className="th-btn btn-sm style-border2">VIEW DETAILS<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -600,14 +559,10 @@ export default function Home() {
                                     <div className="course-card">
                                         <div className="box-img">
                                             <a href="blog-details.html"><img src="/assets/img/course/course1-5.jpg" alt="Course Image" /></a>
-                                            <span className="box-price">$299</span>
+                                            <span className="box-price">[Price TBD]</span>
                                         </div>
                                         <h3 className="box-title"><a href="course-details.html">TEFL Certificate — 120 Hour</a></h3>
-                                        <div className="box-rating">
-                                            <div className="star-rating" role="img" aria-label="Rated 5.00 out of 5">
-                                                <span style={{ width: '100%' }}>Rated <strong className="rating">5.00</strong> out of 5</span>
-                                            </div><span className="ms-2">4.9 (10k)</span>
-                                        </div>
+                                        {/* Star rating and review count withheld until genuine reviews exist. */}
                                         <div className="box-content">
                                             <div className="course-info">
                                                 <div className="box-icon">
@@ -634,7 +589,7 @@ export default function Home() {
                                                     <img src="/assets/img/course/course-thumb1-1.png" alt="avater" />
                                                 </div>
                                                 <div className="media-body">
-                                                    <h5 className="box-name"><a href="team.html">Mark Thompson</a></h5>
+                                                    <h5 className="box-name"><a href="team.html">[Instructor TBD]</a></h5>
                                                 </div>
                                             </div>
                                             <a href="course-details.html" className="th-btn btn-sm style-border2">VIEW DETAILS<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -648,14 +603,10 @@ export default function Home() {
                                     <div className="course-card">
                                         <div className="box-img">
                                             <a href="blog-details.html"><img src="/assets/img/course/course1-6.jpg" alt="Course Image" /></a>
-                                            <span className="box-price">$149</span>
+                                            <span className="box-price">[Price TBD]</span>
                                         </div>
                                         <h3 className="box-title"><a href="course-details.html">Classroom Management Essentials</a></h3>
-                                        <div className="box-rating">
-                                            <div className="star-rating" role="img" aria-label="Rated 5.00 out of 5">
-                                                <span style={{ width: '100%' }}>Rated <strong className="rating">5.00</strong> out of 5</span>
-                                            </div><span className="ms-2">4.9 (10k)</span>
-                                        </div>
+                                        {/* Star rating and review count withheld until genuine reviews exist. */}
                                         <div className="box-content">
                                             <div className="course-info">
                                                 <div className="box-icon">
@@ -682,7 +633,7 @@ export default function Home() {
                                                     <img src="/assets/img/course/course-thumb1-1.png" alt="avater" />
                                                 </div>
                                                 <div className="media-body">
-                                                    <h5 className="box-name"><a href="team.html">Emily Chen</a></h5>
+                                                    <h5 className="box-name"><a href="team.html">[Instructor TBD]</a></h5>
                                                 </div>
                                             </div>
                                             <a href="course-details.html" className="th-btn btn-sm style-border2">VIEW DETAILS<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -755,12 +706,14 @@ export default function Home() {
                                         <div className="why-img-shape-line" data-mask-src="/assets/img/normal/why-thumb-mask10-1.png"></div>
                                     </div>
                                     <div className="thumb" data-mask-src="/assets/img/normal/why-thumb-mask10-1.png">
-                                        <img src="/assets/img/normal/why-choose-section.jpg" alt="Student holding books" />
+                                        <img src="/assets/Why-choose-section.jpeg" alt="Student holding books" />
                                     </div>
                                     <div className="why-info-card11-1 jump">
+                                        {/* TODO: confirm replacement stat before changing — candidate is "200+ Partner Schools" but confirm this doesn't duplicate Section 4's stat awkwardly, or remove the badge entirely. */}
                                         <img src="/assets/img/hero/hero_thumb-info3_1.png" alt="img" />
                                     </div>
                                     <div className="why-info-card11-2 jump-reverse">
+                                        {/* TODO: replace with a real scheduled session snippet (e.g. "TEFL Foundations — Live Q&A, Today at 6:00 PM") once a real session exists, or remove this widget entirely if no live sessions are scheduled yet. */}
                                         <img src="/assets/img/hero/hero_thumb-info11_2.png" alt="img" />
                                     </div>
                                 </div>
@@ -769,10 +722,10 @@ export default function Home() {
                         <div className="col-xl-5">
                             <div className="title-area mb-50">
                                 <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Why Choose World Teachers Academy</span>
-                                <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Achieve Your Dreams With Expert Online Programs</span></h2>
-                                <p className="th_fade_anim">Education and skill development focus on equipping individuals with the knowledge, abilities, and practical experience needed to thrive in an ever-changing world.</p>
+                                <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Train With People Who Actually Teach</span></h2>
+                                <p className="th_fade_anim">Every course here is built by educators who&apos;ve genuinely stood in front of a classroom — not a generic curriculum written by people who&apos;ve never taught. That&apos;s the difference between a certificate and real preparation.</p>
                                 <div className="btn-wrap mt-40 th_fade_anim">
-                                    <a href="about.html" className="th-btn">GET STARTED
+                                    <a href="about.html" className="th-btn">Get Started
                                         <svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
                                         </svg>
@@ -796,21 +749,21 @@ export default function Home() {
                                 <img src="/assets/img/icon/why-card-icon10-2.svg" alt="img" />
                             </div>
                             <h3 className="box-title">Certified Trainers</h3>
-                            <p className="box-text">Learn from educators who've taught in real classrooms, not just online.</p>
+                            <p className="box-text">Learn from educators who&apos;ve taught in real classrooms, not just online.</p>
                         </div>
                         <div className="why-card10 th_fade_anim">
                             <div className="box-icon">
                                 <img src="/assets/img/icon/why-card-icon10-3.svg" alt="img" />
                             </div>
                             <h3 className="box-title">Direct Job Access</h3>
-                            <p className="box-text">Finish a course and browse matching job openings immediately.</p>
+                            <p className="box-text">Finish your certification and go straight to real job listings — no separate site, no waiting.</p>
                         </div>
                         <div className="why-card10 th_fade_anim">
                             <div className="why-card-bg"><img src="/assets/img/normal/support-card-image.jpg" alt="Supported student" /></div>
                             <div className="box-icon">
                                 <img src="/assets/img/icon/why-card-icon10-4.svg" alt="img" />
                             </div>
-                            <h3 className="box-title">Support That Doesn't Disappear</h3>
+                            <h3 className="box-title">Support That Doesn&apos;t Disappear</h3>
                             <p className="box-text">Real help before, during, and after certification.</p>
                         </div>
                     </div>
@@ -826,7 +779,7 @@ export default function Home() {
                             <div className="col-xxl-6 col-lg-7">
                                 <div className="title-area text-center">
                                     <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Our Teachers</span>
-                                    <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Learn From Educators Who've Actually Done the Job</span></h2>
+                                    <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Learn From Educators Who&apos;ve Actually Done the Job</span></h2>
                                 </div>
                             </div>
                         </div>
@@ -967,7 +920,7 @@ export default function Home() {
                                 <p className="th_fade_anim">Browse verified teaching positions across multiple countries — updated regularly, with direct application links.</p>
                             </div>
                             <div className="btn-wrap th_fade_anim">
-                                <a href="/job-portal" className="th-btn">BROWSE OPEN POSITIONS
+                                <a href="/job-portal" className="th-btn">Browse Open Positions
                                     <svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
                                     </svg>
@@ -990,6 +943,7 @@ export default function Home() {
                         <div className="row justify-content-center">
                             <div className="col-xl-7 col-lg-8">
                                 <div className="title-area text-center mb-0">
+                                    {/* TODO: confirm this 30%-off-first-100-teachers promotion is a real, currently-live offer with an actually-enforced 100-teacher cap before publishing this headline. A scarcity claim that isn't real is the kind of thing that damages trust if a customer notices later — do not apply this copy until I explicitly confirm the offer is real. */}
                                     <h2 className="sec-title text-white th-text-perspective"><span className="text-theme2">30%</span> Off Certification for Our First 100 Teachers</h2>
                                     <p className="fw-semibold text-white th_fade_anim mb-0 mt-30">Get certified and get matched with real teaching opportunities — join early and lock in founder pricing.</p>
                                     <div className="btn-wrap mt-40 th_fade_anim justify-content-center">
