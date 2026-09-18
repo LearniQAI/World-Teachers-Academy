@@ -1,3 +1,6 @@
+import VideoTestimonials from "@/components/home/VideoTestimonials";
+import { realCourses } from "@/lib/courses-catalog";
+
 export default function Home() {
   return (
     <>
@@ -15,7 +18,7 @@ export default function Home() {
                                     </div>
                                     <div className="about-tag">
                                         <div className="about-experience-tag">
-                                            <span className="circle-title-anime">Your Way to Learn in the Digital World. Reimagining Education</span>
+                                            <span className="circle-title-anime">TRAIN. CERTIFY. TEACH ANYWHERE IN THE WORLD.BUILT BY TEACHERS, FOR TEACHERS, WORLDWIDE</span>
                                         </div>
                                     </div>
                                     <div className="hero-info-chart jump-reverse ">
@@ -369,278 +372,61 @@ export default function Home() {
                             <div className="title-area text-center">
                                 <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Our Courses</span>
                                 <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Our Featured Courses</span></h2>
-                                {/* TODO: course cards need real data — course name, real price, real hours/access period, and instructor name only if I confirm crediting one (e.g. Naomi Venter) — do NOT re-add star ratings or review counts unless there are genuine reviews to back them. */}
+                                {/* Course images/titles now come from lib/courses-catalog.ts (the 5 real
+                                    courses). Still need real data — price, hours/access period, and
+                                    instructor name only if crediting one is confirmed — do NOT re-add star
+                                    ratings or review counts unless there are genuine reviews to back them. */}
                             </div>
                         </div>
                     </div>
                     <div className="slider-area">
                         <div className="swiper th-slider course-slider11 has-shadow" id="CourseSlider11" data-slider-options='{"autoHeight": "true","breakpoints":{"0":{"slidesPerView":1},"576":{"slidesPerView":"1"},"768":{"slidesPerView":"2"},"992":{"slidesPerView":"2"},"1200":{"slidesPerView":"3"}}}'>
                             <div className="swiper-wrapper">
-                                
-                                <div className="swiper-slide th_fade_anim" data-delay=".3">
-                                    <div className="course-card">
-                                        <div className="box-img">
-                                            <a href="blog-details.html"><img src="/assets/img/course/course1-1.jpg" alt="Course Image" /></a>
-                                            <span className="box-price">[Price TBD]</span>
-                                        </div>
-                                        <h3 className="box-title"><a href="course-details.html">TEFL Certificate — 120 Hour</a></h3>
-                                        {/* Star rating and review count withheld until genuine reviews exist. */}
-                                        <div className="box-content">
-                                            <div className="course-info">
-                                                <div className="box-icon">
-                                                    <i className="fal fa-file-lines"></i>
+                                {realCourses.map((course, i) => (
+                                    <div className="swiper-slide th_fade_anim" data-delay={[".3", ".5", ".7", ".3", ".5"][i]} key={course.slug}>
+                                        <div className="course-card">
+                                            <div className="box-img">
+                                                <a href="/contact"><img src={course.image} alt={course.title} /></a>
+                                                <span className="box-price">[Price TBD]</span>
+                                            </div>
+                                            <h3 className="box-title"><a href="/contact">{course.title}</a></h3>
+                                            {/* Star rating and review count withheld until genuine reviews exist. */}
+                                            <div className="box-content">
+                                                <div className="course-info">
+                                                    <div className="box-icon">
+                                                        <i className="fal fa-file-lines"></i>
+                                                    </div>
+                                                    <div className="course-info-details">
+                                                        <span className="course-info-title">Lessons:</span>
+                                                        <h4 className="course-info-text">50+ Lessons</h4>
+                                                    </div>
                                                 </div>
-                                                <div className="course-info-details">
-                                                    <span className="course-info-title">Lessons:</span>
-                                                    <h4 className="course-info-text">50+ Lessons</h4>
+                                                <div className="course-info">
+                                                    <div className="box-icon">
+                                                        <i className="fal fa-users"></i>
+                                                    </div>
+                                                    <div className="course-info-details">
+                                                        <span className="course-info-title">Students:</span>
+                                                        <h4 className="course-info-text">160+ Students</h4>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div className="course-info">
-                                                <div className="box-icon">
-                                                    <i className="fal fa-users"></i>
+                                            <div className="btn-wrap">
+                                                <div className="meta-box">
+                                                    <div className="meta-thumb">
+                                                        <img src="/assets/img/course/course-thumb1-1.png" alt="avater" />
+                                                    </div>
+                                                    <div className="media-body">
+                                                        <h5 className="box-name"><a href="/team">[Instructor TBD]</a></h5>
+                                                    </div>
                                                 </div>
-                                                <div className="course-info-details">
-                                                    <span className="course-info-title">Students:</span>
-                                                    <h4 className="course-info-text">160+ Students</h4>
-                                                </div>
+                                                <a href="/contact" className="th-btn btn-sm style-border2">VIEW DETAILS<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
+                                                    </svg></a>
                                             </div>
-                                        </div>
-                                        <div className="btn-wrap">
-                                            <div className="meta-box">
-                                                <div className="meta-thumb">
-                                                    <img src="/assets/img/course/course-thumb1-1.png" alt="avater" />
-                                                </div>
-                                                <div className="media-body">
-                                                    <h5 className="box-name"><a href="team.html">[Instructor TBD]</a></h5>
-                                                </div>
-                                            </div>
-                                            <a href="course-details.html" className="th-btn btn-sm style-border2">VIEW DETAILS<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
-                                                </svg></a>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div className="swiper-slide th_fade_anim" data-delay=".5">
-                                    <div className="course-card">
-                                        <div className="box-img">
-                                            <a href="blog-details.html"><img src="/assets/img/course/course1-2.jpg" alt="Course Image" /></a>
-                                            <span className="box-price">[Price TBD]</span>
-                                        </div>
-                                        <h3 className="box-title"><a href="course-details.html">Classroom Management Essentials</a></h3>
-                                        {/* Star rating and review count withheld until genuine reviews exist. */}
-                                        <div className="box-content">
-                                            <div className="course-info">
-                                                <div className="box-icon">
-                                                    <i className="fal fa-file-lines"></i>
-                                                </div>
-                                                <div className="course-info-details">
-                                                    <span className="course-info-title">Lessons:</span>
-                                                    <h4 className="course-info-text">50+ Lessons</h4>
-                                                </div>
-                                            </div>
-                                            <div className="course-info">
-                                                <div className="box-icon">
-                                                    <i className="fal fa-users"></i>
-                                                </div>
-                                                <div className="course-info-details">
-                                                    <span className="course-info-title">Students:</span>
-                                                    <h4 className="course-info-text">160+ Students</h4>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="btn-wrap">
-                                            <div className="meta-box">
-                                                <div className="meta-thumb">
-                                                    <img src="/assets/img/course/course-thumb1-1.png" alt="avater" />
-                                                </div>
-                                                <div className="media-body">
-                                                    <h5 className="box-name"><a href="team.html">[Instructor TBD]</a></h5>
-                                                </div>
-                                            </div>
-                                            <a href="course-details.html" className="th-btn btn-sm style-border2">VIEW DETAILS<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
-                                                </svg></a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="swiper-slide th_fade_anim" data-delay=".7">
-                                    <div className="course-card">
-                                        <div className="box-img">
-                                            <a href="blog-details.html"><img src="/assets/img/course/course1-3.jpg" alt="Course Image" /></a>
-                                            <span className="box-price">[Price TBD]</span>
-                                        </div>
-                                        <h3 className="box-title"><a href="course-details.html">Curriculum & Lesson Planning</a></h3>
-                                        {/* Star rating and review count withheld until genuine reviews exist. */}
-                                        <div className="box-content">
-                                            <div className="course-info">
-                                                <div className="box-icon">
-                                                    <i className="fal fa-file-lines"></i>
-                                                </div>
-                                                <div className="course-info-details">
-                                                    <span className="course-info-title">Lessons:</span>
-                                                    <h4 className="course-info-text">50+ Lessons</h4>
-                                                </div>
-                                            </div>
-                                            <div className="course-info">
-                                                <div className="box-icon">
-                                                    <i className="fal fa-users"></i>
-                                                </div>
-                                                <div className="course-info-details">
-                                                    <span className="course-info-title">Students:</span>
-                                                    <h4 className="course-info-text">160+ Students</h4>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="btn-wrap">
-                                            <div className="meta-box">
-                                                <div className="meta-thumb">
-                                                    <img src="/assets/img/course/course-thumb1-1.png" alt="avater" />
-                                                </div>
-                                                <div className="media-body">
-                                                    <h5 className="box-name"><a href="team.html">[Instructor TBD]</a></h5>
-                                                </div>
-                                            </div>
-                                            <a href="course-details.html" className="th-btn btn-sm style-border2">VIEW DETAILS<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
-                                                </svg></a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="swiper-slide th_fade_anim" data-delay=".3">
-                                    <div className="course-card">
-                                        <div className="box-img">
-                                            <a href="blog-details.html"><img src="/assets/img/course/course1-4.jpg" alt="Course Image" /></a>
-                                            <span className="box-price">[Price TBD]</span>
-                                        </div>
-                                        <h3 className="box-title"><a href="course-details.html">Special Education Foundations</a></h3>
-                                        {/* Star rating and review count withheld until genuine reviews exist. */}
-                                        <div className="box-content">
-                                            <div className="course-info">
-                                                <div className="box-icon">
-                                                    <i className="fal fa-file-lines"></i>
-                                                </div>
-                                                <div className="course-info-details">
-                                                    <span className="course-info-title">Lessons:</span>
-                                                    <h4 className="course-info-text">50+ Lessons</h4>
-                                                </div>
-                                            </div>
-                                            <div className="course-info">
-                                                <div className="box-icon">
-                                                    <i className="fal fa-users"></i>
-                                                </div>
-                                                <div className="course-info-details">
-                                                    <span className="course-info-title">Students:</span>
-                                                    <h4 className="course-info-text">160+ Students</h4>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="btn-wrap">
-                                            <div className="meta-box">
-                                                <div className="meta-thumb">
-                                                    <img src="/assets/img/course/course-thumb1-1.png" alt="avater" />
-                                                </div>
-                                                <div className="media-body">
-                                                    <h5 className="box-name"><a href="team.html">[Instructor TBD]</a></h5>
-                                                </div>
-                                            </div>
-                                            <a href="course-details.html" className="th-btn btn-sm style-border2">VIEW DETAILS<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
-                                                </svg></a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="swiper-slide th_fade_anim" data-delay=".5">
-                                    <div className="course-card">
-                                        <div className="box-img">
-                                            <a href="blog-details.html"><img src="/assets/img/course/course1-5.jpg" alt="Course Image" /></a>
-                                            <span className="box-price">[Price TBD]</span>
-                                        </div>
-                                        <h3 className="box-title"><a href="course-details.html">TEFL Certificate — 120 Hour</a></h3>
-                                        {/* Star rating and review count withheld until genuine reviews exist. */}
-                                        <div className="box-content">
-                                            <div className="course-info">
-                                                <div className="box-icon">
-                                                    <i className="fal fa-file-lines"></i>
-                                                </div>
-                                                <div className="course-info-details">
-                                                    <span className="course-info-title">Lessons:</span>
-                                                    <h4 className="course-info-text">50+ Lessons</h4>
-                                                </div>
-                                            </div>
-                                            <div className="course-info">
-                                                <div className="box-icon">
-                                                    <i className="fal fa-users"></i>
-                                                </div>
-                                                <div className="course-info-details">
-                                                    <span className="course-info-title">Students:</span>
-                                                    <h4 className="course-info-text">160+ Students</h4>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="btn-wrap">
-                                            <div className="meta-box">
-                                                <div className="meta-thumb">
-                                                    <img src="/assets/img/course/course-thumb1-1.png" alt="avater" />
-                                                </div>
-                                                <div className="media-body">
-                                                    <h5 className="box-name"><a href="team.html">[Instructor TBD]</a></h5>
-                                                </div>
-                                            </div>
-                                            <a href="course-details.html" className="th-btn btn-sm style-border2">VIEW DETAILS<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
-                                                </svg></a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="swiper-slide th_fade_anim" data-delay=".7">
-                                    <div className="course-card">
-                                        <div className="box-img">
-                                            <a href="blog-details.html"><img src="/assets/img/course/course1-6.jpg" alt="Course Image" /></a>
-                                            <span className="box-price">[Price TBD]</span>
-                                        </div>
-                                        <h3 className="box-title"><a href="course-details.html">Classroom Management Essentials</a></h3>
-                                        {/* Star rating and review count withheld until genuine reviews exist. */}
-                                        <div className="box-content">
-                                            <div className="course-info">
-                                                <div className="box-icon">
-                                                    <i className="fal fa-file-lines"></i>
-                                                </div>
-                                                <div className="course-info-details">
-                                                    <span className="course-info-title">Lessons:</span>
-                                                    <h4 className="course-info-text">50+ Lessons</h4>
-                                                </div>
-                                            </div>
-                                            <div className="course-info">
-                                                <div className="box-icon">
-                                                    <i className="fal fa-users"></i>
-                                                </div>
-                                                <div className="course-info-details">
-                                                    <span className="course-info-title">Students:</span>
-                                                    <h4 className="course-info-text">160+ Students</h4>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="btn-wrap">
-                                            <div className="meta-box">
-                                                <div className="meta-thumb">
-                                                    <img src="/assets/img/course/course-thumb1-1.png" alt="avater" />
-                                                </div>
-                                                <div className="media-body">
-                                                    <h5 className="box-name"><a href="team.html">[Instructor TBD]</a></h5>
-                                                </div>
-                                            </div>
-                                            <a href="course-details.html" className="th-btn btn-sm style-border2">VIEW DETAILS<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
-                                                </svg></a>
-                                        </div>
-                                    </div>
-                                </div>
-
+                                ))}
                             </div>
                         </div>
                         <button data-slider-prev="#CourseSlider11" className="slider-arrow style9 slider-prev">
@@ -671,6 +457,8 @@ export default function Home() {
                         <div className="divider"></div>
                         <div className="counter-card">
                             <div className="media-body">
+                                {/* TODO: "85+" predates the real 5-course catalog wired in above and is now
+                                    inconsistent with it — confirm the real course count with the client. */}
                                 <h2 className="box-number text-white"><span className="counter-number">85</span>+</h2>
                                 <p className="box-text">Courses Available</p>
                             </div>
@@ -977,41 +765,7 @@ Video Testimonials Area
                         <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-1.svg" alt="img" />Student Stories</span>
                         <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Don&apos;t Take Our Word For It — Hear From Our Students</span></h2>
                     </div>
-                    <div className="row gy-4 justify-content-center">
-                        <div className="col-md-4">
-                            <div className="video-testi-card th_fade_anim" data-delay=".3">
-                                <img className="img-cover" src="/assets/img/testimonial/testi_6_1.jpg" alt="Student testimonial" />
-                                {/* TODO: replace href with a real student testimonial video URL */}
-                                <a href="#" className="play-btn popup-video"><i className="fas fa-solid fa-play"></i></a>
-                                <div className="video-testi-caption">
-                                    <h4 className="box-name">TEFL Graduate</h4>
-                                    <span className="box-desig">Certified 2026</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-md-4">
-                            <div className="video-testi-card th_fade_anim" data-delay=".5">
-                                <img className="img-cover" src="/assets/img/testimonial/testi_6_2.jpg" alt="Student testimonial" />
-                                {/* TODO: replace href with a real student testimonial video URL */}
-                                <a href="#" className="play-btn popup-video"><i className="fas fa-solid fa-play"></i></a>
-                                <div className="video-testi-caption">
-                                    <h4 className="box-name">Classroom Management Graduate</h4>
-                                    <span className="box-desig">Certified 2026</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-md-4">
-                            <div className="video-testi-card th_fade_anim" data-delay=".7">
-                                <img className="img-cover" src="/assets/img/testimonial/testi_6_3.jpg" alt="Student testimonial" />
-                                {/* TODO: replace href with a real student testimonial video URL */}
-                                <a href="#" className="play-btn popup-video"><i className="fas fa-solid fa-play"></i></a>
-                                <div className="video-testi-caption">
-                                    <h4 className="box-name">Special Education Graduate</h4>
-                                    <span className="box-desig">Certified 2026</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <VideoTestimonials />
                 </div>
             </section>
 
@@ -1164,6 +918,8 @@ Video Testimonials Area
             </section>
 
             
+            {/* News & Blog section — commented out per request (keep markup, don't delete). */}
+            {/*
             <section className="space-bottom overflow-hidden" id="blog-sec">
                 <div className="container">
                     <div className="row justify-content-lg-between justify-content-center align-items-center">
@@ -1244,6 +1000,7 @@ Video Testimonials Area
                     </div>
                 </div>
             </section>
+            */}
 
             {/*==============================
 FAQ Area

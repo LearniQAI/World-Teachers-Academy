@@ -71,12 +71,26 @@
 /* New "student video testimonials" card — not part of the original theme,
    built from the theme's existing .play-btn (centered play button) and
    .img-cover conventions used elsewhere, so it matches the rest of the
-   site's visual language instead of introducing a new style. */
+   site's visual language instead of introducing a new style.
+   4 real YouTube Shorts in a 2x2 grid, so the ratio is a true 9:16 (Shorts'
+   actual shape) rather than the previous generic 4:5 placeholder ratio. */
+.video-testi-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+@media (max-width: 575px) {
+  .video-testi-grid {
+    grid-template-columns: 1fr;
+  }
+}
 .video-testi-card {
   position: relative;
   border-radius: 16px;
   overflow: hidden;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 9 / 16;
 }
 .video-testi-card img {
   width: 100%;

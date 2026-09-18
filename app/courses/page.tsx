@@ -1,33 +1,6 @@
-const courses = [
-  {
-    title: "TEFL Certificate — 120 Hour",
-    desc: "The internationally recognized standard for teaching English abroad.",
-  },
-  {
-    title: "Classroom Management Essentials",
-    desc: "Practical tools for managing behavior and engagement.",
-  },
-  {
-    title: "Curriculum & Lesson Planning",
-    desc: "Design lessons that meet learning outcomes, not just fill time.",
-  },
-  {
-    title: "Special Education Foundations",
-    desc: "Core strategies for inclusive classrooms.",
-  },
-];
+import { realCourses } from "@/lib/courses-catalog";
 
-const courseCards = [
-  { img: "/assets/img/course/course1-1.jpg", instructor: "Michel Shon", delay: ".3" },
-  { img: "/assets/img/course/course1-2.jpg", instructor: "Sarah Lee", delay: ".5" },
-  { img: "/assets/img/course/course1-3.jpg", instructor: "John Doe", delay: ".7" },
-  { img: "/assets/img/course/course1-4.jpg", instructor: "Lisa Wong", delay: ".3" },
-  { img: "/assets/img/course/course1-5.jpg", instructor: "Mark Thompson", delay: ".5" },
-  { img: "/assets/img/course/course1-6.jpg", instructor: "Emily Chen", delay: ".7" },
-  { img: "/assets/img/course/course1-2.jpg", instructor: "Sarah Lee", delay: ".3" },
-  { img: "/assets/img/course/course1-3.jpg", instructor: "John Doe", delay: ".5" },
-  { img: "/assets/img/course/course1-4.jpg", instructor: "Lisa Wong", delay: ".7" },
-];
+const DELAYS = [".3", ".5", ".7", ".3", ".5"];
 
 export default function Courses() {
   return (
@@ -69,75 +42,55 @@ Course Area
             </div>
             <div className="container">
               <div className="th-course-row columns-3">
-                {courseCards.map((card, i) => {
-                  const course = courses[i % courses.length];
-                  // Only the TEFL Certificate card has a real details page built so
-                  // far; the other three course titles still point at the
-                  // unbuilt "/course-details" placeholder.
-                  const detailsHref =
-                    course.title === "TEFL Certificate — 120 Hour"
-                      ? "/courses/tefl-certificate-120-hour"
-                      : "/course-details";
-                  return (
-                    <div className="th-course-single th_fade_anim" data-delay={card.delay} key={i}>
-                      <div className="course-card">
-                        <div className="box-img">
-                          <a href="/blog-details"><img src={card.img} alt="Course Image" /></a>
-                          <span className="box-price">$[TBD]</span>
-                        </div>
-                        <h2 className="box-title"><a href={detailsHref}>{course.title}</a></h2>
-                        <div className="box-rating">
-                          <div className="star-rating" role="img" aria-label="Rated 5.00 out of 5">
-                            <span style={{ width: "100%" }}>Rated <strong className="rating">5.00</strong> out of 5</span>
-                          </div><span className="ms-2">4.9 (10k)</span>
-                        </div>
-                        <p className="box-text">{course.desc}</p>
-                        <div className="box-content">
-                          <div className="course-info">
-                            <div className="box-icon">
-                              <i className="fal fa-file-lines"></i>
-                            </div>
-                            <div className="course-info-details">
-                              <span className="course-info-title">Lessons:</span>
-                              <h3 className="course-info-text">50+ Lessons</h3>
-                            </div>
+                {realCourses.map((course, i) => (
+                  <div className="th-course-single th_fade_anim" data-delay={DELAYS[i]} key={course.slug}>
+                    <div className="course-card">
+                      <div className="box-img">
+                        <a href="/contact"><img src={course.image} alt={course.title} /></a>
+                        <span className="box-price">[Price TBD]</span>
+                      </div>
+                      <h2 className="box-title"><a href="/contact">{course.title}</a></h2>
+                      {/* Star rating and review count withheld until genuine reviews exist. */}
+                      <div className="box-content">
+                        <div className="course-info">
+                          <div className="box-icon">
+                            <i className="fal fa-file-lines"></i>
                           </div>
-                          <div className="course-info">
-                            <div className="box-icon">
-                              <i className="fal fa-users"></i>
-                            </div>
-                            <div className="course-info-details">
-                              <span className="course-info-title">Students:</span>
-                              <h3 className="course-info-text">160+ Students</h3>
-                            </div>
+                          <div className="course-info-details">
+                            <span className="course-info-title">Lessons:</span>
+                            <h3 className="course-info-text">50+ Lessons</h3>
                           </div>
                         </div>
-                        <div className="btn-wrap">
-                          <div className="meta-box">
-                            <div className="meta-thumb">
-                              <img src="/assets/img/course/course-thumb1-1.png" alt="avater" />
-                            </div>
-                            <div className="media-body">
-                              <h3 className="box-name"><a href="/team">{card.instructor}</a></h3>
-                            </div>
+                        <div className="course-info">
+                          <div className="box-icon">
+                            <i className="fal fa-users"></i>
                           </div>
-                          <a href={detailsHref} className="th-btn btn-sm style-border2">VIEW DETAILS<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
-                          </svg></a>
+                          <div className="course-info-details">
+                            <span className="course-info-title">Students:</span>
+                            <h3 className="course-info-text">160+ Students</h3>
+                          </div>
                         </div>
                       </div>
+                      <div className="btn-wrap">
+                        <div className="meta-box">
+                          <div className="meta-thumb">
+                            <img src="/assets/img/course/course-thumb1-1.png" alt="avater" />
+                          </div>
+                          <div className="media-body">
+                            <h3 className="box-name"><a href="/team">[Instructor TBD]</a></h3>
+                          </div>
+                        </div>
+                        <a href="/contact" className="th-btn btn-sm style-border2">VIEW DETAILS<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
+                        </svg></a>
+                      </div>
                     </div>
-                  );
-                })}
+                  </div>
+                ))}
               </div>
-              <div className="th-pagination mt-60 mb-0 text-center">
-                <ul>
-                  <li><a href="/blog"><i className="fal fa-arrow-left me-2"></i>Prev</a></li>
-                  <li><a href="/blog">1</a></li>
-                  <li><a href="/blog">2</a></li>
-                  <li><a href="/blog">Next<i className="fal fa-arrow-right ms-2"></i></a></li>
-                </ul>
-              </div>
+              {/* Pagination removed — all 5 real courses fit on one page. The old
+                  "Prev/1/2/Next" links pointed at /blog and were themselves
+                  placeholder artifacts. */}
             </div>
           </section>
 
