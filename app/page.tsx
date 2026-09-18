@@ -1,4 +1,5 @@
 import VideoTestimonials from "@/components/home/VideoTestimonials";
+import HeroSearchForm from "@/components/home/HeroSearchForm";
 import { realCourses } from "@/lib/courses-catalog";
 
 export default function Home() {
@@ -14,7 +15,7 @@ export default function Home() {
                             <div className="col-lg-5">
                                 <div className="hero-thumb11-1 wow animate__fadeInUp">
                                     <div className="thumb">
-                                        <img src="/assets/hero-teacher1.png" alt="World Teachers Academy student" />
+                                        <img src="/assets/hero-teacher.png" alt="World Teachers Academy student" />
                                     </div>
                                     <div className="about-tag">
                                         <div className="about-experience-tag">
@@ -40,17 +41,7 @@ export default function Home() {
                                         Internationally recognised teaching certifications and a live directory of verified teaching jobs, in one place — so you&apos;re never juggling five different sites to build your career.
                                     </p>
                                     <div className="header-search-form wow animate__fadeInUp" data-wow-delay="0.7s">
-                                        <form className="search-form">
-                                            <div className="form-group">
-                                                <i className="far fa-search"></i>
-                                                <input type="text" placeholder="Search TEFL, TESOL, Classroom Management..." />
-                                            </div>
-                                            <button className="th-btn" type="submit">FIND A COURSE
-                                                <svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
-                                                </svg>
-                                            </button>
-                                        </form>
+                                        <HeroSearchForm />
                                     </div>
                                 </div>
                             </div>
@@ -382,14 +373,23 @@ export default function Home() {
                     <div className="slider-area">
                         <div className="swiper th-slider course-slider11 has-shadow" id="CourseSlider11" data-slider-options='{"autoHeight": "true","breakpoints":{"0":{"slidesPerView":1},"576":{"slidesPerView":"1"},"768":{"slidesPerView":"2"},"992":{"slidesPerView":"2"},"1200":{"slidesPerView":"3"}}}'>
                             <div className="swiper-wrapper">
-                                {realCourses.map((course, i) => (
+                                {realCourses.map((course, i) => {
+                                    // Supply Chain Management has no course-details entry yet
+                                    // (pending confirmation it should exist on the site at all) —
+                                    // linking it to /courses/supply-chain-management would silently
+                                    // fall back to showing the TEFL course's details instead.
+                                    const detailsHref =
+                                        course.slug === "supply-chain-management"
+                                            ? "/contact"
+                                            : `/courses/${course.slug}`;
+                                    return (
                                     <div className="swiper-slide th_fade_anim" data-delay={[".3", ".5", ".7", ".3", ".5"][i]} key={course.slug}>
                                         <div className="course-card">
                                             <div className="box-img">
-                                                <a href="/contact"><img src={course.image} alt={course.title} /></a>
+                                                <a href={detailsHref}><img src={course.image} alt={course.title} /></a>
                                                 <span className="box-price">[Price TBD]</span>
                                             </div>
-                                            <h3 className="box-title"><a href="/contact">{course.title}</a></h3>
+                                            <h3 className="box-title"><a href={detailsHref}>{course.title}</a></h3>
                                             {/* Star rating and review count withheld until genuine reviews exist. */}
                                             <div className="box-content">
                                                 <div className="course-info">
@@ -420,13 +420,14 @@ export default function Home() {
                                                         <h5 className="box-name"><a href="/team">[Instructor TBD]</a></h5>
                                                     </div>
                                                 </div>
-                                                <a href="/contact" className="th-btn btn-sm style-border2">VIEW DETAILS<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <a href={detailsHref} className="th-btn btn-sm style-border2">VIEW DETAILS<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
                                                     </svg></a>
                                             </div>
                                         </div>
                                     </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         </div>
                         <button data-slider-prev="#CourseSlider11" className="slider-arrow style9 slider-prev">

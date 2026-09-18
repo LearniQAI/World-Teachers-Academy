@@ -1,3 +1,5 @@
+import NavSearchForm from "@/components/layout/NavSearchForm";
+
 export default function SideMenu() {
   return (
     <>
@@ -75,10 +77,7 @@ export default function SideMenu() {
     </div>
     <div className="popup-search-box d-none d-lg-block">
         <button className="searchClose"><i className="far fa-times"></i></button>
-        <form action="#">
-            <input type="text" placeholder="What are you looking for?" />
-            <button type="submit"><i className="fal fa-search"></i></button>
-        </form>
+        <NavSearchForm />
     </div>
     </>
   );

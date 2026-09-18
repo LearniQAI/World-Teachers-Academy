@@ -1,8 +1,17 @@
-import { realCourses } from "@/lib/courses-catalog";
+import { searchCourses } from "@/lib/courses-catalog";
+import CourseSearchForm from "@/components/courses/CourseSearchForm";
 
 const DELAYS = [".3", ".5", ".7", ".3", ".5"];
 
-export default function Courses() {
+export default async function Courses({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>;
+}) {
+  const { q } = await searchParams;
+  const query = q ?? "";
+  const courses = searchCourses(query);
+
   return (
     <>
       {/*==============================
@@ -41,15 +50,32 @@ Course Area
               </div>
             </div>
             <div className="container">
+              <CourseSearchForm defaultQuery={query} />
+              {query && (
+                <p className="mb-30">
+                  {courses.length > 0
+                    ? `Showing ${courses.length} result${courses.length === 1 ? "" : "s"} for "${query}"`
+                    : `No courses found for "${query}" — try a different search term.`}
+                </p>
+              )}
               <div className="th-course-row columns-3">
-                {realCourses.map((course, i) => (
+                {courses.map((course, i) => {
+                  // Supply Chain Management has no course-details entry yet
+                  // (pending confirmation it should exist on the site at all) —
+                  // linking it to /courses/supply-chain-management would silently
+                  // fall back to showing the TEFL course's details instead.
+                  const detailsHref =
+                    course.slug === "supply-chain-management"
+                      ? "/contact"
+                      : `/courses/${course.slug}`;
+                  return (
                   <div className="th-course-single th_fade_anim" data-delay={DELAYS[i]} key={course.slug}>
                     <div className="course-card">
                       <div className="box-img">
-                        <a href="/contact"><img src={course.image} alt={course.title} /></a>
+                        <a href={detailsHref}><img src={course.image} alt={course.title} /></a>
                         <span className="box-price">[Price TBD]</span>
                       </div>
-                      <h2 className="box-title"><a href="/contact">{course.title}</a></h2>
+                      <h2 className="box-title"><a href={detailsHref}>{course.title}</a></h2>
                       {/* Star rating and review count withheld until genuine reviews exist. */}
                       <div className="box-content">
                         <div className="course-info">
@@ -80,13 +106,14 @@ Course Area
                             <h3 className="box-name"><a href="/team">[Instructor TBD]</a></h3>
                           </div>
                         </div>
-                        <a href="/contact" className="th-btn btn-sm style-border2">VIEW DETAILS<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <a href={detailsHref} className="th-btn btn-sm style-border2">VIEW DETAILS<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
                         </svg></a>
                       </div>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
               {/* Pagination removed — all 5 real courses fit on one page. The old
                   "Prev/1/2/Next" links pointed at /blog and were themselves

@@ -50,8 +50,8 @@ export interface Course {
 
 export const mockCourses: Course[] = [
   {
-    slug: "tefl-certificate-120-hour",
-    title: "TEFL Certificate — 120 Hour",
+    slug: "tefl-certificate-130-hour",
+    title: "TEFL Certificate — 130 Hour",
     subtitle:
       "The internationally recognized standard for teaching English abroad.",
     image: "/assets/img/course/course-details1.jpg",
@@ -121,6 +121,119 @@ export const mockCourses: Course[] = [
     ],
     certificationText:
       "Graduates receive an internationally recognized TEFL Certificate validating their readiness to teach English abroad, covering both theoretical foundations and supervised practical teaching experience.",
+    reviews: [],
+  },
+  // The three entries below give "Diploma — 320 Hour", "Advanced Diploma —
+  // 395 Hour", and "TEFL Comprehensive — 520 Hours" a working details page
+  // (previously all three fell back to /contact). Per the same rule as the
+  // rest of this codebase, only what's actually known (title, hour count,
+  // slug) is real — price, instructor, duration, level, and curriculum
+  // content are explicit TBD placeholders, not invented specifics. Ratings
+  // are left at 0 rather than the fabricated "4.9 (10k)" style used on the
+  // TEFL entry above, since these have zero real reviews behind them.
+  {
+    slug: "diploma-320-hour",
+    title: "Diploma — 320 Hour",
+    subtitle: "[Course subtitle pending confirmation]",
+    image: "/assets/diploma320.jpeg",
+    rating: 0,
+    reviewCount: "0",
+    price: "[Price TBD]",
+    discountLabel: "",
+    instructor: {
+      name: "[Instructor TBD]",
+      photo: "/assets/img/course/course-thumb1-1.png",
+      bio: "[Instructor bio pending confirmation]",
+      courseCount: "[TBD]",
+      studentCount: "[TBD]",
+    },
+    lessonsCount: "50+",
+    studentsCount: "160+",
+    duration: "[TBD]",
+    level: "[TBD]",
+    language: "English",
+    description: [
+      "[Course description pending confirmation — to be provided for the Diploma — 320 Hour course.]",
+    ],
+    whatYouLearn: ["[Learning outcomes pending confirmation]"],
+    curriculumIntro: "[Curriculum overview pending confirmation]",
+    curriculum: [
+      {
+        title: "[Curriculum pending confirmation]",
+        lessons: [{ title: "[Module details pending confirmation]" }],
+      },
+    ],
+    certificationText: "[Certification details pending confirmation]",
+    reviews: [],
+  },
+  {
+    slug: "advanced-diploma-395-hour",
+    title: "Advanced Diploma — 395 Hour",
+    subtitle: "[Course subtitle pending confirmation]",
+    image: "/assets/adv-diploma%20395%20hours.jpeg",
+    rating: 0,
+    reviewCount: "0",
+    price: "[Price TBD]",
+    discountLabel: "",
+    instructor: {
+      name: "[Instructor TBD]",
+      photo: "/assets/img/course/course-thumb1-1.png",
+      bio: "[Instructor bio pending confirmation]",
+      courseCount: "[TBD]",
+      studentCount: "[TBD]",
+    },
+    lessonsCount: "50+",
+    studentsCount: "160+",
+    duration: "[TBD]",
+    level: "[TBD]",
+    language: "English",
+    description: [
+      "[Course description pending confirmation — to be provided for the Advanced Diploma — 395 Hour course.]",
+    ],
+    whatYouLearn: ["[Learning outcomes pending confirmation]"],
+    curriculumIntro: "[Curriculum overview pending confirmation]",
+    curriculum: [
+      {
+        title: "[Curriculum pending confirmation]",
+        lessons: [{ title: "[Module details pending confirmation]" }],
+      },
+    ],
+    certificationText: "[Certification details pending confirmation]",
+    reviews: [],
+  },
+  {
+    slug: "tefl-comprehensive-520-hour",
+    title: "TEFL Comprehensive — 520 Hours",
+    subtitle: "[Course subtitle pending confirmation]",
+    image: "/assets/520%20hours.jpeg",
+    rating: 0,
+    reviewCount: "0",
+    price: "[Price TBD]",
+    discountLabel: "",
+    instructor: {
+      name: "[Instructor TBD]",
+      photo: "/assets/img/course/course-thumb1-1.png",
+      bio: "[Instructor bio pending confirmation]",
+      courseCount: "[TBD]",
+      studentCount: "[TBD]",
+    },
+    lessonsCount: "50+",
+    studentsCount: "160+",
+    duration: "[TBD]",
+    level: "[TBD]",
+    language: "English",
+    description: [
+      "[Course description pending confirmation — to be provided for the TEFL Comprehensive — 520 Hours course.]",
+    ],
+    whatYouLearn: ["[Learning outcomes pending confirmation]"],
+    curriculumIntro: "[Curriculum overview pending confirmation]",
+    curriculum: [
+      {
+        title: "[Curriculum pending confirmation]",
+        lessons: [{ title: "[Module details pending confirmation]" }],
+      },
+    ],
+    certificationText: "[Certification details pending confirmation]",
     reviews: [],
   },
 ];

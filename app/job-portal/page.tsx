@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { getDescriptionSnippet } from "@/lib/html-text";
 
 export interface Job {
   id: string;
   title: string;
+  description: string | null;
   company_name: string | null;
   country: string; // ISO country code, e.g. "ZA"
   city: string | null;
@@ -425,6 +427,7 @@ function FilterControls({
 function JobRow({ job, onApply }: { job: Job; onApply: () => void }) {
   const salary = formatSalary(job);
   const posted = formatRelativeDate(job.posted_at);
+  const snippet = getDescriptionSnippet(job.description);
 
   return (
     <div
@@ -452,6 +455,11 @@ function JobRow({ job, onApply }: { job: Job; onApply: () => void }) {
           </span>
           {posted && <span>{posted}</span>}
         </div>
+        {snippet && (
+          <p style={{ fontSize: "13px", color: PAPER_DIM, margin: "6px 0 0", lineHeight: 1.4 }}>
+            {snippet}
+          </p>
+        )}
       </div>
 
       <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>

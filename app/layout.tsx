@@ -13,9 +13,14 @@ export const metadata: Metadata = {
   description:
     "World Teachers Academy helps educators get internationally recognized teaching certifications and connects them with verified teaching jobs worldwide.",
   icons: {
-    icon: [{ url: "/assets/img/world-teachers-logo.jpeg", type: "image/jpeg" }],
-    apple: [{ url: "/assets/img/world-teachers-logo.jpeg" }],
+    icon: [
+      { url: "/assets/favicons/favicon.svg", type: "image/svg+xml" },
+      { url: "/assets/favicons/favicon-96x96.png", type: "image/png", sizes: "96x96" },
+    ],
+    shortcut: [{ url: "/assets/favicons/favicon.ico" }],
+    apple: [{ url: "/assets/favicons/apple-touch-icon.png" }],
   },
+  manifest: "/assets/favicons/site.webmanifest",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -24,7 +29,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <meta name="theme-color" content="#ffffff" />
         <meta name="msapplication-TileColor" content="#ffffff" />
-        <meta name="msapplication-TileImage" content="/assets/img/world-teachers-logo.jpeg" />
+        <meta name="msapplication-TileImage" content="/assets/favicons/web-app-manifest-512x512.png" />
         {/* Google Fonts */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
