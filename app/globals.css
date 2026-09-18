@@ -14,6 +14,13 @@
   padding-top: 30px !important;
 }
 
+/* The three about-info-wrap11 stat cards have varying copy lengths, so
+   without an explicit stretch the row's flex items each size to their own
+   content and the tallest card's text pushes it taller than its siblings. */
+.about-info-wrap11 {
+  width: 100%;
+}
+
 /* The theme's hero-thumb11-1 has no width/height/object-fit rules at all —
    the original template image was pre-cropped by the designer to exactly
    the right proportions, so an <img> with no sizing "just worked". Our
@@ -28,7 +35,7 @@
 .hero-11 .hero-inner .hero-thumb11-1 .thumb {
   width: 100%;
   aspect-ratio: 3 / 4;
-  transform: scale(1.25);
+  transform: scale(1.1);
   transform-origin: center;
   filter: drop-shadow(0 20px 35px rgba(15, 23, 42, 0.3));
 }
@@ -47,8 +54,8 @@
    tracks the image at any viewport width. !important is needed to beat the
    theme's own breakpoint-specific `left` overrides. */
 .hero-11 .hero-inner .hero-thumb11-1 .about-tag {
-  left: 13% !important;
-  top: -8% !important;
+  left: 17% !important;
+  top: -7% !important;
 }
 
 /* The homepage trust-strip stat cards reuse the theme's .counter-card

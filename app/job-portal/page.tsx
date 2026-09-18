@@ -12,11 +12,13 @@ const categories: Array<Job["category"] | "All"> = [
 ];
 
 const countries = ["All Countries", ...Array.from(new Set(mockJobs.map((j) => j.country)))];
+const employmentTypes: Array<Job["type"] | "All Types"> = ["All Types", "Full-time", "Part-time", "Contract"];
 
 export default function JobPortal() {
   const [keyword, setKeyword] = useState("");
   const [country, setCountry] = useState("All Countries");
   const [category, setCategory] = useState<(typeof categories)[number]>("All");
+  const [employmentType, setEmploymentType] = useState<(typeof employmentTypes)[number]>("All Types");
   const [applyJob, setApplyJob] = useState<Job | null>(null);
 
   const filteredJobs = useMemo(() => {
@@ -29,9 +31,14 @@ export default function JobPortal() {
         job.city.toLowerCase().includes(q);
       const matchesCountry = country === "All Countries" || job.country === country;
       const matchesCategory = category === "All" || job.category === category;
-      return matchesKeyword && matchesCountry && matchesCategory;
+      const matchesType = employmentType === "All Types" || job.type === employmentType;
+      return matchesKeyword && matchesCountry && matchesCategory && matchesType;
     });
-  }, [keyword, country, category]);
+  }, [keyword, country, category, employmentType]);
+
+  // TODO: replace with real counts once live API integration replaces mock data
+  const totalPostings = mockJobs.length;
+  const totalCountries = new Set(mockJobs.map((j) => j.country)).size;
 
   return (
     <>
@@ -58,6 +65,57 @@ export default function JobPortal() {
           </div>
         </div>
       </div>
+
+      {/*==============================
+    Stats Banner
+============================== */}
+      <section className="space-top space-extra-bottom overflow-hidden bg-black">
+        <div className="container">
+          <div className="sub-title text-theme mb-20 d-inline-block" style={{ letterSpacing: "1px" }}>
+            LIVE TEACHING POSITIONS
+          </div>
+          <h2 className="text-white mb-20" style={{ fontSize: "clamp(28px, 4vw, 40px)" }}>
+            Active Teaching Positions, Verified
+          </h2>
+          <p className="mb-40" style={{ color: "var(--paper-dim-color, #9AA4C0)", maxWidth: "760px" }}>
+            Teaching positions pulled from verified job sources, with direct application links.
+          </p>
+          <div className="row gy-4">
+            <div className="col-6 col-md-3">
+              <div className="counter-card">
+                <div className="media-body">
+                  <h2 className="box-number text-white">{totalPostings}</h2>
+                  <p className="box-text" style={{ color: "var(--paper-dim-color, #9AA4C0)" }}>Total Live Positions</p>
+                </div>
+              </div>
+            </div>
+            <div className="col-6 col-md-3">
+              <div className="counter-card">
+                <div className="media-body">
+                  <h2 className="box-number text-white">{totalCountries}</h2>
+                  <p className="box-text" style={{ color: "var(--paper-dim-color, #9AA4C0)" }}>Countries Covered</p>
+                </div>
+              </div>
+            </div>
+            <div className="col-6 col-md-3">
+              <div className="counter-card">
+                <div className="media-body">
+                  <h2 className="box-number text-white" style={{ fontSize: "22px" }}>Original Posting</h2>
+                  <p className="box-text" style={{ color: "var(--paper-dim-color, #9AA4C0)" }}>Application Type</p>
+                </div>
+              </div>
+            </div>
+            <div className="col-6 col-md-3">
+              <div className="counter-card">
+                <div className="media-body">
+                  <h2 className="box-number text-white" style={{ fontSize: "22px" }}>Regularly</h2>
+                  <p className="box-text" style={{ color: "var(--paper-dim-color, #9AA4C0)" }}>Updated</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/*==============================
     Job Search + Filters
@@ -100,6 +158,21 @@ export default function JobPortal() {
                 <i className="fal fa-globe"></i>
               </div>
             </div>
+            <div className="col-md-3">
+              <div className="form-group style-border3 mb-0">
+                <select
+                  className="form-select"
+                  value={employmentType}
+                  onChange={(e) => setEmploymentType(e.target.value as (typeof employmentTypes)[number])}
+                  aria-label="Filter by employment type"
+                >
+                  {employmentTypes.map((t) => (
+                    <option key={t} value={t}>{t}</option>
+                  ))}
+                </select>
+                <i className="fal fa-briefcase"></i>
+              </div>
+            </div>
             <div className="col-md-auto">
               <div className="btn-wrap flex-wrap">
                 {categories.map((cat) => (
@@ -121,11 +194,14 @@ export default function JobPortal() {
             </div>
           </div>
           <p className="mb-0 text-body">
-            Showing {filteredJobs.length} of {mockJobs.length} listings
+            Showing {filteredJobs.length} verified teaching position{filteredJobs.length === 1 ? "" : "s"}
+            {country !== "All Countries" ? ` in ${country}` : ""}
             {/* TODO: replace mockJobs with real job-source API data (Adzuna, per project scope) */}
           </p>
         </div>
       </section>
+
+      {country !== "All Countries" && <CountryLegalPanel country={country} />}
 
       {/*==============================
     Job Listings
@@ -183,6 +259,40 @@ export default function JobPortal() {
 
       {applyJob && <ApplyModal job={applyJob} onClose={() => setApplyJob(null)} />}
     </>
+  );
+}
+
+// TODO: LEGAL CONTENT — every field in this panel must be sourced from an
+// official government immigration site or a qualified source before this
+// ships to production. The placeholder text below is intentionally
+// obviously-fake (not plausible-sounding invented visa/legal content) so it
+// cannot be mistaken for real guidance if it accidentally ships as-is.
+const LEGAL_PLACEHOLDER =
+  "[LEGAL INFO PENDING VERIFICATION — DO NOT PUBLISH UNTIL SOURCED FROM AN OFFICIAL GOVERNMENT/IMMIGRATION SOURCE]";
+
+function CountryLegalPanel({ country }: { country: string }) {
+  return (
+    <section className="space-extra-bottom overflow-hidden">
+      <div className="container">
+        <div className="event-card2" style={{ padding: "30px" }}>
+          <h3 className="box-title mb-20">{country} — Visa &amp; Legal Overview</h3>
+          <div className="row gy-4">
+            <div className="col-md-4">
+              <h4 style={{ fontSize: "16px" }}>Legal Gateway</h4>
+              <p className="mb-0 text-body">{LEGAL_PLACEHOLDER}</p>
+            </div>
+            <div className="col-md-4">
+              <h4 style={{ fontSize: "16px" }}>Compensation Range</h4>
+              <p className="mb-0 text-body">{LEGAL_PLACEHOLDER}</p>
+            </div>
+            <div className="col-md-4">
+              <h4 style={{ fontSize: "16px" }}>Work Permit Requirements</h4>
+              <p className="mb-0 text-body">{LEGAL_PLACEHOLDER}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 

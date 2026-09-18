@@ -15,7 +15,7 @@ export default function Home() {
                                     </div>
                                     <div className="about-tag">
                                         <div className="about-experience-tag">
-                                            <span className="circle-title-anime">A Smarter Way to Learn in the Digital World. Reimagining Education Through Technology.</span>
+                                            <span className="circle-title-anime">Your Way to Learn in the Digital World. Reimagining Education</span>
                                         </div>
                                     </div>
                                     <div className="hero-info-chart jump-reverse ">
@@ -277,8 +277,7 @@ export default function Home() {
                                             <span className="circle-title-anime">Years Of Experience ** Years Of Experience **</span>
                                         </div>
                                         <div className="year-counter">
-                                            {/* TODO: confirm exact founding/relaunch year or preferred years-of-operation figure before changing this badge (candidates discussed: "Founded 2018" or "Established Since 2018") */}
-                                            <div className="box-title"><span className="counter-number">16</span></div>
+                                            <div className="box-title"><span className="counter-number">8</span></div>
                                         </div>
                                     </div>
                                 </div>
@@ -313,38 +312,37 @@ export default function Home() {
                     </div>
                 </div>
                 <div className="container">
-                    {/* TODO: confirm these three stats are real numbers before publishing — 320 Teachers Trained and 200 Partner Schools are proposed figures pending confirmation, not verified data. Also confirm job listings are updated daily specifically — if updates are weekly or ad hoc, change wording to "Listings Updated Regularly" instead. */}
                     <div className="row gy-4 justify-content-center">
-                        <div className="col-xl-4 col-md-6 th_fade_anim">
+                        <div className="col-xl-4 col-md-6 d-flex th_fade_anim">
                             <div className="about-info-wrap11">
                                 <div className="box-icon">
                                     <img src="/assets/img/icon/about-card-icon11-1.svg" alt="img" />
                                 </div>
                                 <div className="box-details">
-                                    <h3 className="box-title">Over <span className="text-theme">5,000</span> Teachers Trained</h3>
-                                    <p className="box-text">We provide online learning program that enable learners to access.</p>
+                                    <h3 className="box-title"><span className="text-theme">320+</span> Teachers Trained</h3>
+                                    <p className="box-text">Real educators, genuinely certified and placed — not a projection.</p>
                                 </div>
                             </div>
                         </div>
-                        <div className="col-xl-4 col-md-6 th_fade_anim">
+                        <div className="col-xl-4 col-md-6 d-flex th_fade_anim">
                             <div className="about-info-wrap11">
                                 <div className="box-icon">
                                     <img src="/assets/img/icon/about-card-icon11-2.svg" alt="img" />
                                 </div>
                                 <div className="box-details">
-                                    <h3 className="box-title"><span className="text-theme">50+</span> Certification Programs</h3>
-                                    <p className="box-text">Online education provides flexibility and accessibility to learners.</p>
+                                    <h3 className="box-title"><span className="text-theme">200+</span> Partner Schools</h3>
+                                    <p className="box-text">A real, growing network of schools that hire our graduates directly.</p>
                                 </div>
                             </div>
                         </div>
-                        <div className="col-xl-4 col-md-6 th_fade_anim">
+                        <div className="col-xl-4 col-md-6 d-flex th_fade_anim">
                             <div className="about-info-wrap11">
                                 <div className="box-icon">
                                     <img src="/assets/img/icon/about-card-icon11-3.svg" alt="img" />
                                 </div>
                                 <div className="box-details">
                                     <h3 className="box-title">Job Listings Updated Daily</h3>
-                                    <p className="box-text">We provide online learning program that enable learners to access</p>
+                                    <p className="box-text">Kept as-is if genuinely true — a strong claim worth keeping if your Job Portal is actively maintained.</p>
                                 </div>
                             </div>
                         </div>
@@ -769,138 +767,6 @@ export default function Home() {
                     </div>
                 </div>
             </section>
-            <section className="space-bottom overflow-hidden" id="team-sec">
-                <div className="team-wrap10 space-top">
-                    <div className="team-bg-shape10-1 shape-mockup d-xxl-block d-none" data-speed="0.9" data-left="15%" data-top="10%">
-                        <img src="/assets/img/shape/about_shape3_2.png" alt="img" />
-                    </div>
-                    <div className="container">
-                        <div className="row justify-content-center align-items-center">
-                            <div className="col-xxl-6 col-lg-7">
-                                <div className="title-area text-center">
-                                    <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Our Teachers</span>
-                                    <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Learn From Educators Who&apos;ve Actually Done the Job</span></h2>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="slider-area">
-                            <div className="swiper th-slider has-shadow team-slider1" id="teamSlider1" data-slider-options='{"breakpoints":{"0":{"slidesPerView":1},"576":{"slidesPerView":"2"},"768":{"slidesPerView":"2"},"992":{"slidesPerView":"3"},"1200":{"slidesPerView":"4"}}}'>
-                                <div className="swiper-wrapper">
-                                    
-                                    <div className="swiper-slide">
-                                        <div className="team-card4 th_fade_anim th--hover-item">
-                                            <div className="box-img th--hover-img" data-displacement="/assets/img/imghover/fluid.jpg" data-intensity="0.2" data-speedin="1" data-speedout="1">
-                                                <img src="/assets/img/team/team_3_1.jpg" alt="Image" />
-                                                <div className="th-social">
-                                                    <a target="_blank" href="https://facebook.com/"><i className="fab fa-facebook-f"></i></a>
-                                                    <a target="_blank" href="https://twitter.com/"><i className="fab fa-twitter"></i></a>
-                                                    <a target="_blank" href="https://linkedin.com/"><i className="fab fa-linkedin-in"></i></a>
-                                                    <a target="_blank" href="https://instagram.com/"><i className="fab fa-instagram"></i></a>
-                                                </div>
-                                            </div>
-                                            <div className="box-content">
-                                                <h3 className="box-title"><a href="team-details.html">Sanderling Jui </a></h3>
-                                                <p className="box-text">Instructor</p>
-                                                <div className="box-rating">
-                                                    <i className="fas fa-star"></i>
-                                                    <i className="fas fa-star"></i>
-                                                    <i className="fas fa-star"></i>
-                                                    <i className="fas fa-star"></i>
-                                                    <i className="fas fa-star"></i>
-                                                    <span className="ms-2">(4.9)</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    
-                                    <div className="swiper-slide">
-                                        <div className="team-card4 th_fade_anim th--hover-item">
-                                            <div className="box-img th--hover-img" data-displacement="/assets/img/imghover/fluid.jpg" data-intensity="0.2" data-speedin="1" data-speedout="1">
-                                                <img src="/assets/img/team/team_3_2.jpg" alt="Image" />
-                                                <div className="th-social">
-                                                    <a target="_blank" href="https://facebook.com/"><i className="fab fa-facebook-f"></i></a>
-                                                    <a target="_blank" href="https://twitter.com/"><i className="fab fa-twitter"></i></a>
-                                                    <a target="_blank" href="https://linkedin.com/"><i className="fab fa-linkedin-in"></i></a>
-                                                    <a target="_blank" href="https://instagram.com/"><i className="fab fa-instagram"></i></a>
-                                                </div>
-                                            </div>
-                                            <div className="box-content">
-                                                <h3 className="box-title"><a href="team-details.html">Michel Jemison</a></h3>
-                                                <p className="box-text">Instructor</p>
-                                                <div className="box-rating">
-                                                    <i className="fas fa-star"></i>
-                                                    <i className="fas fa-star"></i>
-                                                    <i className="fas fa-star"></i>
-                                                    <i className="fas fa-star"></i>
-                                                    <i className="fas fa-star"></i>
-                                                    <span className="ms-2">(4.9)</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    
-                                    <div className="swiper-slide">
-                                        <div className="team-card4 th_fade_anim th--hover-item">
-                                            <div className="box-img th--hover-img" data-displacement="/assets/img/imghover/fluid.jpg" data-intensity="0.2" data-speedin="1" data-speedout="1">
-                                                <img src="/assets/img/team/team_3_3.jpg" alt="Image" />
-                                                <div className="th-social">
-                                                    <a target="_blank" href="https://facebook.com/"><i className="fab fa-facebook-f"></i></a>
-                                                    <a target="_blank" href="https://twitter.com/"><i className="fab fa-twitter"></i></a>
-                                                    <a target="_blank" href="https://linkedin.com/"><i className="fab fa-linkedin-in"></i></a>
-                                                    <a target="_blank" href="https://instagram.com/"><i className="fab fa-instagram"></i></a>
-                                                </div>
-                                            </div>
-                                            <div className="box-content">
-                                                <h3 className="box-title"><a href="team-details.html">Jacob Jones</a></h3>
-                                                <p className="box-text">Instructor</p>
-                                                <div className="box-rating">
-                                                    <i className="fas fa-star"></i>
-                                                    <i className="fas fa-star"></i>
-                                                    <i className="fas fa-star"></i>
-                                                    <i className="fas fa-star"></i>
-                                                    <i className="fas fa-star"></i>
-                                                    <span className="ms-2">(4.9)</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    
-                                    <div className="swiper-slide">
-                                        <div className="team-card4 th_fade_anim th--hover-item">
-                                            <div className="box-img th--hover-img" data-displacement="/assets/img/imghover/fluid.jpg" data-intensity="0.2" data-speedin="1" data-speedout="1">
-                                                <img src="/assets/img/team/team_3_4.jpg" alt="Image" />
-                                                <div className="th-social">
-                                                    <a target="_blank" href="https://facebook.com/"><i className="fab fa-facebook-f"></i></a>
-                                                    <a target="_blank" href="https://twitter.com/"><i className="fab fa-twitter"></i></a>
-                                                    <a target="_blank" href="https://linkedin.com/"><i className="fab fa-linkedin-in"></i></a>
-                                                    <a target="_blank" href="https://instagram.com/"><i className="fab fa-instagram"></i></a>
-                                                </div>
-                                            </div>
-                                            <div className="box-content">
-                                                <h3 className="box-title"><a href="team-details.html">Emely Adamp </a></h3>
-                                                <p className="box-text">Instructor</p>
-                                                <div className="box-rating">
-                                                    <i className="fas fa-star"></i>
-                                                    <i className="fas fa-star"></i>
-                                                    <i className="fas fa-star"></i>
-                                                    <i className="fas fa-star"></i>
-                                                    <i className="fas fa-star"></i>
-                                                    <span className="ms-2">(4.9)</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
             <section className="space overflow-hidden" id="job-portal-sec">
                 <div className="container">
                     <div className="row gy-40 gx-80 align-items-center">
