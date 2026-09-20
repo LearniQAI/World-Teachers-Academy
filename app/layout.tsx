@@ -8,6 +8,9 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import ThemeScripts from "@/components/layout/ThemeScripts";
 
+// SideMenu (mounted here) reads recent posts from Supabase; refresh every 5 minutes.
+export const revalidate = 300;
+
 export const metadata: Metadata = {
   title: "World Teachers Academy - Get Certified. Get Hired.",
   description:

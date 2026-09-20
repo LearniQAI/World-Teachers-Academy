@@ -96,25 +96,6 @@ export default function Footer() {
                                         <div className="info-box">
                                             <div className="box-icon">
                                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <g clipPath="url(#clip0_466_4186)">
-                                                        <path d="M3.14932 9.95184C2.3593 8.57425 1.97784 7.4494 1.74783 6.30918C1.40765 4.62282 2.18614 2.97551 3.47578 1.9244C4.02084 1.48016 4.64566 1.63194 4.96797 2.21017L5.69562 3.5156C6.27238 4.55031 6.56075 5.06766 6.50355 5.61616C6.44636 6.16466 6.05744 6.61139 5.27961 7.50485L3.14932 9.95184ZM3.14932 9.95184C4.74839 12.7401 7.25783 15.2509 10.0493 16.8518M10.0493 16.8518C11.4269 17.6418 12.5517 18.0233 13.692 18.2533C15.3783 18.5935 17.0256 17.815 18.0767 16.5253C18.521 15.9803 18.3692 15.3555 17.791 15.0332L16.4855 14.3055C15.4508 13.7288 14.9335 13.4404 14.385 13.4976C13.8365 13.5548 13.3897 13.9437 12.4963 14.7215L10.0493 16.8518Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"  />
-                                                        <path d="M11.668 5.69305C12.854 6.1967 13.8045 7.14715 14.3081 8.33317M12.213 1.6665C15.1606 2.51714 17.4839 4.84027 18.3346 7.78786" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"  />
-                                                    </g>
-                                                    <defs>
-                                                        <clipPath id="clip0_466_4186">
-                                                            <rect width="20" height="20" fill="currentColor"  />
-                                                        </clipPath>
-                                                    </defs>
-                                                </svg>
-                                            </div>
-                                            <div className="box-details">
-                                                <p className="box-text"><a href="tel:" className="box-link">[Phone Number]</a></p>
-                                                <p className="box-text"><a href="tel:" className="box-link">[Phone Number]</a></p>
-                                            </div>
-                                        </div>
-                                        <div className="info-box">
-                                            <div className="box-icon">
-                                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M5.83203 7.0835L8.28372 8.533C9.71303 9.37808 10.2844 9.37808 11.7137 8.533L14.1654 7.0835" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"  />
                                                     <path d="M1.68111 11.2295C1.73559 13.7842 1.76283 15.0614 2.70544 16.0077C3.64804 16.9538 4.95991 16.9868 7.58366 17.0527C9.20072 17.0933 10.8019 17.0933 12.419 17.0527C15.0427 16.9868 16.3546 16.9538 17.2972 16.0077C18.2398 15.0614 18.2671 13.7842 18.3215 11.2295C18.3391 10.4081 18.3391 9.59159 18.3215 8.77017C18.2671 6.21555 18.2398 4.93825 17.2972 3.99205C16.3546 3.04586 15.0427 3.0129 12.419 2.94698C10.8019 2.90635 9.20072 2.90635 7.58365 2.94697C4.95991 3.01289 3.64804 3.04585 2.70543 3.99205C1.76282 4.93824 1.73559 6.21555 1.6811 8.77017C1.66359 9.59159 1.66359 10.4081 1.68111 11.2295Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"  />
                                                 </svg>

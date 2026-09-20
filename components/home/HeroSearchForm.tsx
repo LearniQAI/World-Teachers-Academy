@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import CourseSuggestInput from "@/components/search/CourseSuggestInput";
 
 export default function HeroSearchForm() {
   const router = useRouter();
@@ -17,11 +18,10 @@ export default function HeroSearchForm() {
     <form className="search-form" onSubmit={handleSubmit}>
       <div className="form-group">
         <i className="far fa-search"></i>
-        <input
-          type="text"
-          placeholder="Search TEFL, TESOL, Classroom Management..."
+        <CourseSuggestInput
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={setQuery}
+          placeholder="Search TEFL, TESOL, Classroom Management..."
         />
       </div>
       <button className="th-btn" type="submit">

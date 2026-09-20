@@ -1,3 +1,5 @@
+import { countries } from "@/lib/countries-data";
+
 export default function MobileMenu() {
   return (
     <div className="th-menu-wrapper">
@@ -37,7 +39,14 @@ export default function MobileMenu() {
                         <li><a href="/">Home</a></li>
                         <li><a href="/resources">Resources</a></li>
                         <li><a href="/courses">Courses</a></li>
-                        <li><a href="/countries">Countries</a></li>
+                        <li className="menu-item-has-children">
+                            <a href="/countries">Countries</a>
+                            <ul className="sub-menu">
+                                {countries.map((c) => (
+                                    <li key={c.slug}><a href={`/countries/${c.slug}`}>{c.flagEmoji} {c.name}</a></li>
+                                ))}
+                            </ul>
+                        </li>
                         <li><a href="/job-portal">Job Portal</a></li>
                         <li><a href="/blog">Blog</a></li>
                     </ul>

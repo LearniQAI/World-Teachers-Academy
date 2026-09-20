@@ -280,7 +280,7 @@ export default function Home() {
                                             <span className="circle-title-anime">Years Of Experience ** Years Of Experience **</span>
                                         </div>
                                         <div className="year-counter">
-                                            <div className="box-title"><span className="counter-number">8</span></div>
+                                            <div className="box-title"><span className="counter-number">10</span></div>
                                         </div>
                                     </div>
                                 </div>

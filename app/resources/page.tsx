@@ -15,28 +15,11 @@ export default function Resources() {
       {/*==============================
     Breadcumb
 ============================== */}
-      <div className="breadcumb-wrapper " data-bg-src="/assets/img/bg/breadcumb-bg.png">
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-7">
-              <div className="breadcumb-content">
-                <span className="sub-title text-theme"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Resources</span>
-                <h1 className="breadcumb-title">Guides &amp; Resources for Teachers</h1>
-                <p className="breadcumb-text" style={{ maxWidth: 520 }}>Practical guides on application skills — resumes, certifications, documents, visas, and classroom readiness — for anyone preparing to teach abroad.</p>
-                <ul className="breadcumb-menu">
-                  <li><a href="/">Home</a></li>
-                  <li>Resources</li>
-                </ul>
-              </div>
-            </div>
-            <div className="col-lg-5 align-self-end d-lg-block d-none">
-              <div className="breadcumb-thumb">
-                <img src="/assets/img/normal/breadcumb-thumb1-1.png" alt="img" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <img
+        src="/assets/Resources-herosection.jpg"
+        alt="World Teachers Academy Resources"
+        style={{ display: "block", width: "100%", height: "auto" }}
+      />
       {/*==============================
 Blog Area
 ==============================*/}

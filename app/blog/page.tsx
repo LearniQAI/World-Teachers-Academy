@@ -1,62 +1,57 @@
-// Shell only — no real posts exist yet. Replace PLACEHOLDER_POSTS with real
-// content (and link each card to its own post route) once articles are published.
-const PLACEHOLDER_POSTS = [
-  { category: "Teaching Abroad" },
-  { category: "Certification News" },
-  { category: "Community Stories" },
-  { category: "Teaching Abroad" },
-  { category: "Certification News" },
-  { category: "Community Stories" },
-];
+import { getAllPublishedPosts, formatPostDate } from "@/lib/posts-data";
 
-const DELAYS = [".3", ".5", ".7", ".3", ".5", ".7"];
+// Posts come from Supabase; re-check every 5 minutes.
+export const revalidate = 300;
 
-export default function Blog() {
+const DELAYS = [".3", ".5", ".7"];
+
+export default async function Blog() {
+  const posts = await getAllPublishedPosts();
+
   return (
     <>
-      {/*==============================
-    Breadcumb
-============================== */}
-      <div className="breadcumb-wrapper " data-bg-src="/assets/img/bg/breadcumb-bg.png">
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-7">
-              <div className="breadcumb-content">
-                <h1 className="breadcumb-title">Blog</h1>
-                <ul className="breadcumb-menu">
-                  <li><a href="/">Home</a></li>
-                  <li>Blog</li>
-                </ul>
-              </div>
-            </div>
-            <div className="col-lg-5 align-self-end d-lg-block d-none">
-              <div className="breadcumb-thumb">
-                <img src="/assets/img/normal/breadcumb-thumb1-1.png" alt="img" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <img
+        src="/assets/Blog-herosection.jpg"
+        alt="World Teachers Academy Blog"
+        style={{ display: "block", width: "100%", height: "auto" }}
+      />
       {/*==============================
 Blog Area
 ==============================*/}
       <section className="space-top space-extra-bottom" id="blog-sec">
         <div className="container">
-          <div className="row gy-40">
-            {PLACEHOLDER_POSTS.map((post, i) => (
-              <div className="col-lg-4 col-md-6 th_fade_anim" data-delay={DELAYS[i]} key={i}>
-                <div className="blog-card" style={{ padding: "30px", border: "1px solid #E2E5EE", borderRadius: "16px" }}>
-                  <div className="blog-content" style={{ padding: 0 }}>
-                    <div className="blog-meta">
-                      <span>Category: {post.category}</span>
+          {posts.length === 0 ? (
+            <p className="text-center mb-0" style={{ color: "#6B7280" }}>
+              No articles have been published yet — check back soon.
+            </p>
+          ) : (
+            <div className="row gy-40">
+              {posts.map((post, i) => (
+                <div className="col-lg-4 col-md-6 th_fade_anim" data-delay={DELAYS[i % 3]} key={post.id}>
+                  <div className="blog-card" style={{ border: "1px solid #E2E5EE", borderRadius: "16px", overflow: "hidden", height: "100%" }}>
+                    {post.cover_image_url && (
+                      <div className="blog-img">
+                        <a href={`/blog/${post.slug}`}>
+                          <img src={post.cover_image_url} alt={post.title} style={{ width: "100%", height: "auto", display: "block" }} />
+                        </a>
+                      </div>
+                    )}
+                    <div className="blog-content" style={{ padding: "24px 30px 30px" }}>
+                      <div className="blog-meta">
+                        <span>{post.category}</span>
+                        {post.published_at && <span>{formatPostDate(post.published_at)}</span>}
+                      </div>
+                      <h2 className="box-title">
+                        <a href={`/blog/${post.slug}`}>{post.title}</a>
+                      </h2>
+                      {post.excerpt && <p className="blog-text">{post.excerpt}</p>}
+                      <a href={`/blog/${post.slug}`} className="th-btn style4 btn-sm">READ MORE</a>
                     </div>
-                    <h2 className="box-title">Blog post coming soon</h2>
-                    <p className="blog-text">Articles in this category will appear here once they are published.</p>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </>

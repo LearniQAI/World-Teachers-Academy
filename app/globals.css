@@ -252,3 +252,102 @@
   margin-bottom: auto;
   margin-left: calc(-10px - 3%);
 }
+
+/* ---- Country guide cards (/countries) ---- */
+.country-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #e2e5ee;
+  border-radius: 18px;
+  overflow: hidden;
+  color: #0f172a;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px -14px rgba(15, 23, 42, 0.12);
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+}
+.country-card:hover {
+  transform: translateY(-6px);
+  border-color: #cbd2e0;
+  box-shadow: 0 30px 60px -20px rgba(15, 23, 42, 0.28);
+}
+.country-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.country-card__flag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  font-size: 44px;
+  line-height: 1;
+  border-radius: 20px;
+  background: #f4f5f7;
+  border: 1px solid #e2e5ee;
+  box-shadow: none;
+  transition: transform 0.35s ease;
+}
+.country-card:hover .country-card__flag {
+  transform: scale(1.06) rotate(-3deg);
+}
+.country-card__code {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #6b7280;
+  padding: 6px 12px;
+  border: 1px solid #e2e5ee;
+  border-radius: 999px;
+  background: #fff;
+}
+.country-card__name {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 12px;
+  color: #0f172a;
+}
+.country-card__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.country-card__pill {
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+  background: #f1f3f6;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+.country-card__cta {
+  margin-top: auto;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: #f97316;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+  transition: background 0.3s ease;
+}
+.country-card:hover .country-card__cta {
+  background: #ea580c;
+}
+.country-card__cta i {
+  transition: transform 0.3s ease;
+}
+.country-card:hover .country-card__cta i {
+  transform: translateX(6px);
+}

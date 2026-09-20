@@ -121,6 +121,14 @@ export default function JobPortal() {
 
   const [headerHeight, setHeaderHeight] = useState(96);
 
+  // Deep link from the country guides: /job-portal?country=AR preselects the
+  // country filter. Read on mount (not useSearchParams) to keep this page free
+  // of a Suspense boundary.
+  useEffect(() => {
+    const code = new URLSearchParams(window.location.search).get("country");
+    if (code && /^[A-Za-z]{2}$/.test(code)) setCountry(code.toUpperCase());
+  }, []);
+
   // The shared site <Header/> switches to position:fixed after a scroll
   // threshold (vendor `.sticky-wrapper.sticky` behavior in main.js) — this
   // page's own sticky filter bar needs to stick just below it, so it tracks
@@ -199,6 +207,11 @@ export default function JobPortal() {
 
   return (
     <>
+      <img
+        src="/assets/Jobportal%20hero%20section.jpg"
+        alt="World Teachers Academy Job Portal"
+        style={{ display: "block", width: "100%", height: "auto" }}
+      />
       {/*==============================
     Sticky Filter Bar
 ============================== */}
@@ -489,7 +502,7 @@ function JobRow({ job, onApply }: { job: Job; onApply: () => void }) {
           style={{ background: ORANGE, borderColor: ORANGE, whiteSpace: "nowrap" }}
           onClick={onApply}
         >
-          Apply
+          View Job
         </button>
       </div>
     </div>
