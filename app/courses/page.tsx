@@ -17,25 +17,9 @@ export default async function Courses({
       {/*==============================
     Breadcumb
 ============================== */}
-          <div className="breadcumb-wrapper " data-bg-src="/assets/img/bg/breadcumb-bg.png">
-            <div className="container">
-              <div className="row">
-                <div className="col-lg-7">
-                  <div className="breadcumb-content">
-                    <h1 className="breadcumb-title">Courses</h1>
-                    <ul className="breadcumb-menu">
-                      <li><a href="/">Home</a></li>
-                      <li>Courses</li>
-                    </ul>
-                  </div>
-                </div>
-                <div className="col-lg-5 align-self-end d-lg-block d-none">
-                  <div className="breadcumb-thumb">
-                    <img src="/assets/img/normal/breadcumb-thumb1-1.png" alt="img" />
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="courses-hero">
+            <h1 className="visually-hidden">Courses</h1>
+            <img src="/assets/img/bg/courses-hero-1920x400.png" alt="Courses — World Teachers Academy" style={{ display: "block", width: "100%", height: "auto" }} />
           </div>
           {/*==============================
 Course Area

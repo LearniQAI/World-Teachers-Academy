@@ -19,7 +19,9 @@ export default function Header() {
                                     <li><a href="/">Home</a></li>
                                     <li><a href="/resources">Resources</a></li>
                                     <li><a href="/courses">Courses</a></li>
+                                    <li><a href="/countries">Countries</a></li>
                                     <li><a href="/job-portal">Job Portal</a></li>
+                                    <li><a href="/blog">Blog</a></li>
                                 </ul>
                             </nav>
                             <button type="button" className="th-menu-toggle d-block d-lg-none"><i className="fal fa-bars"></i></button>

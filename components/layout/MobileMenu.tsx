@@ -37,7 +37,9 @@ export default function MobileMenu() {
                         <li><a href="/">Home</a></li>
                         <li><a href="/resources">Resources</a></li>
                         <li><a href="/courses">Courses</a></li>
+                        <li><a href="/countries">Countries</a></li>
                         <li><a href="/job-portal">Job Portal</a></li>
+                        <li><a href="/blog">Blog</a></li>
                     </ul>
                 </div>
 

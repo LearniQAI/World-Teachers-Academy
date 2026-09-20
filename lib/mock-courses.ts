@@ -54,14 +54,14 @@ export const mockCourses: Course[] = [
     title: "TEFL Certificate — 130 Hour",
     subtitle:
       "The internationally recognized standard for teaching English abroad.",
-    image: "/assets/img/course/course-details1.jpg",
+    image: "/assets/img/course/course-details-808x500.png",
     rating: 4.9,
     reviewCount: "10k",
     price: "$[TBD]",
     discountLabel: "25% Off",
     instructor: {
       name: "Michel Shon",
-      photo: "/assets/img/team/team_2_1.jpg",
+      photo: "/assets/img/team/instructor-272x272.png",
       bio: "TEFL-certified instructor with experience training educators for classrooms in Asia, Europe, and Latin America.",
       courseCount: "4 Courses",
       studentCount: "2500 Students",

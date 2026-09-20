@@ -2,6 +2,15 @@ import VideoTestimonials from "@/components/home/VideoTestimonials";
 import HeroSearchForm from "@/components/home/HeroSearchForm";
 import { realCourses } from "@/lib/courses-catalog";
 
+const testimonials = [
+    { name: "Anika van der Merwe", image: "/assets/Image testimonial 1.jpeg", quote: "The online mentorship program completely transformed how I approach my university studies. Having a dedicated coach helped me break down complex assignments and manage my time so much better!" },
+    { name: "Liam du Plessis", image: "/assets/Testimonial image 2.jpeg", quote: "I was struggling to figure out my career path after graduation. The personalized advice and industry insights I received gave me the exact clarity and confidence I needed to land my first role." },
+    { name: "Lwazi Mokoena", image: "/assets/Testimonial image 3.jpeg", quote: "Connecting one-on-one with an industry expert changed everything for me. Instead of guessing my way through professional challenges, I had tailored guidance every step of the way." },
+    { name: "Zola Dlamini", image: "/assets/Testimonial image 4.jpeg", quote: "The resources and mentorship platform provided an incredible support system. It’s amazing how fast you can grow and gain practical skills when you have a mentor who truly listens to your goals." },
+    { name: "Priya Naidoo", image: "/assets/Testimonial image 5.jpeg", quote: "This mentorship framework is absolute gold. Being able to solve real-world challenges through direct digital sessions accelerated my learning curve beyond what I expected." },
+    { name: "Keegan van Rooyen", image: "/assets/Testimonial image 6.jpeg", quote: "Having direct access to experienced professionals through this platform helped me bridge the gap between classroom theory and real industry practice. Highly recommended for any student!" },
+];
+
 export default function Home() {
   return (
     <>
@@ -563,7 +572,7 @@ export default function Home() {
                             <div className="img-box11">
                                 <div className="img1 th--hover-item th_fade_anim">
                                     <div className="thumb th--hover-img" data-displacement="/assets/img/imghover/fluid.jpg" data-intensity="0.2" data-speedin="1" data-speedout="1">
-                                        <img className="img-cover" src="/assets/img/normal/about_11_1.jpg" alt="Job Portal" />
+                                        <img className="img-cover" src="/assets/img/normal/about-job-portal-346x580.png" alt="Job Portal" />
                                     </div>
                                 </div>
                             </div>
@@ -588,16 +597,16 @@ export default function Home() {
 
             <section className="overflow-hidden position-relative z-index-common" data-bg-src="/assets/img/bg/cta-bg10-1.jpg">
                 <div className="cta-wrap10 space">
-                    <div className="cta-thumb-wrap10-1 th_fade_anim">
-                        <img src="/assets/img/normal/cta-thumb8-1.png" alt="img" />
-                    </div>
-                    <div className="cta-thumb-wrap10-2 th_fade_anim">
-                        <img src="/assets/img/normal/cta-thumb8-2.png" alt="img" />
-                    </div>
+                    {/* Right-hand slot intentionally empty: cta-thumb-291x497.png was an unrelated "LearnPro" product screenshot and was removed pending a real replacement. */}
                     <div className="container">
-                        <div className="row justify-content-center">
-                            <div className="col-xl-7 col-lg-8">
-                                <div className="title-area text-center mb-0">
+                        <div className="row justify-content-center align-items-center gy-4 gx-xl-5">
+                            <div className="col-xl-5 col-lg-6 col-md-8 col-10 order-xl-2">
+                                <div className="cta-photo th_fade_anim">
+                                    <img src="/assets/img/normal/cta-thumb-418x475.png" alt="Teacher leading a classroom" />
+                                </div>
+                            </div>
+                            <div className="col-xl-7 col-12 order-xl-1">
+                                <div className="title-area text-center mb-0 cta-scrim">
                                     {/* TODO: confirm this 30%-off-first-100-teachers promotion is a real, currently-live offer with an actually-enforced 100-teacher cap before publishing this headline. A scarcity claim that isn't real is the kind of thing that damages trust if a customer notices later — do not apply this copy until I explicitly confirm the offer is real. */}
                                     <h2 className="sec-title text-white th-text-perspective"><span className="text-theme2">30%</span> Off Certification for Our First 100 Teachers</h2>
                                     <p className="fw-semibold text-white th_fade_anim mb-0 mt-30">Get certified and get matched with real teaching opportunities — join early and lock in founder pricing.</p>
@@ -784,64 +793,36 @@ Video Testimonials Area
                             <div className="slider-area testi-slider7 th_fade_anim">
                                 <div className="swiper th-slider" id="testiSlide7" data-slider-options='{"effect":"fade", "autoHeight": "true"}'>
                                     <div className="swiper-wrapper">
-                                        <div className="swiper-slide">
-                                            <div className="testi-card">
-                                                <div className="testi-meta-wrap">
-                                                    <div className="quote-icon">
-                                                        <img src="/assets/img/icon/quote5.svg" alt="img" />
+                                        {testimonials.map((t) => (
+                                            <div className="swiper-slide" key={t.name}>
+                                                <div className="testi-card">
+                                                    <div className="testi-meta-wrap">
+                                                        <div className="quote-icon">
+                                                            <img src="/assets/img/icon/quote5.svg" alt="" />
+                                                        </div>
+                                                        <div className="testi-review-wrap">
+                                                            <h3 className="rating-title"><strong>4.9</strong>/5.0</h3>
+                                                            <span className="testi-card_review">
+                                                                <i className="fas fa-star"></i>
+                                                                <i className="fas fa-star"></i>
+                                                                <i className="fas fa-star"></i>
+                                                                <i className="fas fa-star"></i>
+                                                                <i className="fas fa-star"></i>
+                                                            </span>
+                                                        </div>
                                                     </div>
-                                                    <div className="testi-review-wrap">
-                                                        <h3 className="rating-title"><strong>4.9</strong>/5.0</h3>
-                                                        <span className="testi-card_review">
-                                                            <i className="fas fa-star"></i>
-                                                            <i className="fas fa-star"></i>
-                                                            <i className="fas fa-star"></i>
-                                                            <i className="fas fa-star"></i>
-                                                            <i className="fas fa-star"></i>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <p className="box-text">“Online mentorship is a personalized, one-to-one guidance system where learners connect with industry experts, coaches, or professionals through digital platforms. It helps individuals gain skills, solve challenges, and grow faster by receiving tailored advice.”</p>
-                                                <div className="testi-card-profile">
-                                                    <div className="box-thumb">
-                                                        <img src="/assets/img/testimonial/testi_1_1.png" alt="img" />
-                                                    </div>
-                                                    <div className="media-left">
-                                                        <h3 className="testi-card_name">Alex James</h3>
-                                                        <span className="testi-card_desig">University Student</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="swiper-slide">
-                                            <div className="testi-card">
-                                                <div className="testi-meta-wrap">
-                                                    <div className="quote-icon">
-                                                        <img src="/assets/img/icon/quote5.svg" alt="img" />
-                                                    </div>
-                                                    <div className="testi-review-wrap">
-                                                        <h3 className="rating-title"><strong>4.9</strong>/5.0</h3>
-                                                        <span className="testi-card_review">
-                                                            <i className="fas fa-star"></i>
-                                                            <i className="fas fa-star"></i>
-                                                            <i className="fas fa-star"></i>
-                                                            <i className="fas fa-star"></i>
-                                                            <i className="fas fa-star"></i>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <p className="box-text">“University education is the foundation for shaping skilled, knowledgeable, and responsible individuals who contribute meaningfully to society. It provides students with a deeper understanding of their chosen fields through a blend of theoretical learning, practical experience,”</p>
-                                                <div className="testi-card-profile">
-                                                    <div className="box-thumb">
-                                                        <img src="/assets/img/testimonial/testi_1_2.png" alt="img" />
-                                                    </div>
-                                                    <div className="media-left">
-                                                        <h3 className="testi-card_name">Maria Gonzalez</h3>
-                                                        <span className="testi-card_desig">University Student</span>
+                                                    <p className="box-text">“{t.quote}”</p>
+                                                    <div className="testi-card-profile">
+                                                        <div className="box-thumb">
+                                                            <img src={t.image} alt={t.name} />
+                                                        </div>
+                                                        <div className="media-left">
+                                                            <h3 className="testi-card_name">{t.name}</h3>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        ))}
                                     </div>
                                 </div>
                                 <div className="icon-box th_fade_anim">
@@ -1017,23 +998,25 @@ FAQ Area
                     <div className="row gy-40">
                         <div className="col-xl-6">
                             <div className="faq-img-box1">
+                                <div className="faq-side">
                                 <div className="img1 th--hover-item th_fade_anim">
                                     <div className="thumb th--hover-img" data-displacement="/assets/img/imghover/fluid.jpg" data-intensity="0.2" data-speedin="1" data-speedout="1">
-                                        <img className="img-cover" src="/assets/img/normal/faq_4_1.jpg" alt="img" />
-                                    </div>
-                                </div>
-                                <div className="img2 th--hover-item th_fade_anim">
-                                    <div className="thumb th--hover-img" data-displacement="/assets/img/imghover/fluid.jpg" data-intensity="0.2" data-speedin="1" data-speedout="1">
-                                        <img className="img-cover" src="/assets/img/normal/faq_4_2.jpg" alt="img" />
+                                        <img className="img-cover" src="/assets/img/normal/faq-1-mentor-desk.png" alt="Teacher at his desk with a certificate" />
                                     </div>
                                 </div>
                                 <div className="faq-counter-wrap jump">
                                     <div className="thumb">
-                                        <img src="/assets/img/normal/volunteer-group2.png" alt="img" />
+                                        <img src="/assets/img/normal/faq-3-notes.jpg" alt="Handwritten notes beside a stack of books" />
                                     </div>
                                     <div className="box-details">
                                         <h3 className="box-title"><span className="counter-number">10</span>K +</h3>
                                         <p className="box-text">Active students</p>
+                                    </div>
+                                </div>
+                                </div>
+                                <div className="img2 th--hover-item th_fade_anim">
+                                    <div className="thumb th--hover-img" data-displacement="/assets/img/imghover/fluid.jpg" data-intensity="0.2" data-speedin="1" data-speedout="1">
+                                        <img className="img-cover" src="/assets/img/normal/faq-2-teacher.jpg" alt="Smiling teacher at her desk with a teaching certificate" />
                                     </div>
                                 </div>
                             </div>
