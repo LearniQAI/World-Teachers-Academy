@@ -1,4 +1,6 @@
-import { countries } from "@/lib/countries-data";
+import { Fragment } from "react";
+import CountryFlag from "./CountryFlag";
+import { countriesByRegion } from "@/lib/countries-data";
 
 export default function MobileMenu() {
   return (
@@ -42,8 +44,13 @@ export default function MobileMenu() {
                         <li className="menu-item-has-children">
                             <a href="/countries">Countries</a>
                             <ul className="sub-menu">
-                                {countries.map((c) => (
-                                    <li key={c.slug}><a href={`/countries/${c.slug}`}>{c.flagEmoji} {c.name}</a></li>
+                                {countriesByRegion.map((g) => (
+                                    <Fragment key={g.region}>
+                                        <li className="country-menu__label">{g.region}</li>
+                                        {g.countries.map((c) => (
+                                            <li key={c.slug}><a href={`/countries/${c.slug}`}><CountryFlag country={c} /> {c.name}</a></li>
+                                        ))}
+                                    </Fragment>
                                 ))}
                             </ul>
                         </li>

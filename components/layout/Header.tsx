@@ -1,4 +1,5 @@
-import { countries } from "@/lib/countries-data";
+import { countriesByRegion } from "@/lib/countries-data";
+import CountryFlag from "./CountryFlag";
 
 export default function Header() {
   return (
@@ -23,9 +24,16 @@ export default function Header() {
                                     <li><a href="/courses">Courses</a></li>
                                     <li className="menu-item-has-children">
                                         <a href="/countries">Countries</a>
-                                        <ul className="sub-menu">
-                                            {countries.map((c) => (
-                                                <li key={c.slug}><a href={`/countries/${c.slug}`}>{c.flagEmoji} {c.name}</a></li>
+                                        <ul className="sub-menu country-menu">
+                                            {countriesByRegion.map((g) => (
+                                                <li key={g.region} className="country-menu__group">
+                                                    <span className="country-menu__label">{g.region}</span>
+                                                    <ul className="country-menu__list">
+                                                        {g.countries.map((c) => (
+                                                            <li key={c.slug}><a href={`/countries/${c.slug}`}><CountryFlag country={c} /> {c.name}</a></li>
+                                                        ))}
+                                                    </ul>
+                                                </li>
                                             ))}
                                         </ul>
                                     </li>

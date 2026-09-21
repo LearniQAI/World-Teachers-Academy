@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { countries, getCountryBySlug } from "@/lib/countries-data";
 import type { Block, Tone } from "@/lib/countries-data";
+import CountryFlag from "@/components/layout/CountryFlag";
+import { countryMedia } from "@/lib/country-media";
 
 const INDIGO = "#4F46E5";
 const ORANGE = "#F97316";
@@ -32,7 +34,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const country = getCountryBySlug(slug);
-  return country ? { title: `Teaching in ${country.name} | World Teachers Academy`, description: country.tagline } : {};
+  return country ? { title: `${country.heading ?? `Teaching in ${country.name}`} | World Teachers Academy`, description: country.tagline } : {};
 }
 
 function SectionBar({ title, color }: { title: string; color: string }) {
@@ -80,7 +82,8 @@ function BlockView({ block }: { block: Block }) {
                 {i + 1}
               </span>
               <span style={{ color: INK_NAVY, paddingTop: "4px" }}>
-                <strong>{s.label}</strong> — {s.text}
+                <strong>{s.label}</strong>
+                {s.text && <> — {s.text}</>}
               </span>
             </li>
           ))}
@@ -123,13 +126,54 @@ function BlockView({ block }: { block: Block }) {
                       {c.badge}
                     </span>
                   )}
-                  <p style={{ fontSize: "14px", color: PAPER_DIM, margin: 0 }}>{c.text}</p>
+                  <p style={{ fontSize: "14px", color: PAPER_DIM, margin: 0, whiteSpace: "pre-line" }}>{c.text}</p>
                 </div>
               </div>
             );
           })}
         </div>
       );
+    case "table":
+      return (
+        <div style={{ overflowX: "auto", border: `1px solid ${BORDER}`, borderRadius: "10px", marginBottom: "18px" }}>
+          <table style={{ width: "100%", minWidth: "560px", borderCollapse: "collapse", fontSize: "14px" }}>
+            <thead>
+              <tr>
+                {block.headers.map((h, i) => (
+                  <th
+                    key={i}
+                    style={{ background: INK_NAVY, color: "#fff", padding: "12px 16px", textAlign: "left", fontSize: "12px", letterSpacing: "0.05em", verticalAlign: "top" }}
+                  >
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {block.rows.map((row, i) => (
+                <tr key={i} style={{ background: i % 2 ? SOFT : "#fff" }}>
+                  {row.map((cell, j) => (
+                    <td
+                      key={j}
+                      style={{
+                        padding: "12px 16px",
+                        color: INK_NAVY,
+                        borderTop: `1px solid ${BORDER}`,
+                        fontWeight: j === 0 ? 700 : 400,
+                        verticalAlign: "top",
+                      }}
+                    >
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    case "quote":
+      return <PullQuote text={block.text} source={block.attribution} />;
     case "callout": {
       const tone = TONES[block.tone];
       return (
@@ -150,7 +194,7 @@ function BlockView({ block }: { block: Block }) {
   }
 }
 
-function PullQuote({ text }: { text: string }) {
+function PullQuote({ text, source = "FROM THE VIDEO SCRIPT" }: { text: string; source?: string }) {
   return (
     <blockquote
       style={{
@@ -165,7 +209,7 @@ function PullQuote({ text }: { text: string }) {
       <img src="/assets/img/icon/quote5.svg" alt="" style={{ width: "34px", marginBottom: "12px", opacity: 0.85 }} />
       <p style={{ fontSize: "20px", fontStyle: "italic", color: INK_NAVY, lineHeight: 1.5, margin: "0 0 14px" }}>“{text}”</p>
       <cite style={{ fontStyle: "normal", fontSize: "12px", fontWeight: 700, letterSpacing: "0.08em", color: TEAL }}>
-        FROM THE VIDEO SCRIPT
+        {source}
       </cite>
     </blockquote>
   );
@@ -180,6 +224,7 @@ export default async function CountryDetails({ params }: { params: Promise<{ slu
   }
 
   const { reading, videoScript, debateAudio } = country;
+  const media = countryMedia[country.slug];
 
   return (
     <>
@@ -192,7 +237,7 @@ export default async function CountryDetails({ params }: { params: Promise<{ slu
             <div className="col-lg-9">
               <div className="breadcumb-content" style={{ "--space": "45px" } as React.CSSProperties}>
                 <span className="sub-title text-theme"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Country Guide</span>
-                <h1 className="breadcumb-title">{country.flagEmoji} Teaching in {country.name}</h1>
+                <h1 className="breadcumb-title"><CountryFlag country={country} height={32} /> {country.heading ?? `Teaching in ${country.name}`}</h1>
                 <ul className="breadcumb-menu">
                   <li><a href="/">Home</a></li>
                   <li><a href="/countries">Countries</a></li>
@@ -213,7 +258,7 @@ export default async function CountryDetails({ params }: { params: Promise<{ slu
 
               <div className="row gy-3" style={{ marginBottom: "36px" }}>
                 {country.statBadges.map((b, i) => (
-                  <div className="col-md-4" key={b.label}>
+                  <div className={country.statBadges.length === 4 ? "col-md-6 col-lg-3" : "col-md-4"} key={b.label}>
                     <div style={{ background: SOFT, border: `1px solid ${BORDER}`, borderRadius: "10px", padding: "20px", textAlign: "center", height: "100%" }}>
                       <div style={{ fontSize: "24px", fontWeight: 800, color: [INDIGO, TEAL, ORANGE][i % 3] }}>{b.value}</div>
                       <div style={{ fontSize: "12px", fontWeight: 700, color: PAPER_DIM, letterSpacing: "0.04em", textTransform: "uppercase" }}>{b.label}</div>
@@ -222,55 +267,111 @@ export default async function CountryDetails({ params }: { params: Promise<{ slu
                 ))}
               </div>
 
-              <h3 style={{ fontSize: "22px", color: INK_NAVY, marginBottom: "14px" }}>What&apos;s In This Guide</h3>
-              <ul style={{ paddingLeft: "20px", marginBottom: "48px" }}>
-                {country.guideContents.map((g) => {
-                  const [label, ...rest] = g.split(" — ");
-                  return (
-                    <li key={g} style={{ marginBottom: "6px", color: INK_NAVY }}>
-                      <strong>{label}</strong> — {rest.join(" — ")}
-                    </li>
-                  );
-                })}
-              </ul>
+              {country.guideContents.length > 0 && (
+                <>
+                  <h3 style={{ fontSize: "22px", color: INK_NAVY, marginBottom: "14px" }}>What&apos;s In This Guide</h3>
+                  <ul style={{ paddingLeft: "20px", marginBottom: "48px" }}>
+                    {country.guideContents.map((g) => {
+                      const [label, ...rest] = g.split(" — ");
+                      return (
+                        <li key={g} style={{ marginBottom: "6px", color: INK_NAVY }}>
+                          <strong>{label}</strong> — {rest.join(" — ")}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </>
+              )}
+
+              {/* Video + debate audio players */}
+              {media && (
+                <div style={{ marginBottom: "48px" }}>
+                  {media.youtubeId && (
+                    <div style={{ marginBottom: media.audio ? "32px" : 0 }}>
+                      <SectionBar title={`Watch — Teaching in ${country.name}`} color={INDIGO} />
+                      <div style={{ position: "relative", paddingTop: "56.25%", borderRadius: "12px", overflow: "hidden", border: `1px solid ${BORDER}`, background: INK_NAVY }}>
+                        <iframe
+                          src={`https://www.youtube-nocookie.com/embed/${media.youtubeId}`}
+                          title={`Teaching in ${country.name} — video`}
+                          loading="lazy"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                          allowFullScreen
+                          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: 0 }}
+                        />
+                      </div>
+                    </div>
+                  )}
+                  {media.audio && (
+                    <div>
+                      <SectionBar title={`Listen — Debate Audio: ${country.name}`} color={TEAL} />
+                      <iframe
+                        src={`https://www.buzzsprout.com/${media.audio.show}/episodes/${media.audio.id}-${media.audio.slug}?client_source=small_player&iframe=true`}
+                        title={`Teaching in ${country.name} — debate audio`}
+                        loading="lazy"
+                        width="100%"
+                        height="200"
+                        scrolling="no"
+                        style={{ border: 0, borderRadius: "12px", display: "block" }}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Reading */}
-              <SectionBar title={`Reading — ${country.name} at a glance`} color={INK_NAVY} />
-              <h3 style={{ fontSize: "20px", color: INDIGO, marginBottom: "12px" }}>Quick Facts</h3>
-              <ul style={{ paddingLeft: "20px", marginBottom: "32px" }}>
-                {reading.quickFacts.map((f) => (
-                  <li key={f} style={{ marginBottom: "8px", color: INK_NAVY }}>{f}</li>
-                ))}
-              </ul>
+              {reading.quickFacts.length > 0 && (
+                <>
+                  <SectionBar title={`Reading — ${country.name} at a glance`} color={INK_NAVY} />
+                  <h3 style={{ fontSize: "20px", color: INDIGO, marginBottom: "12px" }}>Quick Facts</h3>
+                  <ul style={{ paddingLeft: "20px", marginBottom: "32px" }}>
+                    {reading.quickFacts.map((f) => (
+                      <li key={f} style={{ marginBottom: "8px", color: INK_NAVY }}>{f}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
 
               {reading.sections.map((section, i) => (
-                <div key={section.heading}>
+                <div key={i}>
                   <div style={{ marginBottom: "32px" }}>
-                    <h3 style={{ fontSize: "20px", color: INDIGO, marginBottom: "14px" }}>{section.heading}</h3>
+                    {section.heading && <h3 style={{ fontSize: "20px", color: INDIGO, marginBottom: "14px" }}>{section.heading}</h3>}
                     {section.blocks.map((block, j) => (
                       <BlockView block={block} key={j} />
                     ))}
                   </div>
-                  {i === reading.pullQuoteAfter && <PullQuote text={reading.pullQuote} />}
+                  {reading.pullQuote && i === reading.pullQuoteAfter && <PullQuote text={reading.pullQuote} />}
                 </div>
               ))}
 
               {/* Do's & Don'ts */}
-              <h3 style={{ fontSize: "20px", color: INDIGO, marginBottom: "14px" }}>Rules: Do&apos;s &amp; Don&apos;ts</h3>
+              {country.doAndDont.length > 0 && (
+              <>
+              <h3 style={{ fontSize: "20px", color: INDIGO, marginBottom: "14px" }}>{country.doAndDontHeading ?? <>Rules: Do&apos;s &amp; Don&apos;ts</>}</h3>
               <div style={{ border: `1px solid ${BORDER}`, borderRadius: "10px", overflow: "hidden", marginBottom: "56px" }}>
                 <div className="row g-0" style={{ fontWeight: 700 }}>
                   <div className="col-6" style={{ background: "#ECFDF5", color: "#059669", padding: "12px 18px" }}>✓ DO</div>
                   <div className="col-6" style={{ background: "#FEF2F2", color: "#DC2626", padding: "12px 18px" }}>✗ DON&apos;T</div>
                 </div>
                 {country.doAndDont.map((row, i) => (
-                  <div className="row g-0" key={i} style={{ background: i % 2 ? SOFT : "#fff", borderTop: `1px solid ${BORDER}` }}>
-                    <div className="col-6" style={{ padding: "14px 18px", fontSize: "14px", color: INK_NAVY }}>{row.do}</div>
-                    <div className="col-6" style={{ padding: "14px 18px", fontSize: "14px", color: INK_NAVY, borderLeft: `1px solid ${BORDER}` }}>{row.dont}</div>
+                  <div key={i}>
+                    {row.group && (
+                      <div style={{ background: INK_NAVY, color: "#fff", padding: "10px 18px", fontSize: "13px", fontWeight: 700, letterSpacing: "0.04em", borderTop: `1px solid ${BORDER}` }}>
+                        {row.group}
+                      </div>
+                    )}
+                    <div className="row g-0" style={{ background: i % 2 ? SOFT : "#fff", borderTop: `1px solid ${BORDER}` }}>
+                      <div className="col-6" style={{ padding: "14px 18px", fontSize: "14px", color: INK_NAVY }}>{row.do}</div>
+                      <div className="col-6" style={{ padding: "14px 18px", fontSize: "14px", color: INK_NAVY, borderLeft: `1px solid ${BORDER}` }}>{row.dont}</div>
+                    </div>
                   </div>
                 ))}
               </div>
+              </>
+              )}
 
               {/* Video Script */}
+              {videoScript && (
+              <>
               <SectionBar title={`Video Script — “${videoScript.title}”`} color={INDIGO} />
               <div style={{ marginBottom: "56px" }}>
                 {videoScript.scenes.map((scene, i) => (
@@ -297,8 +398,12 @@ export default async function CountryDetails({ params }: { params: Promise<{ slu
                   </div>
                 ))}
               </div>
+              </>
+              )}
 
               {/* Debate Audio */}
+              {debateAudio && (
+              <>
               <SectionBar title={`Debate Audio — “${debateAudio.title}”`} color={TEAL} />
               <p style={{ fontStyle: "italic", color: PAPER_DIM, marginBottom: "22px" }}>
                 Hosts: {debateAudio.host1} and {debateAudio.host2}
@@ -327,6 +432,8 @@ export default async function CountryDetails({ params }: { params: Promise<{ slu
                   );
                 })}
               </div>
+              </>
+              )}
 
               {/* Closing equation */}
               <div style={{ borderTop: `2px solid ${TEAL}`, paddingTop: "28px", marginBottom: "48px" }}>

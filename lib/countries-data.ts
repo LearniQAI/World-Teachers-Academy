@@ -13,13 +13,21 @@ export type Block =
       kind: "cards";
       items: { title: string; badge?: string; tone?: Tone; text: string }[];
     }
-  | { kind: "callout"; title?: string; text: string; tone: Tone };
+  | { kind: "callout"; title?: string; text: string; tone: Tone }
+  | { kind: "table"; headers: string[]; rows: string[][] }
+  | { kind: "quote"; text: string; attribution: string };
 
-export type ReadingSection = { heading: string; blocks: Block[] };
+export type ReadingSection = { heading: string; blocks: Block[] }; // empty heading = untitled section
+
+export type Region = "Americas" | "Asia" | "Europe" | "Middle East";
+export const REGIONS: Region[] = ["Americas", "Asia", "Europe", "Middle East"];
 
 export type Country = {
   slug: string;
   name: string;
+  region: Region;
+  // Page title when the source guide's own title isn't "Teaching in {name}".
+  heading?: string;
   code: string; // ISO 3166-1 alpha-2 — also the Job Portal country filter value
   flagEmoji: string;
   tagline: string;
@@ -28,17 +36,20 @@ export type Country = {
   reading: {
     quickFacts: string[];
     sections: ReadingSection[];
-    pullQuote: string;
+    pullQuote?: string;
     // The pull-quote is rendered directly after sections[pullQuoteAfter],
     // matching where it sits in the source guide.
-    pullQuoteAfter: number;
+    pullQuoteAfter?: number;
   };
-  doAndDont: { do: string; dont: string }[];
-  videoScript: {
+  // A row may leave one side empty; `group` starts a labelled sub-group.
+  doAndDontHeading?: string;
+  doAndDont: { do?: string; dont?: string; group?: string }[];
+  // The dossier-format guides have no video script or debate audio in their source.
+  videoScript?: {
     title: string;
     scenes: { direction: string; lines: { speaker: string; text: string }[] }[];
   };
-  debateAudio: {
+  debateAudio?: {
     title: string;
     host1: string;
     host2: string;
@@ -58,6 +69,8 @@ const cards = (...items: { title: string; badge?: string; tone?: Tone; text: str
   kind: "cards",
   items,
 });
+const table = (headers: string[], ...rows: string[][]): Block => ({ kind: "table", headers, rows });
+const quote = (t: string, attribution: string): Block => ({ kind: "quote", text: t, attribution });
 const callout = (tone: Tone, t: string, title?: string): Block => ({ kind: "callout", tone, text: t, title });
 
 const SCRIPT_TITLE = "FIRST IMPRESSIONS";
@@ -77,6 +90,7 @@ const argentina: Country = {
   slug: "argentina",
   name: "Argentina",
   code: "AR",
+  region: "Americas",
   flagEmoji: "🇦🇷",
   tagline:
     "Culture, visas, and the dollar-economy advantage — a complete guide for South African teachers, with Reading, Video, and Audio.",
@@ -247,6 +261,7 @@ const cambodia: Country = {
   slug: "cambodia",
   name: "Cambodia",
   code: "KH",
+  region: "Asia",
   flagEmoji: "🇰🇭",
   tagline:
     "Ancient temples, a genuinely accessible market, and a history worth understanding with real care — a complete guide for South African teachers, with Reading, Video, and Audio.",
@@ -405,6 +420,7 @@ const brunei: Country = {
   slug: "brunei",
   name: "Brunei",
   code: "BN",
+  region: "Asia",
   flagEmoji: "🇧🇳",
   tagline:
     "An empire's history, an oil-funded present, and the BELTP government programme — a complete guide for South African teachers, with Reading, Video, and Audio.",
@@ -563,6 +579,7 @@ const brazil: Country = {
   slug: "brazil",
   name: "Brazil",
   code: "BR",
+  region: "Americas",
   flagEmoji: "🇧🇷",
   tagline:
     "Culture, visas, and the private-tutoring economy — a complete guide for South African teachers, with Reading, Video, and Audio.",
@@ -713,6 +730,7 @@ const china: Country = {
   slug: "china",
   name: "China",
   code: "CN",
+  region: "Asia",
   flagEmoji: "🇨🇳",
   tagline:
     "Guanxi, mianzi, and the Z-visa reality — a complete guide for South African teachers, with Reading, Video, and Audio.",
@@ -865,6 +883,7 @@ const chile: Country = {
   slug: "chile",
   name: "Chile",
   code: "CL",
+  region: "Americas",
   flagEmoji: "🇨🇱",
   tagline:
     "English Opens Doors, private institutes, and Latin America's most stable teaching market — a complete guide for South African teachers, with Reading, Video, and Audio.",
@@ -1021,6 +1040,7 @@ const costaRica: Country = {
   slug: "costa-rica",
   name: "Costa Rica",
   code: "CR",
+  region: "Americas",
   flagEmoji: "🇨🇷",
   tagline:
     "Pura Vida, three real visa routes, and an honest look at the hiring landscape — a complete guide for South African teachers, with Reading, Video, and Audio.",
@@ -1177,6 +1197,7 @@ const colombia: Country = {
   slug: "colombia",
   name: "Colombia",
   code: "CO",
+  region: "Americas",
   flagEmoji: "🇨🇴",
   tagline:
     "A genuinely functioning work visa, plus two real public-initiative routes — a complete guide for South African teachers, with Reading, Video, and Audio.",
@@ -1323,6 +1344,7 @@ const france: Country = {
   slug: "france",
   name: "France",
   code: "FR",
+  region: "Europe",
   flagEmoji: "🇫🇷",
   tagline:
     "The real South African route in (not TAPIF), B1 French, and a genuine cultural adjustment — a complete guide with Reading, Video, and Audio.",
@@ -1468,17 +1490,1983 @@ const france: Country = {
 };
 
 // Order shown in the navbar dropdown and the /countries catalogue.
+const italy: Country = {
+  slug: "italy",
+  name: "Italy",
+  code: "IT",
+  region: "Europe",
+  flagEmoji: "🇮🇹",
+  tagline:
+    "Three real visa routes, la bella figura, and knowing which door actually gets you working — a complete guide with Reading, Video, and Audio.",
+  statBadges: [
+    { value: "3 Visa Routes", label: "Know the Difference" },
+    { value: "20 Hrs/Week", label: "Student Visa Work Limit" },
+    { value: "~5-10%", label: "Sponsored D-Visa Success" },
+  ],
+  guideContents: [
+    "Reading — culture, food, landmarks, and the three real visa routes explained clearly",
+    GUIDE_VIDEO,
+    "Debate Audio — two hosts weighing whether Italy is the right fit for you",
+  ],
+  reading: {
+    quickFacts: [
+      "Florence, Rome, and Milan are the largest hubs for both summer camps and language schools",
+      "Non-EU teachers genuinely need to understand three distinct visa routes before committing",
+      "One of Europe's most competitive teaching markets on paperwork, genuinely rewarding once cleared",
+    ],
+    sections: [
+      {
+        heading: "The Visa Diagnostic: Three Real Routes",
+        blocks: [
+          text("Non-EU teachers in Italy work under one of three genuinely different arrangements. Know exactly which one applies to your situation:"),
+          cards(
+            {
+              title: "90-Day Schengen Window",
+              badge: "Camps Only",
+              tone: "warn",
+              text: "Covers summer camp work only, paying roughly €150-250/week plus board. Does NOT cover language school employment.",
+            },
+            {
+              title: "Student Visa",
+              badge: "Legal, Most Common",
+              tone: "success",
+              text: "Enrol in an Italian language course, which permits up to 20 hours/week of paid work — the most common real route in.",
+            },
+            {
+              title: "Sponsored D-Visa",
+              badge: "Rare, ~5-10%",
+              tone: "info",
+              text: "A genuinely employer-sponsored work visa, subject to Italy's annual immigration quota system. Rare, but real when it happens.",
+            }
+          ),
+        ],
+      },
+      {
+        heading: "La Bella Figura & Riposo",
+        blocks: [
+          text(
+            "“La bella figura” — making a good impression — genuinely shapes daily life, from how people dress to how meals are presented. Riposo, the early-afternoon quiet hours, sees many shops and businesses close, particularly in smaller towns — plan errands accordingly."
+          ),
+        ],
+      },
+      {
+        heading: "Food",
+        blocks: [
+          list(
+            T("Regional identity runs deep — a dish considered essential in Naples may be unheard of in Milan"),
+            T("Meals are treated as genuine social occasions, rarely rushed, especially dinner"),
+            T("Coffee culture has real rules — cappuccino is a morning drink, rarely ordered after a meal")
+          ),
+        ],
+      },
+      {
+        heading: "Landmarks",
+        blocks: [
+          list(
+            L("The Colosseum & Roman Forum", "ancient Rome's defining ruins"),
+            L("The Duomo (Florence)", "Brunelleschi's dome, a genuine feat of Renaissance engineering"),
+            L("The Amalfi Coast", "dramatic cliffside towns overlooking the Tyrrhenian Sea")
+          ),
+        ],
+      },
+      {
+        heading: "The Teacher's Toolkit: Finding the Work",
+        blocks: [
+          cards(
+            { title: "Wall Street English", text: "A major private chain with consistent demand across Italian cities." },
+            { title: "Inlingua & British Institutes", text: "Established language school networks, genuinely worth contacting directly." },
+            { title: "TEFL.org", text: "General job board resources with Italy-specific visa guidance." },
+            { title: "Go Overseas", text: "Job listings and provider reviews for summer camp and language school roles." }
+          ),
+        ],
+      },
+    ],
+    pullQuote:
+      "Italy often surprises new teachers with how much the visa route actually matters — the same job title can mean something completely different depending on which door you walked through to get there.",
+    pullQuoteAfter: 0,
+  },
+  doAndDont: [
+    { do: "Understand exactly which of the three visa routes applies to your specific situation", dont: "Assume a 90-day Schengen entry covers language school work — it genuinely doesn't" },
+    { do: "Respect riposo hours when planning errands, especially in smaller towns", dont: "Order a cappuccino after a meal — a small but real local norm" },
+    { do: "Dress with genuine care — la bella figura is a real, everyday expectation", dont: "Assume the sponsored D-Visa is a reliable primary plan — it's genuinely rare" },
+    { do: "Treat meals as unhurried social occasions", dont: "Flatten regional food identity — what's normal in one city may be unheard of in another" },
+  ],
+  videoScript: {
+    title: SCRIPT_TITLE,
+    scenes: [
+      {
+        direction: "NOMPUMELELO, a South African teacher, stands in a sunlit courtyard at a Florence summer camp, children's laughter echoing from a nearby classroom.",
+        lines: [
+          { speaker: N, text: "Italy often surprises new teachers with how much the visa route actually matters — the same job title can mean something completely different depending on which door you walked through to get there." },
+          { speaker: "NOMPUMELELO (checking her paperwork)", text: "Ninety days, camps only. I need to remember this doesn't carry over to a language school job." },
+        ],
+      },
+      {
+        direction: "Weeks earlier, in flashback — Nompumelelo researching her options online, comparing the Schengen camp route against enrolling in an Italian language course for the work rights it grants.",
+        lines: [
+          { speaker: N, text: "A ninety-day Schengen entry genuinely covers summer camp work, paying roughly €150 to 250 a week plus board — but it does not cover language school employment. For that, most teachers enrol in a student visa programme instead, which permits up to twenty hours of paid work a week." },
+        ],
+      },
+      {
+        direction: "At a small café near the Duomo, Nompumelelo orders a cappuccino after her dinner, and the barista gently raises an eyebrow.",
+        lines: [{ speaker: "NOMPUMELELO (laughing, catching herself)", text: "Right — morning drink only. Noted." }],
+      },
+      {
+        direction: "At 2pm on a weekday, Nompumelelo finds the small shops in her neighbourhood shuttered, a printed sign taped to each door.",
+        lines: [
+          { speaker: N, text: "Riposo, the early-afternoon quiet hours, closes many shops and businesses, especially outside the big cities — a rhythm worth planning around, not fighting." },
+        ],
+      },
+      {
+        direction: "Weekend — Nompumelelo stands at a clifftop viewpoint along the Amalfi Coast, pastel-coloured buildings clinging to the hillside below.",
+        lines: [
+          { speaker: N, text: "And once the visa route is properly understood, Italy offers a teacher something genuinely rare — extraordinary history, real regional richness, and a culture that rewards slowing down." },
+        ],
+      },
+    ],
+  },
+  debateAudio: {
+    title: "IS ITALY RIGHT FOR YOU?",
+    host1: "LEBOGANG (confused by the visa options)",
+    host2: "KHOLOFELO (has taught in Italy, makes the case for it)",
+    exchange: [
+      { speaker: "LEBOGANG", text: "I keep seeing different visa advice for Italy. Is there actually one clear way in?" },
+      { speaker: "KHOLOFELO", text: "Genuinely not one single way — there are three real routes, and mixing them up is the most common mistake. A ninety-day Schengen entry covers summer camp work only, paying roughly €150 to 250 a week plus board. It does not cover language school employment." },
+      { speaker: "LEBOGANG", text: "So what covers language school work, then?" },
+      { speaker: "KHOLOFELO", text: "Most teachers enrol in an Italian language course on a student visa, which genuinely permits up to twenty hours of paid work a week. It's the most common real route for longer stays." },
+      { speaker: "LEBOGANG", text: "What about an actual sponsored work visa?" },
+      { speaker: "KHOLOFELO", text: "That exists too, the D-Visa, but it's genuinely rare — roughly five to ten percent of applicants, subject to Italy's annual quota system. Worth knowing about, but not something to plan around as your primary route." },
+      { speaker: "LEBOGANG", text: "What's the one cultural thing that catches people out?" },
+      { speaker: "KHOLOFELO", text: "Riposo, genuinely — those early-afternoon hours when smaller shops just close. And la bella figura is real too; how you present yourself actually matters here, day to day." },
+      { speaker: "LEBOGANG", text: "So, worth it overall?" },
+      { speaker: "KHOLOFELO", text: "Genuinely, yes — as long as you understand which visa route you're actually on. Get that right, and Italy offers extraordinary history and a culture that rewards real patience." },
+    ],
+  },
+  closingEquation: {
+    heading: "The Italy Equation",
+    content:
+      "Italy rewards teachers who get the paperwork distinction right from day one: knowing exactly which of the three visa routes they're actually on, before making any plans around it. Get that clarity early, and Italy offers extraordinary history, regional richness, and a culture that genuinely rewards patience.",
+  },
+  jobPortalCTA: cta("Italy", "IT"),
+};
+
+const japan: Country = {
+  slug: "japan",
+  name: "Japan",
+  code: "JP",
+  region: "Asia",
+  flagEmoji: "🇯🇵",
+  tagline:
+    "Honne, tatemae, and four real routes into one of the world's most established teaching markets — a complete guide with Reading, Video, and Audio.",
+  statBadges: [
+    { value: "4 Real Routes", label: "JET, ALT, Eikaiwa, Int'l" },
+    { value: "Meishi", label: "Business Card Ritual" },
+    { value: "Est. Market", label: "Decades of Structure" },
+  ],
+  guideContents: [
+    "Reading — culture, food, landmarks, honne/tatemae, and the four real routes in",
+    GUIDE_VIDEO,
+    "Debate Audio — two hosts weighing whether Japan is the right fit for you",
+  ],
+  reading: {
+    quickFacts: [
+      "Tokyo and Osaka are the largest hubs, though ALT placements reach right across the country",
+      "One of the world's longest-established, most structured English-teaching markets",
+      "Four genuinely distinct routes in, each with a different pace, pay, and competitiveness",
+    ],
+    sections: [
+      {
+        heading: "Honne & Tatemae: The Two Concepts That Run Everything",
+        blocks: [
+          cards(
+            { title: "HONNE", text: "A person's true feelings and desires — genuinely held, but not necessarily spoken aloud in professional or public settings." },
+            { title: "TATEMAE", text: "The public face or stated position, chosen to maintain group harmony — not dishonesty, but genuine social tact." }
+          ),
+        ],
+      },
+      {
+        heading: "Meishi: The Business Card Ritual",
+        blocks: [
+          text("Exchanging business cards (meishi) is a genuine, structured ritual in Japanese professional life — treated with real formality:"),
+          steps(
+            { label: "Present with both hands", text: "card facing the recipient, text readable to them, with a slight bow." },
+            { label: "Receive with both hands", text: "take a moment to actually read it before putting it away." },
+            { label: "Never write on it, fold it, or put it straight in your back pocket", text: "treat it as an extension of the person." }
+          ),
+        ],
+      },
+      {
+        heading: "Four Real Routes In",
+        blocks: [
+          cards(
+            { title: "JET Programme", text: "The official government scheme — genuinely well-structured, competitive, placing ALTs in public schools nationwide." },
+            { title: "ALT (via Dispatch Companies)", text: "Interac, Altia Central and similar — a faster, more accessible route into public school assistant teaching." },
+            { title: "Eikaiwa (Private Conversation Schools)", text: "Private language schools with flexible hours, genuinely popular for city-based placements." },
+            { title: "International Schools", text: "Higher bar for entry (often requiring a teaching license), but genuinely strong pay and conditions." }
+          ),
+        ],
+      },
+      {
+        heading: "Food",
+        blocks: [
+          list(
+            L("Ramen", "regional broth styles vary enormously, genuinely worth exploring beyond one city"),
+            L("Izakaya culture", "casual after-work drinking and small plates, a real social institution")
+          ),
+        ],
+      },
+      {
+        heading: "Landmarks",
+        blocks: [
+          list(
+            L("Mount Fuji", "Japan's defining, genuinely iconic peak"),
+            L("Fushimi Inari Shrine (Kyoto)", "thousands of vermillion torii gates winding up the mountainside"),
+            L("Hiroshima Peace Memorial", "a significant, sobering historical site, approached with genuine respect")
+          ),
+        ],
+      },
+    ],
+    pullQuote:
+      "Japan often surprises new teachers with how much unspoken structure sits beneath the surface — this is a culture where what's said and what's meant aren't always the same thing, and that's not dishonesty, it's genuine social care.",
+    pullQuoteAfter: 0,
+  },
+  doAndDont: [
+    { do: "Present and receive business cards with both hands, and read them before putting them away", dont: "Write on, fold, or pocket a business card carelessly" },
+    { do: "Bow when greeting, matching the depth of the other person where possible", dont: "Assume a direct “no” will always be spoken plainly — tatemae often softens refusal" },
+    { do: "Research which of the four routes genuinely fits your goals before applying", dont: "Tip at restaurants — it's genuinely not expected, and can cause confusion" },
+    { do: "Remove your shoes wherever indoor footwear norms expect it", dont: "Assume JET, ALT, eikaiwa, and international schools are interchangeable — they're genuinely different jobs" },
+  ],
+  videoScript: {
+    title: SCRIPT_TITLE,
+    scenes: [
+      {
+        direction: "LINDIWE, a South African teacher, stands before the vermillion torii gates of Fushimi Inari, the path winding up into the trees ahead of her.",
+        lines: [
+          { speaker: N, text: "Japan often surprises new teachers with how much unspoken structure sits beneath the surface — this is a culture where what's said and what's meant aren't always the same thing, and that's not dishonesty, it's genuine social care." },
+          { speaker: "LINDIWE (taking in the gates)", text: "I've never walked through anything quite like this." },
+        ],
+      },
+      {
+        direction: "At her new school, Lindiwe carefully presents her business card with both hands, bowing slightly, and receives her principal's card the same way, pausing to read it.",
+        lines: [
+          { speaker: N, text: "The meishi exchange is a genuine ritual here — present and receive with both hands, and actually take a moment to read it. Small details, but they matter." },
+        ],
+      },
+      {
+        direction: "In a staff meeting, a colleague responds to a scheduling request with a warm, non-committal answer, and Lindiwe later learns it was a gentle no.",
+        lines: [
+          { speaker: "LINDIWE (reflecting, to a friend)", text: "I'm learning to listen for what's not quite being said." },
+          { speaker: N, text: "That's honne and tatemae in action — the true feeling beneath the polite, harmony-preserving surface. Reading it takes time, but it comes." },
+        ],
+      },
+      {
+        direction: "Weekend — Lindiwe stands at a viewpoint with Mount Fuji rising clearly against a bright blue sky.",
+        lines: [
+          { speaker: N, text: "And once the etiquette and the unspoken layers both start to click, Japan offers a teacher something genuinely rare — deep structure, real respect, and a culture worth a lifetime of learning." },
+        ],
+      },
+    ],
+  },
+  debateAudio: {
+    title: "IS JAPAN RIGHT FOR YOU?",
+    host1: "NKOSANA (confused by the different routes in)",
+    host2: "AYANDA (has taught in Japan, makes the case for it)",
+    exchange: [
+      { speaker: "NKOSANA", text: "Everyone mentions JET, ALT, eikaiwa — are these all basically the same thing with different names?" },
+      { speaker: "AYANDA", text: "Genuinely not — they're four real, distinct paths. JET is the official government scheme, well-structured and competitive. ALT roles through dispatch companies like Interac are a faster, more accessible way into public schools. Eikaiwa are private conversation schools, genuinely flexible. International schools sit at the top, usually wanting a teaching license." },
+      { speaker: "NKOSANA", text: "What's the one thing that catches new teachers off guard culturally?" },
+      { speaker: "AYANDA", text: "Honne and tatemae, without question. What someone says isn't always exactly what they mean — it's about preserving harmony, not deception. Learning to read that takes real time." },
+      { speaker: "NKOSANA", text: "And the business card thing I keep hearing about?" },
+      { speaker: "AYANDA", text: "Meishi, genuinely a real ritual. Both hands to give, both hands to receive, and actually read it before putting it away. Small, but it says a lot about how seriously first impressions are taken here." },
+      { speaker: "NKOSANA", text: "So, worth it overall?" },
+      { speaker: "AYANDA", text: "Genuinely, yes — as long as you pick the route that actually fits your goals. Japan rewards patience and real cultural curiosity with one of the most structured, rewarding teaching markets anywhere." },
+    ],
+  },
+  closingEquation: {
+    heading: "The Japan Equation",
+    content:
+      "Japan rewards teachers who choose their route deliberately, and invest real patience in reading the unspoken layers of honne and tatemae. Get both right, and Japan offers deep structure, genuine respect, and a culture worth a lifetime of learning.",
+  },
+  jobPortalCTA: cta("Japan", "JP"),
+};
+
+const kuwait: Country = {
+  slug: "kuwait",
+  name: "Kuwait",
+  code: "KW",
+  region: "Middle East",
+  flagEmoji: "🇰🇼",
+  tagline:
+    "A fully dry country, the genuine tradition of diwaniya, and a market that values real classroom experience — a complete guide with Reading, Video, and Audio.",
+  statBadges: [
+    { value: "Fully Dry", label: "No Exceptions, Unlike UAE/Qatar" },
+    { value: "Diwaniya", label: "UNESCO-Recognised Tradition" },
+    { value: "~2 Years", label: "Experience Commonly Expected" },
+  ],
+  guideContents: [
+    "Reading — culture, food, landmarks, the fully-dry reality, and diwaniya",
+    GUIDE_VIDEO,
+    "Debate Audio — two hosts weighing whether Kuwait is the right fit for you",
+  ],
+  reading: {
+    quickFacts: [
+      "Kuwait City concentrates the large majority of international teaching positions",
+      "Genuinely tax-free income, a real financial advantage across the Gulf region",
+      "Around 2 years of classroom experience is commonly expected, more than some neighbouring markets",
+    ],
+    sections: [
+      {
+        heading: "Fully Dry: Not the Same as Its Neighbours",
+        blocks: [
+          callout(
+            "danger",
+            "Unlike the UAE or Qatar, where alcohol is available through licensed hotels and venues, Kuwait is genuinely and completely dry — there are no licensed exceptions anywhere in the country. This is worth understanding clearly before you commit, not discovering on arrival.",
+            "No Exceptions, Anywhere"
+          ),
+          cards(
+            { title: "Kuwait", badge: "Fully Dry", tone: "danger", text: "Alcohol is banned outright, with no exceptions anywhere in the country." },
+            { title: "UAE", badge: "Licensed Exceptions", text: "Alcohol is available through licensed hotels, bars, and restaurants." },
+            { title: "Qatar", badge: "Licensed Exceptions", text: "Alcohol is available through licensed hotels and select venues." }
+          ),
+        ],
+      },
+      {
+        heading: "Diwaniya: A Genuine Living Tradition",
+        blocks: [
+          callout(
+            "info",
+            "The diwaniya — a regular gathering of men (traditionally) to discuss politics, business, and daily life — is a genuine, UNESCO-recognised Kuwaiti cultural tradition, still very much alive today. Being invited to one is a real mark of trust and hospitality.",
+            "A UNESCO-Recognised Social Institution"
+          ),
+        ],
+      },
+      {
+        heading: "Food",
+        blocks: [
+          list(
+            L("Machboos", "spiced rice with meat or fish, widely considered Kuwait's national dish"),
+            L("Arabic coffee (gahwa)", "served with dates, a genuine daily hospitality ritual")
+          ),
+        ],
+      },
+      {
+        heading: "Landmarks",
+        blocks: [
+          list(
+            L("Kuwait Towers", "the country's defining modern landmark, overlooking the Gulf"),
+            L("The Grand Mosque", "Kuwait's largest, a genuine architectural landmark")
+          ),
+        ],
+      },
+      {
+        heading: "The Teacher's Toolkit: Finding the Work",
+        blocks: [
+          cards(
+            { title: "Go Overseas", text: "Job listings and provider reviews for Gulf-region teaching placements." },
+            { title: "TEFL Org", text: "General job board resources with Kuwait-specific guidance." },
+            { title: "Search Associates", text: "A respected international school recruitment platform, especially for experienced teachers." },
+            { title: "Dave's ESL Café", text: "A long-running, classic ESL job board that still lists Gulf-based roles." }
+          ),
+        ],
+      },
+    ],
+    pullQuote:
+      "Kuwait often surprises new teachers with just how central hospitality and conversation are to daily life — the diwaniya tradition here isn't a tourist curiosity, it's a genuine, living institution.",
+    pullQuoteAfter: 1,
+  },
+  doAndDont: [
+    { do: "Accept a diwaniya invitation graciously — it's a genuine mark of trust", dont: "Bring, buy, or expect to find alcohol anywhere in Kuwait — there are genuinely no exceptions" },
+    { do: "Dress modestly in public at all times", dont: "Assume Kuwait's rules mirror the UAE or Qatar — they are genuinely stricter here" },
+    { do: "Build real classroom experience before applying — roughly 2 years is commonly expected", dont: "Eat or drink in public during Ramadan daylight hours" },
+    { do: "Research Kuwait's fully-dry status clearly before accepting an offer", dont: "Underestimate the experience bar — this market values proven classroom time" },
+  ],
+  videoScript: {
+    title: SCRIPT_TITLE,
+    scenes: [
+      {
+        direction: "ZODWA, a South African teacher, arrives in Kuwait City, the Kuwait Towers catching the late afternoon light along the Gulf corniche.",
+        lines: [
+          { speaker: N, text: "Kuwait often surprises new teachers with just how central hospitality and conversation are to daily life — the diwaniya tradition here isn't a tourist curiosity, it's a genuine, living institution." },
+          { speaker: "ZODWA (taking in the skyline)", text: "I've read about diwaniya, but I still don't fully understand it yet." },
+        ],
+      },
+      {
+        direction: "Weeks later, a colleague invites Zodwa to a family diwaniya gathering, where she's welcomed warmly into a genuine, ongoing conversation over coffee and dates.",
+        lines: [
+          { speaker: N, text: "Being invited to a diwaniya is a real mark of trust — a UNESCO-recognised tradition of gathering to talk, genuinely still alive today, not performed for visitors." },
+        ],
+      },
+      {
+        direction: "At a restaurant, Zodwa notices there's no alcohol on the menu at all, not even in the upscale section, and remembers reading about this before she arrived.",
+        lines: [
+          { speaker: "ZODWA (to herself, nodding)", text: "Right — properly, fully dry. Not like what I read about Dubai." },
+          { speaker: N, text: "Worth knowing clearly — Kuwait is genuinely dry with no exceptions, unlike the UAE or Qatar, where licensed venues exist. It's a real, meaningful difference between Gulf countries." },
+        ],
+      },
+      {
+        direction: "At her new school, Zodwa's principal reviews her CV, nodding at her two years of prior classroom experience.",
+        lines: [
+          { speaker: N, text: "This market genuinely values proven experience — roughly two years is commonly expected, more than some neighbouring countries ask for." },
+        ],
+      },
+      {
+        direction: "Weekend — Zodwa stands beneath the towering Kuwait Towers at sunset, the Gulf stretching out beyond them.",
+        lines: [
+          { speaker: N, text: "And once the culture and the expectations are both understood clearly, Kuwait offers a teacher something genuinely rare — real hospitality, tax-free income, and a living tradition of conversation and trust." },
+        ],
+      },
+    ],
+  },
+  debateAudio: {
+    title: "IS KUWAIT RIGHT FOR YOU?",
+    host1: "AMOGELANG (unsure about the fully-dry rules)",
+    host2: "TUMELO (has taught in Kuwait, makes the case for it)",
+    exchange: [
+      { speaker: "AMOGELANG", text: "I've heard Kuwait is completely dry, no exceptions at all. Is that actually true, even compared to somewhere like Dubai?" },
+      { speaker: "TUMELO", text: "Genuinely true, and it's worth understanding clearly before you go. Unlike the UAE or Qatar, where licensed hotels and venues serve alcohol, Kuwait has no exceptions anywhere. It's a real, meaningful difference between Gulf countries, not a minor detail." },
+      { speaker: "AMOGELANG", text: "What's diwaniya, and why does it come up so much?" },
+      { speaker: "TUMELO", text: "It's a genuine, UNESCO-recognised tradition — regular gatherings to talk, share coffee, and build real community. Being invited to one is a real mark of trust, and it says a lot about how seriously hospitality is taken here." },
+      { speaker: "AMOGELANG", text: "Is it hard to actually get hired?" },
+      { speaker: "TUMELO", text: "Genuinely more competitive than some neighbouring markets — around two years of classroom experience is commonly expected. Worth building that up before applying if you can." },
+      { speaker: "AMOGELANG", text: "So, worth it overall?" },
+      { speaker: "TUMELO", text: "Genuinely, yes — tax-free income, real hospitality, and a culture that takes conversation and trust seriously. Just go in fully clear on the fully-dry reality and the experience bar." },
+    ],
+  },
+  closingEquation: {
+    heading: "The Kuwait Equation",
+    content:
+      "Kuwait rewards teachers who arrive genuinely informed: clear on the fully-dry reality, ready with real classroom experience, and open to the deep hospitality of diwaniya culture. Go in prepared, and Kuwait offers real financial reward and a genuine tradition of trust and conversation.",
+  },
+  jobPortalCTA: cta("Kuwait", "KW"),
+};
+
+const laos: Country = {
+  slug: "laos",
+  name: "Laos",
+  code: "LA",
+  region: "Asia",
+  flagEmoji: "🇱🇦",
+  tagline:
+    "No recruiter gatekeepers, direct department outreach, and a document chain that genuinely differs from most other countries — a complete guide with Reading, Video, and Audio.",
+  statBadges: [
+    { value: "Not Hague", label: "Full Legalisation Required" },
+    { value: "$500-1,500/mo", label: "Language Centres & NGOs" },
+    { value: "$40-46K/yr", label: "International School Packages" },
+  ],
+  guideContents: [
+    "Reading — the real document chain, a direct contact directory, and a 6-month playbook",
+    GUIDE_VIDEO,
+    "Debate Audio — two hosts weighing whether Laos is the right fit for you",
+  ],
+  reading: {
+    quickFacts: [
+      "Laos has no large formal recruitment pipeline — the market rewards direct outreach, not competing in a system you're locked out of",
+      "Salaries: US$500-1,500/month at language centres and NGOs; international school packages can reach US$40,000-46,000/year plus housing, insurance, and flights",
+      "Myanmar is excluded from this guide entirely, per current “Do Not Travel” advisories — this guide covers Laos only",
+    ],
+    sections: [
+      {
+        heading: "The Document Chain: Laos Is Genuinely Different",
+        blocks: [
+          callout(
+            "warn",
+            "Unlike most countries in this guide series, a simple apostille will not work here. Documents require full consular legalisation instead — a longer, more involved process. Start this chain 4-6 months before you intend to travel.",
+            "Laos Is NOT a Hague Apostille Convention Member"
+          ),
+          steps(
+            { label: "SAQA verification letter for your degree and transcripts", text: "25+ working days" },
+            { label: "SACE registration certificate", text: "name must match your passport exactly" },
+            { label: "SAPS Police Clearance Certificate", text: "2-4 weeks, valid only 6 months, time it carefully" },
+            { label: "120-hour accredited TEFL/TESOL certificate", text: "" },
+            { label: "DIRCO Certificate of Authentication (Legalisation Section, Pretoria)", text: "6-8 weeks, originals only, certified copies are rejected" },
+            { label: "Legalisation by a Lao diplomatic mission, by courier or agent", text: "Laos has no resident embassy in South Africa" }
+          ),
+          text("Budget: approximately R5,000-8,000+. Total timeline: 3-6 months."),
+        ],
+      },
+      {
+        heading: "Direct Contact Directory",
+        blocks: [
+          text("Laos rewards candidates who approach the right departments and schools directly, rather than waiting for a recruiter:"),
+          cards(
+            { title: "Ministry of Education and Sports (MoES)", text: "No. 1 Lanexang Avenue, Vientiane. Tel: +856 21 216 004. moes.edu.la" },
+            { title: "MoES Education Coordination Unit (ECU)", text: "Correct entry point for foreign educators. Tel: +856 21 243672 / 020 5459 5936. Email: ecu.moes.laopdr@gmail.com" },
+            { title: "MoES Dept. of Higher Education", text: "For university-level teaching. Tel: +856 20 212 019" },
+            { title: "Australian International School of Laos", text: "Direct applications: admin.manager@aisedulaos.com. Provides work visa + residence permit; welcomes newly qualified teachers." },
+            { title: "Vientiane International School (IB)", text: "Applies via Tes Jobs. August-start hiring closes around December the prior year." }
+          ),
+        ],
+      },
+      {
+        heading: "The Six-Month Direct-Application Playbook",
+        blocks: [
+          steps(
+            { label: "MONTHS 1-2", text: "SAQA verification, SAPS clearance application, SACE certificate copy, enrol in a 120-hour TEFL." },
+            { label: "MONTHS 2-3", text: "DIRCO authentication; courier legalisation to the Lao mission; build a 2-page international teaching CV plus tailored cover letter." },
+            { label: "MONTHS 3-4", text: "Email schools and the MoES ECU directly, one PDF attachment (CV, degree, TEFL, clearance, references). Follow up once after 10 working days." },
+            { label: "MONTHS 4-6", text: "Interview plus a 20-minute demo lesson. International schools hire October-January for an August start; language centres hire year-round." }
+          ),
+        ],
+      },
+      {
+        heading: "What Employers Actually Expect",
+        blocks: [
+          list(
+            T("Bachelor's degree in education or English-related field; BEd/PGCE especially strong for international schools"),
+            T("Recognised TEFL/TESOL/CELTA/PGCE, 120-hour minimum"),
+            T("South African English-medium training is a genuine asset; offer IELTS if requested"),
+            T("Multilingual classroom experience — a daily South African reality — is worth making explicit on your CV"),
+            T("Modest dress near monasteries, returning the nop greeting, and genuine patience are all noticed")
+          ),
+        ],
+      },
+      {
+        heading: "Honest Caveats",
+        blocks: [
+          list(
+            T("Verify all phone numbers before relying on them — Lao government contacts change; call MoES to confirm the ECU desk"),
+            T("The ECU email is a donor-liaison desk, not a jobs board — use it to ask which office handles foreign teacher accreditation"),
+            T("“Native speaker” preference exists, but at least one major Vientiane international school explicitly welcomes newly qualified, non-native teachers with strong qualifications — pitch qualifications, not accent"),
+            T("Never accept a role proposing long-term teaching on a tourist visa"),
+            T("Arrive with meaningful savings — pay can be unpredictable even when hired directly")
+          ),
+        ],
+      },
+    ],
+    pullQuote:
+      "Laos often surprises new teachers with how much the process rewards initiative — this isn't a market you wait to be discovered in, it's one you write directly into.",
+    pullQuoteAfter: 1,
+  },
+  doAndDont: [
+    { do: "Start your document legalisation chain 4-6 months before travelling", dont: "Assume an apostille alone will work — Laos requires full consular legalisation" },
+    { do: "Email schools and the MoES ECU directly with one clean PDF attachment", dont: "Submit certified copies to DIRCO — originals only are accepted" },
+    { do: "Time your SAPS clearance carefully — it's only valid 6 months", dont: "Accept a role proposing long-term work on a tourist visa" },
+    { do: "Arrive with meaningful savings, since pay timing can be unpredictable", dont: "Assume the ECU email is a jobs board — it's a liaison desk, use it to ask the right question" },
+  ],
+  videoScript: {
+    title: SCRIPT_TITLE,
+    scenes: [
+      {
+        direction: "NOMSA, a South African teacher, stands outside the Ministry of Education and Sports building on Lanexang Avenue, a folder of documents held carefully under her arm.",
+        lines: [
+          { speaker: N, text: "Laos often surprises new teachers with how much the process rewards initiative — this isn't a market you wait to be discovered in, it's one you write directly into." },
+          { speaker: "NOMSA (checking her folder)", text: "Degree, SACE, TEFL, clearance — all legalised, not just apostilled. Took months to get here." },
+        ],
+      },
+      {
+        direction: "Months earlier, in flashback — Nomsa on a call with a legalisation agent, carefully noting down each step of the process on a printed checklist.",
+        lines: [
+          { speaker: N, text: "Laos genuinely isn't part of the Hague Apostille Convention — documents need full consular legalisation instead, start to finish, usually three to six months. Worth beginning this early, not scrambling later." },
+        ],
+      },
+      {
+        direction: "At a café in Vientiane, Nomsa reviews an email she's drafting to a school's admin manager, attaching a single clean PDF with her CV, degree, TEFL certificate, and references.",
+        lines: [
+          { speaker: "NOMSA (reading it over, satisfied)", text: "One PDF, one clear subject line. Let's see." },
+          { speaker: N, text: "Direct outreach genuinely works here — a well-documented, professional application to the right department or school stands out precisely because so few candidates take this route seriously." },
+        ],
+      },
+      {
+        direction: "Weeks later, Nomsa teaches a demo lesson at an international school, her multilingual classroom experience from South Africa clearly resonating with the interview panel.",
+        lines: [
+          { speaker: N, text: "And once the paperwork is behind you, Laos offers a teacher something genuinely rare — a market that rewards real preparation and initiative, in one of Southeast Asia's most understated, welcoming countries." },
+        ],
+      },
+    ],
+  },
+  debateAudio: {
+    title: "IS LAOS RIGHT FOR YOU?",
+    host1: "PALESA (worried about the lack of a formal recruitment system)",
+    host2: "REABETSWE (has researched Laos deeply, makes the case for it)",
+    exchange: [
+      { speaker: "PALESA", text: "Laos doesn't seem to have a big formal recruitment pipeline like some other countries. Doesn't that make it harder to actually get hired?" },
+      { speaker: "REABETSWE", text: "It's a genuinely different kind of market, but not necessarily harder — it means South Africans aren't competing inside a system built around other nationalities. The advantage goes to whoever approaches the right departments and schools directly, properly documented." },
+      { speaker: "PALESA", text: "What's the one thing that catches people off guard about the paperwork?" },
+      { speaker: "REABETSWE", text: "That Laos isn't part of the Hague Apostille Convention. A simple apostille genuinely won't work — documents need full consular legalisation, which takes three to six months from start to finish. Budget real time for this." },
+      { speaker: "PALESA", text: "Is it worth pursuing the native-speaker angle, or does that limit South Africans?" },
+      { speaker: "REABETSWE", text: "A native-speaker preference genuinely exists, but at least one major international school in Vientiane explicitly welcomes newly qualified, non-native teachers with strong qualifications. The real advice is to pitch your qualifications, not your accent." },
+      { speaker: "PALESA", text: "What should someone genuinely avoid?" },
+      { speaker: "REABETSWE", text: "Never accept a role built around a tourist visa — and arrive with real savings, since pay can be unpredictable even in a legitimate, direct-hire role." },
+      { speaker: "PALESA", text: "So, worth it overall?" },
+      { speaker: "REABETSWE", text: "Genuinely, yes, for the right person — someone willing to do the document work properly and reach out directly. Laos rewards exactly that kind of preparation." },
+    ],
+  },
+  closingEquation: {
+    heading: "The Laos Equation",
+    content:
+      "Laos rewards teachers who do the unglamorous work properly: the full legalisation chain, direct and professional outreach to the right departments, and genuine patience with an informal, relationship-driven market. Do that groundwork, and Laos offers a genuine, understated opportunity most other candidates never even attempt.",
+  },
+  jobPortalCTA: cta("Laos", "LA"),
+};
+
+const mexico: Country = {
+  slug: "mexico",
+  name: "Mexico",
+  code: "MX",
+  region: "Americas",
+  flagEmoji: "🇲🇽",
+  tagline:
+    "A TEFL certificate that legally counts toward your visa, and a celebration of memory too often misunderstood — a complete guide with Reading, Video, and Audio.",
+  statBadges: [
+    { value: "TEFL = Degree", label: "For Visa Purposes, Uniquely" },
+    { value: "180 Days", label: "FMM Tourist Entry Window" },
+    { value: "Not Halloween", label: "Día de los Muertos, Truly" },
+  ],
+  guideContents: [
+    "Reading — culture, food, landmarks, the real visa process, and correcting a common myth",
+    GUIDE_VIDEO,
+    "Debate Audio — two hosts weighing whether Mexico is the right fit for you",
+  ],
+  reading: {
+    quickFacts: [
+      "Mexico City is the largest hub, with genuine demand also in Guadalajara and coastal cities",
+      "One of the few countries where a TEFL certificate can legally substitute for a degree on the work visa",
+      "International and bilingual K-12 schools still genuinely expect a degree plus real experience",
+    ],
+    sections: [
+      {
+        heading: "A Genuinely Unique Visa Advantage",
+        blocks: [
+          callout(
+            "success",
+            "Mexican law allows a TEFL certificate to substitute for a bachelor's degree specifically for work visa purposes — a genuine rarity among the countries in this guide series. This opens real doors for career-changers without a formal teaching degree. Note: international and bilingual K-12 schools still typically want a degree and real classroom experience, regardless of this visa flexibility.",
+            "TEFL Certificate as Legal Degree Substitute"
+          ),
+        ],
+      },
+      {
+        heading: "The Visa Reality",
+        blocks: [
+          callout(
+            "warn",
+            "The Temporary Resident Visa (often still called “FM3”) is employer-sponsored. Most teachers enter on an FMM tourist permit (up to 180 days) to secure a job offer, then formally apply for the work visa — working on tourist status itself is not legally permitted. Always confirm your employer's INM registration before accepting an offer.",
+            "Secure Your Offer First, Then Apply"
+          ),
+        ],
+      },
+      {
+        heading: "Correcting a Common Myth",
+        blocks: [
+          cards(
+            { title: "THE MISCONCEPTION", tone: "danger", text: "“Día de los Muertos is Mexican Halloween.” A genuinely common, and genuinely inaccurate, assumption many newcomers bring with them." },
+            { title: "THE REALITY", tone: "success", text: "A UNESCO-recognised celebration of memory and family, honouring loved ones who've passed — genuinely joyful, not spooky, and deeply distinct from Halloween." }
+          ),
+        ],
+      },
+      {
+        heading: "Food",
+        blocks: [
+          list(
+            L("Tacos al Pastor", "marinated pork, pineapple, and onion, a genuine Mexico City institution"),
+            L("Mole", "a rich, complex sauce with regional variations across the country")
+          ),
+        ],
+      },
+      {
+        heading: "Landmarks",
+        blocks: [
+          list(
+            L("Chichen Itza", "the iconic Maya step pyramid, a genuine UNESCO World Heritage Site"),
+            L("Teotihuacan", "the vast pre-Aztec pyramid complex just outside Mexico City"),
+            L("Oaxaca", "renowned for its cuisine, crafts, and vivid Día de los Muertos celebrations")
+          ),
+        ],
+      },
+      {
+        heading: "The Teacher's Toolkit: Finding the Work",
+        blocks: [
+          cards(
+            { title: "Premier TEFL", text: "Structured programme support for Mexico-specific placement and visa guidance." },
+            { title: "Go Overseas", text: "Job listings and provider reviews across Mexico's major teaching hubs." },
+            { title: "TEFL.org", text: "General job board resources with country-specific requirements." },
+            { title: "School of TEFL", text: "Certification paired with job-search support for the Mexican market." }
+          ),
+        ],
+      },
+    ],
+    pullQuote:
+      "Mexico often surprises new teachers with how accessible the paperwork genuinely is — this is one of the few places where your certificate alone can carry real legal weight.",
+    pullQuoteAfter: 0,
+  },
+  doAndDont: [
+    { do: "Secure a job offer first, then formally apply for your work visa", dont: "Work on FMM tourist status alone — it is genuinely not legally permitted" },
+    { do: "Confirm your employer's INM registration before accepting any offer", dont: "Call Día de los Muertos “Mexican Halloween” — it's a distinct, deeply meaningful tradition" },
+    { do: "Approach Día de los Muertos as the genuine celebration of memory it is", dont: "Assume every school accepts a TEFL certificate in place of a degree — international schools still want both" },
+    { do: "Bring a degree if you have one — still an advantage at international schools", dont: "Skip verifying your employer's visa sponsorship capability in writing" },
+  ],
+  videoScript: {
+    title: SCRIPT_TITLE,
+    scenes: [
+      {
+        direction: "A South African teacher stands before the Maya step pyramid at Chichen Itza, morning light catching the ancient stonework.",
+        lines: [
+          { speaker: N, text: "Mexico often surprises new teachers with how accessible the paperwork genuinely is — this is one of the few places where your certificate alone can carry real legal weight." },
+        ],
+      },
+      {
+        direction: "Weeks earlier, in flashback, the teacher reviews her FMM tourist permit alongside her TEFL certificate, confirming with her new employer that it will substitute for a degree on her visa application.",
+        lines: [
+          { speaker: N, text: "Mexican law genuinely allows a TEFL certificate to substitute for a bachelor's degree, specifically for work visa purposes — a real advantage for career-changers. Secure your job offer first, on your FMM tourist entry, then apply for the proper Temporary Resident Visa." },
+        ],
+      },
+      {
+        direction: "At a staff room in late October, a Mexican colleague gently explains the meaning behind an ofrenda being set up nearby, photos of family members carefully arranged.",
+        lines: [
+          { speaker: N, text: "Día de los Muertos is genuinely not “Mexican Halloween” — it's a UNESCO-recognised celebration of memory and family, joyful and deeply meaningful, worth approaching with real respect." },
+        ],
+      },
+      {
+        direction: "Weekend — the teacher walks through Oaxaca's markets, vivid marigolds and handcrafted skulls on display ahead of the coming celebrations.",
+        lines: [
+          { speaker: N, text: "And once the paperwork is properly sorted, Mexico offers a teacher something genuinely rare — real accessibility, extraordinary history, and traditions worth understanding on their own terms." },
+        ],
+      },
+    ],
+  },
+  debateAudio: {
+    title: "IS MEXICO RIGHT FOR YOU?",
+    host1: "ZINTLE (unsure about the visa process)",
+    host2: "MPHO (has taught in Mexico, makes the case for it)",
+    exchange: [
+      { speaker: "ZINTLE", text: "I heard you don't even need a degree to teach legally in Mexico. Is that actually true?" },
+      { speaker: "MPHO", text: "Genuinely, yes, for work visa purposes specifically — Mexican law allows a TEFL certificate to substitute for a bachelor's degree. It's a real rarity among the countries we cover. Worth noting though, international and bilingual K-12 schools still typically want a degree and real experience regardless." },
+      { speaker: "ZINTLE", text: "How does the actual visa process work?" },
+      { speaker: "MPHO", text: "Most teachers enter on an FMM tourist permit, up to 180 days, to secure a job offer first. Then you formally apply for the Temporary Resident Visa, employer-sponsored. Working on tourist status itself genuinely isn't legally permitted." },
+      { speaker: "ZINTLE", text: "What's the one cultural thing people misunderstand most?" },
+      { speaker: "MPHO", text: "Día de los Muertos, without question. It's genuinely not Mexican Halloween — it's a UNESCO-recognised celebration of memory and family, and treating it as a spooky costume holiday genuinely misses the point." },
+      { speaker: "ZINTLE", text: "So, worth it overall?" },
+      { speaker: "MPHO", text: "Genuinely, yes — the visa flexibility alone makes Mexico one of the more accessible markets out there, and the culture and history are extraordinary once you approach them with real respect." },
+    ],
+  },
+  closingEquation: {
+    heading: "The Mexico Equation",
+    content:
+      "Mexico rewards teachers who take advantage of its genuine accessibility while getting the sequence right: job offer first, then the proper visa — and who approach the country's traditions on their own real terms. Get both right, and Mexico offers one of the most accessible, culturally rich teaching markets in Latin America.",
+  },
+  jobPortalCTA: cta("Mexico", "MX"),
+};
+
+// ---- Dossier-format guides -------------------------------------------------
+// These come from a different PDF series (no Video Script / Debate Audio, no
+// "What's In This Guide" list), so those fields are intentionally omitted.
+
+const qatar: Country = {
+  slug: "qatar",
+  name: "Qatar",
+  code: "QA",
+  region: "Middle East",
+  flagEmoji: "🇶🇦",
+  heading: "Teaching in Qatar: The Quiet Oasis",
+  tagline:
+    "A definitive playbook for educators from South Africa, the UK, Ireland, Australia, New Zealand, Canada, and the US seeking extreme personal safety, institutional prestige, and high-tier tax-free compensation in Doha.",
+  statBadges: [
+    { value: "Doha Central Hub", label: "World-class cultural landmarks & premier schools" },
+    { value: "English Primary", label: "Instruction language across elite academies" },
+    { value: "Full Package Norm", label: "Tax-free salary, flights, housing & healthcare" },
+    { value: "South African Friendly", label: "Recognized passport pool for tier-1 hiring" },
+  ],
+  guideContents: [],
+  reading: {
+    quickFacts: [],
+    sections: [
+      {
+        heading: "The Cultural Dichotomy: Bustle vs. Understated Structure",
+        blocks: [
+          cards(
+            {
+              title: "The Conflation: The Loud Scene",
+              tone: "warn",
+              text: "The Myth: Often confused with Dubai's nightlife-heavy, consumerist pace.\nThe Misconception: Fear that a conservative monarchy translates to social isolation or severe confinement.\nThe Reality: If your priority is nonstop clubbing and high-octane spectacle, Qatar will feel misaligned with your lifestyle expectations.",
+            },
+            {
+              title: "The Oasis: Quiet Wealth & Family Safety",
+              tone: "success",
+              text: "The Reality: An understated, ultra-safe society engineered for calm and professional focus.\nThe Environment: Unrivaled public safety, world-class healthcare, and deeply structured community living.\nThe Verdict: Qatar trades superficial buzz for authentic stability, prestige, and generational savings potential.",
+            }
+          ),
+        ],
+      },
+      {
+        heading: "The Desert Rhythm: Daily Schedule Architecture",
+        blocks: [
+          cards(
+            {
+              title: "The 6:30 AM Desert Dawn Start",
+              text: "School days start early before the sun is fully up to beat midday heatwaves. Staff meetings and intensive instruction occur in temperature-controlled, state-of-the-art facilities.\nSchool Hours: Typically conclude between 1:30 PM and 2:30 PM.",
+            },
+            {
+              title: "The Sunset Reawakening & Karak Ritual",
+              text: "As the heat breaks at dusk, public life begins. Evenings center on strolls along the Corniche, social dinners in Souq Waqif, and hot cups of spiced Karak tea.\nCommunity Life: Family parks, open markets, and seaside cafés.",
+            }
+          ),
+        ],
+      },
+      {
+        heading: "The Ecosystem of Sponsorship & Institutional Compliance",
+        blocks: [
+          table(
+            ["LEGAL PILLAR", "OPERATIONAL MECHANISM", "EDUCATOR SAFEGUARD"],
+            [
+              "Sponsoring Employer",
+              "Your residence permit and legal status are directly anchored to your educational institution.",
+              "Ensure the contract is confirmed in writing; changing schools mid-term requires explicit sponsor approval.",
+            ],
+            [
+              "Work Residence Permit (RP)",
+              "Government-issued status allowing long-term stay, banking, housing leases, and local driving rights.",
+              "Non-Negotiable: Never travel or begin classroom work before full Work RP clearance is verified.",
+            ],
+            [
+              "Exit Permits & Travel",
+              "Formal administrative coordination required by some entities prior to departing the country.",
+              "Handled seamlessly by tier-1 international schools around designated academic holiday terms.",
+            ]
+          ),
+        ],
+      },
+      {
+        heading: "The Six-Month Runway: Document Attestation Roadmap",
+        blocks: [
+          cards(
+            {
+              title: "Dossier Assembly",
+              badge: "MONTH 1",
+              tone: "info",
+              text: "Obtain original degrees, verified academic transcripts, professional teaching licenses, and national police clearance certificates.",
+            },
+            {
+              title: "The Attestation Hurdle",
+              badge: "MONTHS 2 – 5",
+              tone: "info",
+              text: "Authentication by relevant Department of Foreign Affairs / DIRCO, notary authentications, and Qatari Embassy legalization stamps.",
+            },
+            {
+              title: "Visa Issuance & Touchdown",
+              badge: "MONTH 6",
+              tone: "info",
+              text: "Work visa clearance approval, flight bookings, Doha airport arrival, and completion of medical checks for final Residency Permit.",
+            }
+          ),
+          callout(
+            "danger",
+            "Never enter Qatar on an informal tourist visa expecting to convert to teaching employment locally. All documents must be attested beforehand, and your formal Work Residence Permit process initiated through an accredited school.",
+            "CRITICAL COMPLIANCE DIRECTIVE"
+          ),
+        ],
+      },
+      {
+        heading: "Workplace Diplomacy & Rules of the Realm",
+        blocks: [
+          cards(
+            {
+              title: "The Etiquette of “Saving Face”",
+              text: "Gulf workplace hierarchy relies on indirect communication. Publicly criticizing leadership or colleagues in staff meetings causes irrevocable loss of face and destroys trust.\nBest Practice: Address concerns gently in private one-on-one sessions.",
+            },
+            {
+              title: "Hospitality & Social Respect",
+              text: "Accept offered Arabic coffee (Gahwa) and dates with your right hand. Greet the most senior person first. With female nationals, wait for a hand to be extended; otherwise, offer a nod.\nSocial Norm: Modest dress required in public spaces. Alcohol strictly in licensed hotels.",
+            }
+          ),
+        ],
+      },
+      {
+        heading: "Life in Doha: Heritage, Gastronomy & Leisure",
+        blocks: [
+          cards(
+            { title: "Art & Heritage", text: "Museum of Islamic Art: I.M. Pei masterpiece. Explore Katara Cultural Village and the National Museum." },
+            { title: "Living Tradition", text: "Souq Waqif: Historic bazaar with artisan stalls, traditional spices, and historic falconry hospital quarters." },
+            { title: "Signature Cuisine", text: "Feast on spiced Machboos, breakfast Balaleet, and daily brewed spiced cardamom Karak." }
+          ),
+        ],
+      },
+      {
+        heading: "Target Placement Channels",
+        blocks: [
+          cards(
+            { title: "Search Associates", text: "Premier international school hiring fairs" },
+            { title: "TEFL Org Jobs", text: "Dedicated language academy listings" },
+            { title: "Go Overseas", text: "School reviews & direct teach-abroad programs" },
+            { title: "Dave's ESL Café", text: "Established Gulf academic job boards" }
+          ),
+        ],
+      },
+    ],
+  },
+  doAndDont: [],
+  closingEquation: {
+    heading: "Strictness is the Feature, Not the Bug",
+    content: "The thorough paperwork builds the foundation for unparalleled safety, prestige, and financial peace.",
+  },
+  jobPortalCTA: cta("Qatar", "QA"),
+};
+
+const saudiArabia: Country = {
+  slug: "saudi-arabia",
+  name: "Saudi Arabia",
+  code: "SA",
+  region: "Middle East",
+  flagEmoji: "🇸🇦",
+  heading: "Teaching in Saudi Arabia: The Modern Blueprint",
+  tagline:
+    "The comprehensive orientation guide to navigating Vision 2030, rapid social modernization, and the Kingdom's lucrative, tier-1 teaching market for international educators from South Africa and worldwide.",
+  statBadges: [
+    { value: "Vision 2030 Driven", label: "Mandatory English curriculum from primary school" },
+    { value: "Premium Earnings", label: "Tax-free salary, flight allowances & housing" },
+    { value: "Ultra-Low Crime", label: "Consistently ranked among the safest global environments" },
+    { value: "BA + 120h TEFL", label: "Mandatory non-negotiable baseline for visa issuance" },
+  ],
+  guideContents: [],
+  reading: {
+    quickFacts: [],
+    sections: [
+      {
+        heading: "The Engine of Opportunity: Conservative Roots Meets Rapid Reform",
+        blocks: [
+          cards(
+            {
+              title: "Deep Islamic Heritage",
+              text: "Cultural Bedrock: Rooted in historic Islamic traditions, tight-knit family honor, and profound hospitality.\nWorld Heritage: Home to eight UNESCO sites, including the ancient Nabataean tombs of Hegra (AlUla).\nSocial Etiquette: Gracious hospitality (Qahwa & dates) and mutual modesty remain the core social standard.",
+            },
+            {
+              title: "The Vision 2030 Evolution",
+              text: "Economic Shift: National mandate expanding beyond oil into tourism, logistics, and global commerce.\nMajor Reforms: Reopened public cinemas, major entertainment/concerts, and women driving (2018 onward).\nPublic Spaces: Significant relaxation of mandatory abayas and strict gender-segregated zoning.",
+            }
+          ),
+        ],
+      },
+      {
+        heading: "Primary Hubs: Where Modern Education Meets Heritage",
+        blocks: [
+          cards(
+            {
+              title: "Riyadh",
+              badge: "THE CAPITAL HUB",
+              tone: "info",
+              text: "Financial center with dense international school networks. Features the mud-brick Masmak Fortress, At-Turaif (Diriyah), and the Kingdom Centre.",
+            },
+            {
+              title: "Jeddah",
+              badge: "THE COASTAL METROPOLIS",
+              tone: "info",
+              text: "Cosmopolitan Red Sea coastal hub. Gateway city famous for Al-Balad's UNESCO-listed coral architecture and relaxed coastal lifestyle.",
+            },
+            {
+              title: "AlUla & Hegra",
+              badge: "CULTURAL HERITAGE SITE",
+              tone: "info",
+              text: "Breathtaking desert living steeped in ancient Nabataean civilization. An emerging epicenter of global eco-tourism and cultural projects.",
+            }
+          ),
+        ],
+      },
+      {
+        heading: "The Peninsula Table: Foundations of Saudi Hospitality",
+        blocks: [
+          table(
+            ["DISH / TRADITION", "DESCRIPTION & ORIGIN", "CULTURAL MEANING"],
+            [
+              "Qahwa & Dates",
+              "Cardamom-infused Arabic coffee served warm in traditional finjan cups with premium dates.",
+              "Universal symbol of hospitality; accept graciously with your right hand.",
+            ],
+            [
+              "Kabsa & Mandi",
+              "Spiced meat and rice national dishes; Mandi is traditionally slow-cooked in underground fire pits.",
+              "Centerpiece of communal gatherings, family honor, and banquets.",
+            ],
+            [
+              "Saleeg & Matazeez",
+              "Saleeg: Hijazi creamy broth-rice dish. Matazeez: Najdi dumpling stew with tender vegetables.",
+              "Regional comfort staples highlighting rich geographic diversity.",
+            ]
+          ),
+        ],
+      },
+      {
+        heading: "The Classroom Access Matrix: Navigating Gender Dynamics",
+        blocks: [
+          cards(
+            {
+              title: "Male Educators",
+              text: "Classroom Access: Restricted primarily to boys' schools, male colleges, and corporate training divisions.\nNot permitted to teach girls or female university classes in traditional public streams.",
+            },
+            {
+              title: "Female Educators",
+              text: "Dual Market Access: Highly sought after across female educational tiers and primary/elementary co-educational stages.\nEnjoys broader versatility across both early-years boys and all-female institutes.",
+            }
+          ),
+        ],
+      },
+      {
+        heading: "The Professional Pipeline: Attestation, Qiwa & Iqama",
+        blocks: [
+          cards(
+            {
+              title: "Sponsorship & Attestation",
+              badge: "STEP 1 & 2: PRE-ARRIVAL",
+              tone: "info",
+              text: "Secure signed contract. Complete degree attestation, police clearances, and medical check authenticated via Saudi Cultural Attache / Embassy.",
+            },
+            {
+              title: "Government Platform",
+              badge: "STEP 3: MOFA & QIWA",
+              tone: "info",
+              text: "Your sponsoring school issues government visa slips via MoFA and initiates digital contract binding through the national Qiwa platform.",
+            },
+            {
+              title: "Iqama Issuance",
+              badge: "STEP 4: IN-COUNTRY",
+              tone: "info",
+              text: "Arrive in KSA on entry visa, complete in-country finger-printing and blood labs to receive official Iqama (Civil Residency Card).",
+            }
+          ),
+          callout(
+            "warn",
+            "Saudi Arabia is not a backpacker TEFL market. Online, non-accredited certificates are strictly denied. A Bachelor's Degree from an accredited institution and an in-person or 120+ hour verified TEFL/CELTA are legal baselines.",
+            "PREMIUM MARKET COMPLIANCE"
+          ),
+        ],
+      },
+      {
+        heading: "Verified Sourcing & Recruitment Channels",
+        blocks: [
+          cards(
+            { title: "Search Associates", text: "Elite international school hiring fairs" },
+            { title: "TEFL Org Jobs", text: "Verified KSA academy & university positions" },
+            { title: "Go Overseas", text: "Alumni reviews & vetted provider listings" },
+            { title: "Qiwa / MoFA", text: "Official Saudi government visa portals" }
+          ),
+        ],
+      },
+    ],
+  },
+  doAndDontHeading: "The Cultural Etiquette Grid: Respect vs. Strict Prohibitions",
+  doAndDont: [
+    { do: "Dress conservatively and respectfully in all public facilities.", dont: "Zero Alcohol / Pork: Both substances are strictly prohibited under national law." },
+    { do: "Accept hospitality warmly if invited into a local home (honored custom).", dont: "No PDA: Avoid public displays of affection; respect community decorum." },
+    { do: "Confirm full package details (housing, airfare, health coverage) in writing.", dont: "No Unauthorized Photography: Never film or photograph locals without permission." },
+  ],
+  closingEquation: {
+    heading: "Strict Cultural Roots. Rapid Modernization. Lucrative Rewards.",
+    content: "For qualified educators committed to cultural respect, KSA offers an unparalleled career launchpad.",
+  },
+  jobPortalCTA: cta("Saudi Arabia", "SA"),
+};
+
+const uae: Country = {
+  slug: "uae",
+  name: "UAE",
+  code: "AE",
+  region: "Middle East",
+  flagEmoji: "🇦🇪",
+  heading: "Teaching in the UAE: Modern Horizons & Ancient Roots",
+  tagline:
+    "Where futuristic skylines meet timeless Bedouin traditions. A comprehensive orientation to tax-free earning potential, global multicultural classrooms, and cultural compliance.",
+  statBadges: [
+    { value: "7 Emirates", label: "Federation Hubs" },
+    { value: "Expat-Majority", label: "Global Demographics" },
+    { value: "0% Tax", label: "Personal Income Tax" },
+    { value: "English", label: "Workplace Standard" },
+  ],
+  guideContents: [],
+  reading: {
+    quickFacts: [],
+    sections: [
+      {
+        heading: "1. The Operational Reality",
+        blocks: [
+          cards(
+            {
+              title: "The Federation Landscape",
+              text: "Comprising seven emirates, with Dubai and Abu Dhabi (the capital) serving as primary educational epicenters. Powered by a multicultural expat majority, English is the dominant working language of international schooling.",
+            },
+            {
+              title: "The Modern Work Week",
+              text: "Schools operate across a modern Sunday to Thursday working schedule, with Friday and Saturday observed as the weekend, allowing ample time for personal restoration and community events.",
+            },
+            {
+              title: "Architectural Anchors",
+              text: "• Burj Khalifa (Dubai): World's tallest tower defining modern engineering.\n• Louvre Abu Dhabi: Landmark cultural institution on Saadiyat Island.\n• Sheikh Zayed Grand Mosque: Masterpiece of white marble craftsmanship.\n• Al Fahidi & Al Ain: Historic wind-tower heritage and UNESCO-listed oases.",
+            }
+          ),
+          quote(
+            "It’s bigger than the photos. The UAE is reinventing itself in real-time, built on expatriate energy sitting atop centuries-old hospitality.",
+            "Sipho, South African Educator"
+          ),
+        ],
+      },
+      {
+        heading: "2. Hospitality & The Public Boundary",
+        blocks: [
+          text("The Sacred Ritual of Gahwa (Arabic Coffee) — Serving gahwa alongside dates is a time-honored gesture of respect:"),
+          cards(
+            { title: "One-Third Pour", text: "Poured 1/3 full—a deliberate mark of honor, never stinginess." },
+            { title: "The Refill Loop", text: "Refilled continuously until you gently tilt/shake the cup." },
+            { title: "Date Pairing", text: "Always presented with fresh dates as a gesture of welcome." }
+          ),
+          cards({
+            title: "Public vs. Private Boundaries",
+            text: "• The Public Sphere: Conservative modesty is strictly expected across shopping malls, civic avenues, and workplaces. Public displays of affection beyond modest hand-holding are frowned upon.\n• Licensed & Private Venues: Beachwear and relaxed social norms apply strictly within private pools, hotel resorts, and licensed establishments.\n• Ramadan Protocol: Public eating, drinking, and smoking during daylight hours are paused out of respect, including by non-Muslim educators.",
+          }),
+          text("The Local Plate & Global Cuisine"),
+          list(
+            L("Machboos", "Fragrant spiced rice with meat or fish and loomi (dried lime)."),
+            L("Harees", "Slow-cooked cracked wheat and meat, essential for festivities."),
+            L("Luqaimat", "Crispy golden fried dumplings drizzled in sweet date syrup."),
+            L("Karak", "Spiced black milk tea anchoring morning and afternoon breaks.")
+          ),
+        ],
+      },
+      {
+        heading: "3. The Educator's Calculus: The Draw vs. The Trade-Off",
+        blocks: [
+          table(
+            ["DIMENSION", "THE COMPELLING DRAW", "THE NECESSARY TRADE-OFF"],
+            ["Tax-Free Earnings", "Zero personal income tax, maximizing net monthly take-home pay.", "High cost of living and soaring housing rents—especially in central Dubai."],
+            ["Climate & Seasons", "Deeply pleasant, sunny, and temperate outdoor winter season (Nov–Apr).", "Intense summer heat (May–Sep) drastically restricting outdoor activities."],
+            ["Community Dynamic", "Warm, diverse expatriate peer network; friendships form quickly.", "Transient cycle with high expatriate turnover as colleagues rotate out."],
+            ["Professional Standard", "World-class school facilities and well-resourced multinational classrooms.", "Rigid administrative hierarchies, strict punctuality, and compliance reviews."]
+          ),
+        ],
+      },
+      {
+        heading: "4. Contract Anatomy: Look Beyond the Headline",
+        blocks: [
+          text("The Full Package Triangle — A lucrative tax-free salary headline means little without contractual guarantees. Verify that your formal written offer includes:"),
+          steps(
+            { label: "Housing Support", text: "Provided accommodation or adequate housing allowance." },
+            { label: "Annual Relocation Flights", text: "Round-trip home airfare allowances." },
+            { label: "Comprehensive Medical", text: "Full-coverage healthcare insurance." }
+          ),
+          callout(
+            "warn",
+            "Never relocate based on verbal representations. Ensure all housing provisions, flight allocations, and end-of-service gratuities are finalized in writing before departure.",
+            "The Golden Contract Rule"
+          ),
+        ],
+      },
+      {
+        heading: "5. Classroom Pedagogy & Hierarchy",
+        blocks: [
+          list(
+            L("Global Demographics", "You will teach students from dozens of national backgrounds in an environment valuing multicultural empathy."),
+            L("Institutional Respect", "Strict deference to school directors and heads of department is expected; align with administrative decisions professionally."),
+            L("Punctuality & Readiness", "Timing is non-negotiable. Punctuality in meetings and classroom management forms the foundation of professional trust.")
+          ),
+          quote(
+            "Go in blind, and the same things become the culture shock everyone complains about. Go in prepared, and it delivers exactly what people post about.",
+            "Kabelo, UAE International Teacher"
+          ),
+        ],
+      },
+    ],
+  },
+  doAndDontHeading: "6. Rules of Engagement: Code of Conduct",
+  doAndDont: [
+    { do: "Dress modestly in public spaces, shopping centers, and campuses.", dont: "Engage in public displays of affection beyond simple hand-holding." },
+    { do: "Observe public daylight fasting customs during Ramadan with respect.", dont: "Consume alcohol outside of officially licensed hotels or private spaces." },
+    { do: "Carefully calculate your specific emirate's living and rental costs.", dont: "Assume Dubai's rental overhead applies equally across all 7 emirates." },
+    { do: "Accept gahwa and dates graciously as an honored personal welcome.", dont: "Treat conservative cultural norms or legal statutes as optional guidelines." },
+  ],
+  closingEquation: {
+    heading: "Navigate the UAE with World Teachers Academy",
+    content:
+      "Master document attestation, evaluate international school packages across Dubai and Abu Dhabi, and launch your tax-free teaching career with confidence.",
+  },
+  jobPortalCTA: cta("UAE", "AE"),
+};
+
+const spain: Country = {
+  slug: "spain",
+  name: "Spain",
+  code: "ES",
+  region: "Europe",
+  flagEmoji: "🇪🇸",
+  heading: "Spain: The Teacher's Dossier",
+  tagline:
+    "Culture, visa pathways, and real-world logistics for South African educators. Experience immersive Spanish living, connection-driven schedules, and verified legal entry routes.",
+  statBadges: [
+    { value: "€700 – €1,000/mo", label: "Auxiliar cultural-immersion stipend" },
+    { value: "12 – 16 Hours/wk", label: "Part-time language assistant timetable" },
+    { value: "17 Autonomous Regions", label: "45 UNESCO sites & co-official languages" },
+    { value: "BA + TEFL Norm", label: "Universal qualification baseline" },
+  ],
+  guideContents: [],
+  reading: {
+    quickFacts: [],
+    sections: [
+      {
+        heading: "A Different Relationship to Time: Connection Over Schedule",
+        blocks: [
+          cards(
+            {
+              title: "The Iberian Daily Rhythm",
+              text: "Late-Hour Dining: Dinner rarely begins before 9:00 PM or 10:00 PM. Restaurants don't operate on 6:00 PM schedules.\nExtended Midday Pause: Lunch runs between 2:00 PM and 3:30 PM, serving as the substantive culinary center of the day.\nConnection First: Life revolves around relational warmth, casual terrace gatherings, and unwushed public pacing.",
+            },
+            {
+              title: "The Art of Sobremesa",
+              text: "Lingering at the Table: The revered custom of conversing long after the meal ends; the invisible ingredient of Spanish food culture.\nSocial Rituals: Two cheek-kisses as the standard greeting; vibrant evening tapas runs jumping between local neighborhood bars.\nSacred Sundays: Long, inviolable Sunday lunches uniting extended multi-generational families.",
+            }
+          ),
+        ],
+      },
+      {
+        heading: "Heritage & The Regional Divide",
+        blocks: [
+          cards(
+            {
+              title: "Barcelona",
+              badge: "CATALONIA EPICENTER",
+              tone: "info",
+              text: "Antoni Gaudí's awe-inspiring La Sagrada Família, whimsical Park Güell, Catalan bilingualism, and cosmopolitan Mediterranean life.",
+            },
+            {
+              title: "Granada & Seville",
+              badge: "ANDALUSIA HEART",
+              tone: "info",
+              text: "The sublime Moorish palaces of The Alhambra, passionate 15th-century UNESCO Flamenco heritage, and warm southern living.",
+            },
+            {
+              title: "Madrid & Beyond",
+              badge: "CENTRAL HUB",
+              tone: "info",
+              text: "Vibrant academy network, historic plazas, bustling nightlife, alongside distinct regions like the Basque Country and Galicia.",
+            }
+          ),
+          callout(
+            "warn",
+            "Treat an assistant placement as an enriching, low-stress cultural-immersion gap year rather than a high-income corporate move. Auxiliar roles grant a modest stipend (€700–€1,000) under a student visa, not an employer-sponsored work contract.",
+            "THE PROFESSIONAL REALITY CHECK"
+          ),
+        ],
+      },
+      {
+        heading: "Program Eligibility: Avoiding the NALCAP Dead-End",
+        blocks: [
+          cards(
+            {
+              title: "The Blocked Path: NALCAP",
+              tone: "danger",
+              text: "Specifically Restricted: Despite heavy marketing online, NALCAP is exclusively open to North American (US & Canadian) passport holders.\nSouth African applicants must NOT waste valuable time applying here.",
+            },
+            {
+              title: "The Open Doors for South Africans",
+              tone: "success",
+              text: "BEDA, ConversaSpain & Auxiliares: Officially open to South Africans via confirmed bilateral accords, placing teachers in Madrid, Catholic schools, and regional public networks.\nRoute your ambition to confirmed, eligible program gateways.",
+            }
+          ),
+        ],
+      },
+      {
+        heading: "Teaching Routes in Spain: Comparative Matrix",
+        blocks: [
+          table(
+            ["FEATURE", "OFFICIAL AUXILIARES", "BEDA / CONVERSASPAIN", "PRIVATE ACADEMIES"],
+            ["South African Eligibility", "Yes (Bilateral accord)", "Yes (Explicitly recognized)", "Yes (Requires work visa)"],
+            ["Role & Setting", "Public & semi-private schools", "Catholic (BEDA) & public schools", "Independent language schools"],
+            ["Time Commitment", "Part-time (12–16 hrs/week)", "Part-time (12–20 hrs/week)", "Full-time / Flexible schedules"],
+            ["Compensation", "€700 – €1,000 monthly stipend", "€700 – €1,000 monthly stipend", "Higher, stable professional salary"],
+            ["Legal Visa Framework", "Non-EU Student Visa", "Non-EU Student Visa", "Employer-Sponsored Work Visa"]
+          ),
+        ],
+      },
+      {
+        heading: "Verified Sourcing Portals",
+        blocks: [
+          cards(
+            { title: "Ministry Portal", text: "educacionfpydeportes.gob.es" },
+            { title: "Agency Direct", text: "BEDA & ConversaSpain portals" },
+            { title: "Job Boards", text: "TEFL.org & Go Overseas" },
+            { title: "Direct Hustle", text: "In-person academy networking" }
+          ),
+        ],
+      },
+    ],
+  },
+  doAndDontHeading: "Cultural & Practical Rules of Engagement",
+  doAndDont: [
+    { do: "Confirm verified eligibility (Auxiliares, BEDA, ConversaSpain) before applying.", dont: "Don't Apply for NALCAP: It is legally barred to non-US/Canadian citizens." },
+    { do: "Embrace sobremesa and adapt your biological clock to late meals.", dont: "Don't Rush Shared Meals: Never demand hasty restaurant service or early dinners." },
+    { do: "Treat the language assistant stipend strictly as a cultural-immersion adventure.", dont: "Never Work Illegally: Do not teach unauthorized private classes without proper visa clearance." },
+  ],
+  closingEquation: {
+    heading: "Spain Rewards Those Who Adapt",
+    content: "Prepare your documents. Adjust your internal clock. Enjoy the sobremesa.",
+  },
+  jobPortalCTA: cta("Spain", "ES"),
+};
+
+const centralEurope: Country = {
+  slug: "central-europe",
+  name: "Central Europe",
+  code: "PL · HU",
+  region: "Europe",
+  flagEmoji: "🇵🇱🇭🇺",
+  heading: "Centuries of History. High Purchasing Power. Teach in Central Europe.",
+  tagline:
+    "Escape inflated living costs without sacrificing European lifestyle. Discover high-demand ESL placements across Poland and Hungary designed for Native English teachers, including South African educators.",
+  statBadges: [
+    { value: "Native English", label: "Surging corporate & language school demand" },
+    { value: "$800 – $1,900/mo", label: "Strong local purchasing power" },
+    { value: "Under $2 Coffee", label: "Bar mleczny meals at deep discount" },
+    { value: "BA + TEFL", label: "Observed qualification baseline" },
+  ],
+  guideContents: [],
+  reading: {
+    quickFacts: [],
+    sections: [
+      {
+        heading: "The Destination Breakdown",
+        blocks: [
+          cards(
+            {
+              title: "Poland",
+              badge: "3,500 – 7,500 PLN ($900–$1,900)",
+              tone: "info",
+              text: "Major Hubs: Warsaw & Kraków, with surging regional positions.\nMarket Drivers: Outside Eurozone (PLN); booming Business English sectors.\nLocal Culture: Legendary hospitality (\"Gość w dom, Bóg w dom\"); traditional milk bars (bar mleczny) with low-cost meals.\nVisa Advantage: Multiple viable non-EU routes (D-Type visa, TRP in-country, and JDG Sole Trader registration).",
+            },
+            {
+              title: "Hungary",
+              badge: "300k – 450k HUF ($800–$1,200)",
+              tone: "info",
+              text: "Major Hubs: Budapest dominates, supported by university towns Debrecen and Szeged.\nLifestyle Anchor: Historic bath culture (Széchenyi), punctuality, and vibrant cafe life.\nNon-EU Reality: CETP program is restricted to US/Canadian citizens; South Africans must use direct work permits or the White Card.\nDigital Path: White Card nomad visa available for remote ESL teachers earning €3,000/month.",
+            }
+          ),
+        ],
+      },
+      {
+        heading: "Market Diagnostic Matrix",
+        blocks: [
+          table(
+            ["DIMENSION", "POLAND", "HUNGARY"],
+            ["Primary Hubs", "Warsaw, Kraków, Wrocław", "Budapest, Debrecen, Szeged"],
+            ["Average Monthly Comp", "$900 – $1,900 (Business English premium)", "$800 – $1,200"],
+            ["Non-EU Visa Pathways", "D-Visa, TRP, JDG (Sole Freelance Permit)", "Employer Work Permit, White Card (Nomad)"],
+            ["Culinary Heritage", "Pierogi, Żurek, Bigos, Oscypek", "Gulyás, Lángos, Kürtőskalács, Tokaj wine"],
+            ["Cultural Pillar", "Home-based hospitality & formal respect", "Public thermal bath culture & exact punctuality"]
+          ),
+        ],
+      },
+      {
+        heading: "Poland: Verified Legal Pathways for Non-EU Educators",
+        blocks: [
+          cards(
+            {
+              title: "D-Type National Visa",
+              badge: "Route 01",
+              tone: "success",
+              text: "Direct pre-arrival permit. Requires employer-sponsored work permit. Valid for 1 year with continuous work rights.",
+            },
+            {
+              title: "Ground Route (TRP)",
+              badge: "Route 02",
+              tone: "success",
+              text: "Arrive via visa-exempt status and finalize employment locally. Secure Temporary Residence Permit for up to 3 years.",
+            },
+            {
+              title: "Freelance Route (JDG)",
+              badge: "Route 03",
+              tone: "success",
+              text: "Jednoosobowa Działalność Gospodarcza. Self-employed sole trader permit for teachers running private or corporate contracts.",
+            }
+          ),
+          callout(
+            "warn",
+            "The commonly referenced CETP program is legally limited to US and Canadian passport holders. South African educators cannot apply via CETP and must pursue direct employer sponsorship or verify Hungary's Digital Nomad \"White Card\" (€3,000 monthly income and €10,000 savings).",
+            "Important Eligibility Notice (Hungary / South African Applicants)"
+          ),
+        ],
+      },
+      {
+        heading: "Placement Sourcing & Next Steps",
+        blocks: [
+          cards(
+            { title: "Job Boards", text: "Active regional openings via Go Overseas & TEFL.org" },
+            { title: "Placement Partners", text: "Premier TEFL tailored visa assistance" },
+            { title: "Direct Outreach", text: "Language chain direct hire in Warsaw & Budapest" },
+            { title: "Onboarding Prep", text: "Observed TEFL certification guidance" }
+          ),
+        ],
+      },
+    ],
+  },
+  doAndDontHeading: "The Cultural Etiquette Compass",
+  doAndDont: [
+    {
+      group: "Essential Protocols: Poland",
+      do: "Accept generous second and third food portions; hospitality is an honored civic duty.",
+      dont: "Treat memorial sites like Auschwitz-Birkenau casually; conduct yourself with quiet dignity and respect.",
+    },
+    { do: "Address colleagues and contacts with formal honorifics (Pan/Pani) until explicitly asked to use first names." },
+    {
+      group: "Essential Protocols: Hungary",
+      do: "Lock firm eye contact during toasts; partake in communal thermal baths at Széchenyi as standard leisure.",
+      dont: "Exhibit loud, disruptive behavior in trams or historic coffee houses.",
+    },
+    { do: "Uphold punctuality strictly; early arrival is expected in academic environments." },
+  ],
+  closingEquation: {
+    heading: "Your Central European Classroom is Waiting",
+    content: "Access structured dossiers, verified school directories, and visa application kits.",
+  },
+  // Covers two countries, so the Job Portal link isn't pre-filtered to one of them.
+  jobPortalCTA: {
+    heading: "Ready to Teach in Central Europe?",
+    text: "Browse current openings and apply for a position through our Job Portal.",
+    buttonLabel: "APPLY FOR A POSITION IN CENTRAL EUROPE",
+    href: "/job-portal",
+  },
+};
+
+const southKorea: Country = {
+  slug: "south-korea",
+  name: "South Korea",
+  code: "KR",
+  region: "Asia",
+  flagEmoji: "🇰🇷",
+  heading: "Teaching in South Korea: Ancient Roots & Hyper-Modernity",
+  tagline:
+    "Unlock one of the world’s most structured, well-compensated ESL ecosystems. South Africa is one of only seven privileged nationalities legally eligible for the premier E-2 teaching visa.",
+  statBadges: [
+    { value: "E-2 Eligible Nation", label: "1 of only 7 qualifying global passports" },
+    { value: "Free Housing Norm", label: "Furnished studio or housing allowance provided" },
+    { value: "EPIK & Hagwons", label: "Public co-teaching & private academy pathways" },
+    { value: "Clean Record + BA", label: "Apostilled credentials required for sponsorship" },
+  ],
+  guideContents: [],
+  reading: {
+    quickFacts: [],
+    sections: [
+      {
+        heading: "The Cultural Ecosystem: Ancient Hierarchy in a Digital World",
+        blocks: [
+          cards(
+            {
+              title: "Confucian Hierarchy & Harmony",
+              text: "Respect & Age: Deeply rooted in Confucianism. A respectful slight bow when greeting older colleagues or your school director is expected.\nSaving Face (Kibun): Preserving group harmony is vital. Never criticize coworkers or management openly; resolve feedback quietly in private.\nGlobal Cultural Wave: Home to Hallyu (K-pop, K-dramas, cinema), creating a vibrant and culturally magnetic environment for educators.",
+            },
+            {
+              title: "The Emotion of Jeong (정)",
+              text: "Unconditional Bond: Jeong represents a profound, loyal warmth that grows through shared meals, time, and patient guidance.\nClassroom Heart: Teachers who demonstrate patience and empathy build unbreakable student rapport that transcends language barriers.\nCommunity Care: Colleagues frequently look out for foreign teachers, welcoming you with food, guidance, and genuine social inclusion.",
+            }
+          ),
+        ],
+      },
+      {
+        heading: "Translating the Classroom: The “Sleeping Student” Protocol",
+        blocks: [
+          callout(
+            "warn",
+            "Western teachers often mistake a sleeping student as disrespect or insolence. In reality, Korean students study from early morning through late evening at hagwons and self-study libraries. A dozing student is battling pure exhaustion. Never reprimand with frustration—wake them gently with a warm smile and build jeong.",
+            "Rethinking Student Fatigue in South Korea"
+          ),
+        ],
+      },
+      {
+        heading: "Landscape & Escapes: Beyond the Seoul Metropolis",
+        blocks: [
+          cards(
+            {
+              title: "Seoul",
+              badge: "METROPOLITAN EPICENTER",
+              tone: "info",
+              text: "Hyper-modern skyline paired with historic treasures like Gyeongbokgung Palace and the traditional alleys of Bukchon Hanok Village.",
+            },
+            {
+              title: "Gyeongju",
+              badge: "THE OPEN-AIR MUSEUM",
+              tone: "info",
+              text: "Ancient capital of the thousand-year Silla dynasty, featuring royal burial mounds, sacred stone temples, and UNESCO archaeological parks.",
+            },
+            {
+              title: "Jeju Island",
+              badge: "THE SOUTHERN ESCAPE",
+              tone: "info",
+              text: "Subtropical volcanic getaway with lush waterfalls, dramatic seaside basalt cliffs, and a serene, restorative coastal pace.",
+            }
+          ),
+        ],
+      },
+      {
+        heading: "The Job Matrix: Choosing Your Strategic Teaching Route",
+        blocks: [
+          table(
+            ["DIMENSION", "EPIK (PUBLIC SCHOOL CO-TEACHING)", "HAGWONS (PRIVATE ACADEMIES)"],
+            ["Employer Structure", "South Korean Ministry of Education", "Privately owned after-school learning businesses"],
+            ["Teacher Role", "Co-teacher alongside a licensed Korean educator", "Lead solo instructor with smaller, focused class sizes"],
+            ["Working Schedule", "Standard daytime hours (8:30 AM – 4:30 PM); extensive vacation", "Afternoon to evening shifts (1:00 PM – 9:00 PM / 10:00 PM)"],
+            ["Pedagogical Vibe", "Structured, traditional, textbook & lecture oriented", "Lively, dynamic, conversational, and energetic environment"],
+            ["Core Benefits", "High holiday allowance, entrance/exit allowances, contract bonus", "Flexible start dates year-round, modern facilities, direct placement"]
+          ),
+        ],
+      },
+      {
+        heading: "Navigating the Job Market: Sourcing & Vetting Roadmap",
+        blocks: [
+          cards(
+            {
+              title: "Official Public Route",
+              badge: "STEP 01",
+              tone: "info",
+              text: "Apply directly via epik.go.kr for the gold-standard public school system. Applications open twice yearly for Spring and Fall intakes.",
+            },
+            {
+              title: "Hagwon Job Boards",
+              badge: "STEP 02",
+              tone: "info",
+              text: "Explore trusted boards like Dave's ESL Café or partner with verified recruiters to secure continuous private academy interviews.",
+            },
+            {
+              title: "Rigorous Vetting",
+              badge: "STEP 03",
+              tone: "warn",
+              text: "Non-Negotiable: Cross-reference schools on Reddit (r/teachinginkorea, r/Korea) and expat blacklist/whitelist groups before signing.",
+            }
+          ),
+        ],
+      },
+      {
+        heading: "",
+        blocks: [
+          cards(
+            { title: "Tabletop Social Dining", text: "Bond over tabletop Korean BBQ, authentic Kimchi, Bibimbap bowls, and hot bowls of spicy Tteokbokki after evening classes." },
+            { title: "The Mega-Cafe Culture", text: "South Korea's expansive multi-story coffee shops serve as community workspaces, relaxation sanctuaries, and social hubs." }
+          ),
+        ],
+      },
+    ],
+  },
+  doAndDontHeading: "The Golden Rules for Success in South Korea",
+  doAndDont: [
+    { do: "Bow slightly when greeting administrators, elders, and senior colleagues.", dont: "Don't Assume War Fears: Daily life in Seoul is peaceful; the DMZ is an educational day trip, not a daily hazard." },
+    { do: "Address disagreements calmly in one-on-one private discussions to protect harmony.", dont: "Never Sign Blindly: Do not accept a hagwon offer without speaking to a current foreign teacher or vetting reviews." },
+    { do: "Embrace Korean BBQ gatherings and ubiquitous cafe work cultures.", dont: "No Unverified Travel: Never board a plane before your E-2 visa issuance number is officially finalized." },
+  ],
+  closingEquation: {
+    heading: "South Korea Rewards Patience & Professionalism",
+    content: "Once the hierarchy and cultural nuances click, you unlock deep respect, lifelong friendships, and exceptional savings.",
+  },
+  jobPortalCTA: cta("South Korea", "KR"),
+};
+
+const taiwan: Country = {
+  slug: "taiwan",
+  name: "Taiwan",
+  code: "TW",
+  region: "Asia",
+  flagEmoji: "🇹🇼",
+  heading: "Taiwan: The Premier Asian Gateway",
+  tagline:
+    "The ideal first-time international teaching destination—seamless hyper-convenience, world-class safety, accessible ARC visas, and genuine cultural warmth.",
+  statBadges: [
+    { value: "Big 7", label: "Recognized Passports" },
+    { value: "#1 Safe", label: "Global Expat Ranking" },
+    { value: "30+", label: "Taipei Night Markets" },
+    { value: "Year-Round", label: "Buxiban Hiring Cycles" },
+  ],
+  guideContents: [],
+  reading: {
+    quickFacts: [],
+    sections: [
+      {
+        heading: "1. Landscape & Geopolitical Reality",
+        blocks: [
+          cards(
+            {
+              title: "The Subtropical Convenience Hub",
+              text: "A lush island of dramatic mountains and modern transit networks. From the Taipei MRT to high-speed rail, living here offers unmatched public infrastructure and seasonal subtropical ease.",
+            },
+            {
+              title: "Primary Placements",
+              text: "• Taipei: Capital epicenter with high school density and bustling expat culture.\n• Taichung & Tainan: Cultural centers known for historic temples and balanced climate.\n• Kaohsiung: Sun-soaked southern maritime metropolis with open waterfronts.",
+            },
+            {
+              title: "Defining Landmarks",
+              text: "• Taipei 101: Architectural icon defining the modern skyline.\n• Longshan Temple: Old Wanhua sanctuary honouring 165+ deities.\n• Taroko Gorge & Sun Moon Lake: Marble canyons and alpine escapes.",
+            },
+            {
+              title: "The Geopolitical Baseline",
+              text: "Since 1949, Taiwan has functioned with full independent self-governance, its own constitution, currency (NTD), and democracy. While the PRC claims sovereignty under its policy, foreign educators enjoy complete social freedom and exceptional daily safety.",
+            }
+          ),
+        ],
+      },
+      {
+        heading: "2. Everyday Life & Social Fabric",
+        blocks: [
+          cards(
+            {
+              title: "The Night Market Ecosystem",
+              text: "Night markets form the living room of Taiwanese culture—not merely tourist spots, but community hubs where multi-generational families gather, friends meet, and daily dinners are eaten.",
+            },
+            {
+              title: "Culinary Touchstones & “Xiaochi”",
+              text: "• Xiaolongbao: Delicate, handmade soup dumplings.\n• Beef Noodle Soup: Slow-simmered, rich national comfort food.\n• Bubble Tea (Boba): Homegrown global phenomenon from local tea stalls.\n• Stinky Tofu: Pungent fermented street delicacy—an essential expat rite of passage.",
+            },
+            {
+              title: "Professional Decorum & Harmony",
+              text: "Taiwanese society values mutual respect and social composure. Teachers thrive by reflecting this dignity:\n• Calm Composure\n• Professional Nod\n• Saving Face\nKeep emotional outbursts out of school; replace casual touching/hugs with polite greetings.",
+            }
+          ),
+          callout(
+            "info",
+            "Taiwan legally restricts English teaching visas to recognized native English-speaking nationalities: South Africa, United States, United Kingdom, Canada, Ireland, Australia, and New Zealand. South African educators benefit from full bilateral recognition alongside Commonwealth peers.",
+            "The ‘Big 7’ Native English Speaker Advantage"
+          ),
+        ],
+      },
+      {
+        heading: "3. The Education Landscape: Buxibans vs. Public Schools",
+        blocks: [
+          table(
+            ["DIMENSION", "BUXIBANS (PRIVATE CRAM SCHOOLS)", "PUBLIC & INTERNATIONAL SCHOOLS (E.G. TFETP)"],
+            ["Setting & Scale", "Private after-school academies. Taiwan's single largest employer of foreign ESL teachers.", "Formal state primary/secondary schools or accredited private international institutions."],
+            ["Hiring Cycles", "Year-round continuous recruitment. Flexible start windows.", "Strictly seasonal hiring (typically July–August for the fall academic year)."],
+            ["Prerequisites", "Bachelor's degree (or Associate Degree + 120-hr TEFL) + Clean Criminal Background Check.", "Formal state teaching qualification/license (PGCE, SACE, state cert) + Bachelor's degree."],
+            ["Weekly Schedule", "Afternoon to evening hours (approx. 1:30 PM - 9:00 PM), plus occasional Saturdays.", "Structured daytime hours (8:00 AM - 4:30 PM), Monday to Friday with full school holidays."],
+            ["Ideal For", "First-time educators seeking immediate placement and dynamic small classes.", "Career teachers seeking public school stability and curriculum integration."]
+          ),
+        ],
+      },
+      {
+        heading: "4. 5-Step ARC Residency Pipeline",
+        blocks: [
+          steps(
+            { label: "Prerequisites Assembled", text: "Degree apostille/attestation, Big 7 passport, and clean police check." },
+            { label: "Employer Sponsorship", text: "Sign signed contract with a recognized, licensed school." },
+            { label: "Work Permit Approval", text: "Employer files directly with Taiwan Ministry of Labor (MOL)." },
+            { label: "Resident Visa Issued", text: "Entry clearance validated via overseas Taipei Representative Office." },
+            { label: "In-Country ARC Card", text: "National Immigration Agency issues Alien Resident Certificate (legal ID)." }
+          ),
+          callout(
+            "danger",
+            "Private tutoring outside your ARC sponsor is illegal under Taiwanese labor law. Protect your standing by working solely under your authorized school permit.",
+            "Strict Legal Note"
+          ),
+        ],
+      },
+      {
+        heading: "5. Taiwan vs. Mainland China",
+        blocks: [
+          list(
+            L("Cultural Adjustment", "Taiwan presents a considerably gentler curve with bilingual signage and friendly expat networks."),
+            L("Visa Flow", "Streamlined ARC progression compared to the multi-tier Mainland Z-visa and municipal hurdles."),
+            L("Digital & Social Freedom", "Uncensored internet access and comprehensive civil openness.")
+          ),
+        ],
+      },
+      {
+        heading: "6. Sourcing Placements",
+        blocks: [
+          list(
+            L("Tealit.com", "Dedicated Taiwan ESL classifieds, contracts, and housing."),
+            L("104 Job Bank (104.com.tw)", "Island-wide direct recruitment platform."),
+            L("TFETP Portal", "Official government public school application system."),
+            L("Go Overseas & Dave's ESL Cafe", "Verified school reviews and postings.")
+          ),
+        ],
+      },
+    ],
+  },
+  doAndDontHeading: "7. The Educator's Code of Conduct",
+  doAndDont: [
+    { do: "Confirm full employer sponsorship (Work Permit + ARC) in writing.", dont: "Engage in unauthorized private tutoring outside your visa sponsor." },
+    { do: "Maintain calm, polite composure even under workplace stress.", dont: "Conflate Taiwan's streamlined ARC process with China's Z-visa." },
+    { do: "Embrace night market street stalls as everyday social life.", dont: "Trivialize or casually debate sensitive cross-strait political topics." },
+    { do: "Acknowledge colleagues and elders with a polite nod or slight bow.", dont: "Default to informal hugging or back-slapping in professional settings." },
+  ],
+  closingEquation: {
+    heading: "Begin Your Journey to Taiwan with World Teachers Academy",
+    content:
+      "Get accredited, connect with verified school sponsors across Taipei, Taichung, and Kaohsiung, and secure your Alien Resident Certificate with ease.",
+  },
+  jobPortalCTA: cta("Taiwan", "TW"),
+};
+
+const thailand: Country = {
+  slug: "thailand",
+  name: "Thailand",
+  code: "TH",
+  region: "Asia",
+  flagEmoji: "🇹🇭",
+  heading: "Teaching in Thailand: The Land of Smiles",
+  tagline:
+    "Where legendary warmth meets deep Buddhist respect. A lighter-stress classroom rhythm, remarkably affordable living, and unmatched cultural depth for international educators.",
+  statBadges: [
+    { value: "Uncolonized", label: "Sovereign Pride" },
+    { value: "Theravada", label: "Buddhist Core" },
+    { value: "High Stretch", label: "Purchasing Power" },
+    { value: "Lighter Hours", label: "Balanced Rhythm" },
+  ],
+  guideContents: [],
+  reading: {
+    quickFacts: [],
+    sections: [
+      {
+        heading: "1. National Pillars & Cultural Roots",
+        blocks: [
+          cards(
+            {
+              title: "Proudly Uncolonized History",
+              text: "Thailand holds a unique distinction in Southeast Asia: it has never been colonized. National pride in this preserved independence runs deep, influencing cultural sovereignty, social interactions, and educator respect.",
+            },
+            {
+              title: "Buddhism as the Daily Anchor",
+              text: "Theravada Buddhism fundamentally shapes daily social etiquette, ethical obligations, campus shrines, and the rhythm of national school holidays. Respecting Buddhist symbols is non-negotiable.",
+            },
+            {
+              title: "Bangkok & Regional Epicenters",
+              text: "• Bangkok: The dynamic, mega-city hub uniting ancient gilded temples with modern transit.\n• Chiang Mai & The North: Walled historic capital surrounded by hundreds of sacred temples.\n• The Islands (South): Phuket, Krabi, and Koh Samui offering weekend tropical escapes.",
+            },
+            {
+              title: "Critical Legal Law: The Constitutional Monarchy",
+              tone: "danger",
+              text: "The monarchy is held in sacred regard. Criticizing or disrespecting the Royal Family (Lèse-Majesté) is a severe criminal offense strictly enforced for foreigners and locals alike, both in person and online. Golden rule: refrain from political commentary entirely.",
+            }
+          ),
+        ],
+      },
+      {
+        heading: "2. The Anatomy of Physical Etiquette",
+        blocks: [
+          cards(
+            {
+              title: "The Sacred Head vs. The Lowest Feet",
+              text: "• The Head (Sacred): The highest spiritual point of the body. Never touch anyone's head—even playfully or affectionately with small children.\n• The Feet (Lowest): The spiritually lowest point. Never point your feet at anyone, at Buddha images, or at classroom shrines. Adjust seated posture carefully.",
+            },
+            {
+              title: "The Currency of Respect: The Wai",
+              text: "The traditional Thai greeting (palms together with a slight bow) is offered as gratitude, greeting, or deference. When students or colleagues offer a wai, returning it with genuine courtesy is essential—intention matters far more than perfect angle.",
+            }
+          ),
+          steps(
+            { label: "Palms pressed at chest level", text: "" },
+            { label: "Fingertips rise toward chin", text: "" },
+            { label: "Slight head bow in acknowledgement", text: "" }
+          ),
+          cards({
+            title: "Professionalism Over Tropical Heat",
+            text: "Despite humid temperatures, schools expect formal decorum. Covered shoulders and knees are absolute baselines; collared shirts and tailored trousers/skirts project the dignity required of teachers.",
+          }),
+        ],
+      },
+      {
+        heading: "3. The Placement Diagnostic: Gulf vs. Thailand",
+        blocks: [
+          table(
+            ["DIMENSION", "THE GULF PLACEMENTS (UAE, QATAR, KSA)", "THAILAND PLACEMENTS"],
+            ["Pace & Weekly Hours", "Rigid, heavier teaching hours with high administrative oversight.", "Lighter teaching contact hours; calmer, more balanced school day pace."],
+            ["Classroom Culture", "Highly formal, structured corporate education frameworks.", "Warm and welcoming, yet hierarchy matters deeply. Respect must be earned."],
+            ["The Financial Equation", "Substantial tax-free raw salaries with end-of-service gratuities.", "Modest nominal salary, but ultra-low cost of living lets funds stretch far."],
+            ["Lifestyle & Immersion", "Modern, air-conditioned infrastructure and conservative norms.", "Rich outdoor cultural immersion, daily street markets, and tropical ease."]
+          ),
+        ],
+      },
+      {
+        heading: "4. Communication & Social Goodwill",
+        blocks: [
+          cards({
+            title: "“Mai Pen Rai” & Emotional Restraint",
+            text: "Roughly translated as \"it's okay\" or \"never mind,\" this philosophy represents emotional composure. In Thailand, raising your voice or displaying anger is viewed as a serious personal failure that causes both parties to lose face.",
+          }),
+          callout("success", "Pedagogical Skill + Mai Pen Rai Restraint + Physical Etiquette = Deep Community Trust", "THE GOODWILL EQUATION"),
+          cards({
+            title: "Street Food & Sustenance",
+            text: "• Pad Thai: Stir-fried tamarind noodles, tofu, egg, and crushed peanuts.\n• Tom Yum Goong: Fragrant hot and sour lemongrass prawn soup.\n• Som Tum: Fiery shredded green papaya salad with lime and chili.\n• Mango Sticky Rice: Sweet coconut sticky rice with ripe golden mango.",
+          }),
+        ],
+      },
+      {
+        heading: "5. The Weekend Travel Horizon",
+        blocks: [
+          text("Accessible Cultural Escapes"),
+          list(
+            L("Ayutthaya", "UNESCO-listed ruins of Thailand's ancient royal capital, an easy day trip from Bangkok."),
+            L("Wat Phra Kaew & Wat Arun", "Bangkok's sacred Grand Palace and the Riverside Temple of Dawn."),
+            L("Chiang Mai Old City", "Mountain air, artisan markets, and elephant sanctuaries."),
+            L("Southern Coast & Islands", "World-class diving, limestone karst cliffs, and beach bungalows reachable via affordable domestic transit.")
+          ),
+        ],
+      },
+      {
+        heading: "6. Sourcing Placements",
+        blocks: [
+          list(
+            L("Direct School Networks", "Public schools (Anuban / Mattayom) and private bilingual academies."),
+            L("Verified TEFL Boards", "TEFL.org, Go Overseas, and Ajarn.com (Thailand's leading specialized ESL portal)."),
+            L("Prerequisites", "Bachelor's Degree + 120-hour TEFL certificate + Police Clearance for Non-B Visa.")
+          ),
+        ],
+      },
+    ],
+  },
+  doAndDontHeading: "7. The Educator's Code of Conduct",
+  doAndDont: [
+    { do: "Return a wai when offered by students, staff, or community members.", dont: "Touch anyone's head, even playfully or when encouraging children." },
+    { do: "Dress modestly with covered shoulders and knees at school.", dont: "Point feet at colleagues, monks, elders, or religious images." },
+    { do: "Cultivate calm patience (Mai Pen Rai) during scheduling shifts.", dont: "Raise your voice, express frustration, or cause anyone to lose face." },
+    { do: "Show sincere reverence at temple sites and toward Buddha shrines.", dont: "Make critical remarks about the monarchy in public or online." },
+  ],
+  closingEquation: {
+    heading: "Begin Your Teaching Adventure with World Teachers Academy",
+    content:
+      "Obtain your TEFL certification, master cultural nuances, and secure verified school placements across Bangkok, Chiang Mai, and coastal provinces.",
+  },
+  jobPortalCTA: cta("Thailand", "TH"),
+};
+
+const vietnam: Country = {
+  slug: "vietnam",
+  name: "Vietnam",
+  code: "VN",
+  region: "Asia",
+  flagEmoji: "🇻🇳",
+  heading: "Teaching in Vietnam: Energy, Warmth & Quiet Respect",
+  tagline:
+    "Step into Southeast Asia’s most established educator community—combining electric urban vitality, extraordinary food traditions, and an unshakeable cultural philosophy of mutual dignity.",
+  statBadges: [
+    { value: "2 Major Hubs", label: "Hanoi & HCMC" },
+    { value: "40+ Students", label: "Average Public Class" },
+    { value: "Strict Law", label: "Work Permit Required" },
+    { value: "High Respect", label: "Social Currency" },
+  ],
+  guideContents: [],
+  reading: {
+    quickFacts: [],
+    sections: [
+      {
+        heading: "1. Sheer Energy & A Tale of Two Hubs",
+        blocks: [
+          cards({
+            title: "The Pulse of the Streets",
+            text: "Vietnam greets incoming teachers with immediate vibrancy: buzzing motorbike flows and unforced, genuine hospitality. Strangers offer help freely without asking. While Vietnamese is tonal and complex, learning basic courtesies earns immediate goodwill.",
+          }),
+          quote("I did not expect breakfast to feel like an extreme sport.", "Bongani, South African Teacher in Hanoi’s Old Quarter"),
+          cards(
+            {
+              title: "Hanoi vs. Ho Chi Minh City (HCMC)",
+              text: "• Hanoi (The North): The historic, deliberate capital. Tree-lined boulevards, French colonial architecture, ancient trade quarters, and a quieter, seasonal tempo.\n• HCMC / Saigon (The South): The commercial powerhouse. High-energy, modern, tropical, and fast-moving with a thriving 24/7 dining scene.\nBoth cities house massive, highly active foreign educator networks.",
+            },
+            {
+              title: "Iconic Landscapes & Escapes",
+              text: "• Sa Pa: High-altitude terraced rice fields & ethnic communities.\n• Hạ Long Bay: UNESCO marine karsts rising from jade water.\n• Hội An: Historic riverside merchant port illuminated by lanterns.\n• Hoàn Kiếm Lake: The spiritual heart of Hanoi morning life.",
+            }
+          ),
+        ],
+      },
+      {
+        heading: "2. Daily Rhythms & Sacred Traditions",
+        blocks: [
+          cards(
+            {
+              title: "Daily Sustenance: Street-Level Mastery",
+              text: "• Phở: Fragrant slow-simmered beef/chicken broth; iconic breakfast.\n• Bánh Mì: Crispy French baguette loaded with pâté, roast meats & herbs.\n• Bún Chả: Hanoi grilled pork patties in broth with rice vermicelli.\n• Gỏi Cuốn: Fresh rice paper rolls with fresh herbs and shrimp.\n• Cà Phê Sữa Đá: Intense drip coffee over ice with condensed milk.",
+            },
+            {
+              title: "The Everyday Reality of the Family Altar",
+              text: "Spiritual life weaves Buddhism, Taoism, Confucianism, and profound ancestor veneration into daily life. Altars in homes and shops receive daily offerings of fruit, incense, and flowers.\nCultural Rule: Always treat family altars with quiet physical distance. Never treat sacred home shrines as tourist photo opportunities without permission.",
+            }
+          ),
+          cards({
+            title: "The “Quiet Respect” Framework",
+            text: "Success in Vietnam requires moving away from loud, public individualism. Across family homes, public markets, and school corridors, the single most valuable behavioral currency is Quiet Respect.",
+          }),
+        ],
+      },
+      {
+        heading: "3. Social Mechanics & The Classroom Reality",
+        blocks: [
+          table(
+            ["DIMENSION", "WHAT DESTROYS TRUST (THE MISTAKE)", "WHAT BUILDS TRUST (THE MASTER KEY)"],
+            ["Classroom Correction", "Calling out a student publicly in front of 40 peers → causes severe loss of face and embarrassment.", "Pulling the student aside for gentle, private 1-on-1 feedback → earns lasting loyalty and safety."],
+            ["Student Demographics", "Treating silence as disinterest or lack of preparation.", "Recognizing that students are deeply respectful and eager, requiring warm encouragement to speak up."],
+            ["Classroom Scale", "Relying on low-energy lecture formats in large rooms.", "Deploying active classroom management and structured team activities for groups of 35–45+ learners."],
+            ["Professional Attire", "Wearing casual backpacker street clothes into school.", "Modest business-casual attire (collared shirts, covered knees) demonstrating respect for the institution."]
+          ),
+        ],
+      },
+      {
+        heading: "4. The Legal Divide: Proper Work Permits",
+        blocks: [
+          text("THE JOB OFFER GATEKEEPER (DECISION FLOW)"),
+          cards(
+            { title: "Are they asking you to enter/teach on a Tourist or Business Visa?", badge: "ALERT", tone: "danger", text: "Walk away. This is illegal." },
+            { title: "Is the school failing to verify their licensed sponsor status?", badge: "ALERT", tone: "danger", text: "Walk away." },
+            { title: "Is full Work Permit sponsorship confirmed explicitly in writing prior to arrival?", badge: "LEGAL", tone: "success", text: "Proceed safely." }
+          ),
+          callout(
+            "danger",
+            "Vietnam’s labor departments have significantly tightened work permit and visa enforcement. Shortcuts suggested by unverified brokers represent severe legal risks, including deportation. Always secure legitimate employer sponsorship in writing.",
+            "Zero Tolerance Law Enforcement"
+          ),
+        ],
+      },
+      {
+        heading: "5. Compliance Check: Green vs Red Flags",
+        blocks: [
+          cards(
+            {
+              title: "Green Flags (Legitimate Placements)",
+              tone: "success",
+              text: "• Registered institution handles official Work Permit (WP).\n• Temporary Residence Card (TRC) assistance provided.\n• Attested degree, TEFL certificate, and criminal check requested before entry.",
+            },
+            {
+              title: "Red Flags (Illegal Shortcuts)",
+              tone: "danger",
+              text: "• Suggesting \"visa runs\" every 3 months on tourist visas.\n• Verbal promises of visa processing without formal contracts.\n• Withholding salary until visa status is \"sorted out locally.\"",
+            }
+          ),
+        ],
+      },
+    ],
+  },
+  doAndDontHeading: "6. The Educator's Code of Conduct",
+  doAndDont: [
+    { do: "Address student errors privately and gently to preserve face.", dont: "Humiliate or publicly criticize students or colleagues in meetings." },
+    { do: "Wear modest, professional business-casual attire on campus.", dont: "Accept teaching positions requiring illegal entry on tourist visas." },
+    { do: "Show quiet physical reverence around family altars and shrines.", dont: "Treat household or storefront ancestor altars as photo props." },
+    { do: "Demand written verification of legal work permit sponsorship.", dont: "Lose your temper or display outward anger when dealing with bureaucracy." },
+  ],
+  closingEquation: {
+    heading: "Teach in Vietnam with World Teachers Academy",
+    content:
+      "Master TEFL certification, navigate work permit document legalisation, and connect with reputable public and international school partners in Hanoi and Ho Chi Minh City.",
+  },
+  jobPortalCTA: cta("Vietnam", "VN"),
+};
+
+// Alphabetical by name — the catalog grid uses this order as-is.
 export const countries: Country[] = [
   argentina,
   brazil,
   brunei,
   cambodia,
+  centralEurope,
   chile,
   china,
   colombia,
   costaRica,
   france,
-];
+  italy,
+  japan,
+  kuwait,
+  laos,
+  mexico,
+  qatar,
+  saudiArabia,
+  southKorea,
+  spain,
+  taiwan,
+  thailand,
+  uae,
+  vietnam,
+].sort((a, b) => a.name.localeCompare(b.name));
+
+// For the navbar dropdown / mobile menu: countries grouped by region (each group alphabetical).
+export const countriesByRegion: { region: Region; countries: Country[] }[] = REGIONS.map((region) => ({
+  region,
+  countries: countries.filter((c) => c.region === region),
+}));
 
 export function getCountryBySlug(slug: string): Country | undefined {
   return countries.find((c) => c.slug === slug);

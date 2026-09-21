@@ -351,3 +351,51 @@
 .country-card:hover .country-card__cta i {
   transform: translateX(6px);
 }
+
+/* Countries dropdown — 23 guides, grouped into region columns (desktop) and
+   labelled runs (mobile accordion). */
+.main-menu ul.sub-menu.country-menu {
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+  padding: 18px 14px;
+}
+.main-menu ul.sub-menu.country-menu > li.country-menu__group {
+  flex: 0 0 auto;
+  min-width: 190px;
+  padding: 0 12px;
+}
+.main-menu ul.sub-menu.country-menu > li.country-menu__group + li.country-menu__group {
+  border-left: 1px solid #E2E5EE;
+}
+.country-menu__label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #4F46E5;
+  padding: 0 0 8px;
+}
+.main-menu ul.sub-menu.country-menu ul.country-menu__list li a {
+  white-space: nowrap;
+}
+.country-flag {
+  display: inline-flex;
+  gap: 3px;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+@media (max-width: 1399px) {
+  .main-menu ul.sub-menu.country-menu {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(190px, 1fr));
+    row-gap: 14px;
+  }
+  .main-menu ul.sub-menu.country-menu > li.country-menu__group + li.country-menu__group {
+    border-left: 0;
+  }
+}
+.th-mobile-menu ul li.country-menu__label {
+  padding: 14px 0 4px 18px;
+}
