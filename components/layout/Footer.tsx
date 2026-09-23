@@ -44,7 +44,7 @@ export default function Footer() {
                                             </a>
                                         </div>
                                         <p className="about-text"> World Teachers Academy helps educators get certified and get hired — training and real teaching opportunities, in one place.</p>
-                                        <a href="contact.html" className="th-btn style2 btn-sm">Enroll Now<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <a href="/support" className="th-btn style2 btn-sm">Enroll Now<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"  />
                                             </svg>
                                         </a>
@@ -59,7 +59,7 @@ export default function Footer() {
                                             <li><a href="/about">About Us</a></li>
                                             <li><a href="/courses">Courses</a></li>
                                             <li><a href="/job-portal">Job Portal</a></li>
-                                            <li><a href="/contact">Contact Us</a></li>
+                                            <li><a href="/support">Support</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -69,10 +69,10 @@ export default function Footer() {
                                     <h3 className="widget_title">Resources</h3>
                                     <div className="menu-all-pages-container">
                                         <ul className="menu">
-                                            <li><a href="/#faqAccordion">FAQs</a></li>
-                                            <li><a href="/contact">Support</a></li>
-                                            <li><a href="/terms">Terms of Service</a></li>
-                                            <li><a href="/privacy">Privacy Policy</a></li>
+                                            <li><a href="/faqs">FAQs</a></li>
+                                            <li><a href="/support">Support</a></li>
+                                            <li><a href="/terms-of-service">Terms of Service</a></li>
+                                            <li><a href="/privacy-policy">Privacy Policy</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -89,8 +89,9 @@ export default function Footer() {
                                                 </svg>
                                             </div>
                                             <div className="box-details">
-                                                <p className="box-text">[Street Address],</p>
-                                                <p className="box-text">[City, Country]</p>
+                                                {/* [Full business address TBD] — placeholder per user's own flag; only the city/country is confirmed real. */}
+                                                <p className="box-text">[Full business address TBD]</p>
+                                                <p className="box-text">Johannesburg, South Africa</p>
                                             </div>
                                         </div>
                                         <div className="info-box">
@@ -129,9 +130,8 @@ export default function Footer() {
                             <div className="col-lg-6 text-center text-lg-end">
                                 <div className="footer-links">
                                     <ul>
-                                        <li><a href="about.html">Terms of service</a></li>
-                                        <li><a href="about.html">Privacy policy</a></li>
-                                        <li><a href="about.html">Cookies</a></li>
+                                        <li><a href="/terms-of-service">Terms of service</a></li>
+                                        <li><a href="/privacy-policy">Privacy policy</a></li>
                                     </ul>
                                 </div>
                             </div>

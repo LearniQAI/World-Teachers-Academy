@@ -9,6 +9,8 @@
 export interface ResourceVideo {
   label: string;
   description: string;
+  // YouTube video ID — when absent, the detail page shows a "Video coming soon" placeholder.
+  youtubeId?: string;
   // The resume doc's second video ("Sample Resumes Worth Looking At") is
   // followed by a bullet list specifically about what to look for in those
   // examples — tied to that video, not a standalone section.
@@ -68,6 +70,7 @@ export const resources: Resource[] = [
     videos: [
       {
         label: "How to Design a Resume That Gets You Shortlisted",
+        youtubeId: "YpBq2IjTy98",
         description:
           "A short tutorial covering structure, content, and how to use Canva to build it. Seeing the layout built step by step makes it much easier to replicate than trying to work it out from a written list alone. Watch this before you start building your own.",
       },
@@ -236,6 +239,7 @@ export const resources: Resource[] = [
     videos: [
       {
         label: "Getting Your Documents Ready to Teach Abroad",
+        youtubeId: "hSN5YhfGaB4",
         description:
           "A short breakdown of the document process, from gathering originals to getting them legalised. Watch this before you start collecting paperwork — seeing the full sequence laid out helps you avoid the most common mistake: starting the process too late.",
       },
@@ -311,6 +315,7 @@ export const resources: Resource[] = [
     videos: [
       {
         label: "Understanding Visas & Work Permits",
+        youtubeId: "tt63AL3JSlg",
         description:
           "A short breakdown of how employer sponsorship actually works, and the questions to ask before accepting any offer. Watch this before you sign any contract — understanding the shape of the process makes it much easier to spot a red flag when one comes up.",
       },
@@ -406,6 +411,7 @@ export const resources: Resource[] = [
     videos: [
       {
         label: "Building a Teaching Portfolio That Stands Out",
+        youtubeId: "s7hT6LFRpMg",
         description:
           "A short breakdown of what to include and how to put it together. Watch this before you start pulling your portfolio together — seeing a real example built out makes it much easier to know what “good” actually looks like.",
       },
@@ -541,6 +547,7 @@ export const resources: Resource[] = [
     videos: [
       {
         label: "Classroom Management From Day One",
+        youtubeId: "SW2oyWoKer0",
         description:
           "A short breakdown of practical strategies for large and mixed-ability classes. Watch this before your first day — seeing these strategies demonstrated makes them far easier to actually use than reading them as a list.",
       },

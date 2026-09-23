@@ -29974,6 +29974,52 @@ span.select2-selection.select2-selection--single:focus {
   object-fit: cover;
   display: block;
 }
+/* Cutout student photos flanking the centered text (left/right columns
+   instead of one photo + text side by side). These are transparent-
+   background PNGs, not framed photos, so they drop the card's rounded
+   corners/shadow/background and just float on the section's dark backdrop,
+   feet aligned to the bottom of the row like the rest of the text content. */
+.cta-wrap10 .cta-photo--cutout {
+  aspect-ratio: auto;
+  max-width: 360px;
+  max-height: 552px;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: visible;
+}
+.cta-wrap10 .cta-photo--cutout img {
+  width: 100%;
+  height: auto;
+  max-height: 552px;
+  object-fit: contain;
+}
+/* The flanking photo columns and center text column use custom widths
+   (30/40/30) instead of Bootstrap's col-xl-3/6/3 (25/50/25) — the extra
+   width gives cta-photo--cutout's larger max-width room to actually take
+   effect, instead of being capped by a narrower Bootstrap column first. */
+.cta-wrap10 .cta-flank-col {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 30%;
+          flex: 0 0 30%;
+  width: 30%;
+  max-width: 30%;
+}
+.cta-wrap10 .cta-text-col {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 40%;
+          flex: 0 0 40%;
+  width: 40%;
+  max-width: 40%;
+}
+@media (max-width: 991.98px) {
+  .cta-wrap10 .cta-text-col {
+    -webkit-box-flex: 0;
+        -ms-flex: 0 0 100%;
+            flex: 0 0 100%;
+    width: 100%;
+    max-width: 100%;
+  }
+}
 .cta-wrap10 .cta-scrim {
   background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(10, 8, 60, 0.55));
   border-radius: 24px;

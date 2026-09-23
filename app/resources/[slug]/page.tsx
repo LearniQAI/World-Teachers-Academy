@@ -181,7 +181,20 @@ export default async function ResourceDetails({
                     Watch: {video.label}
                   </h3>
                   <p style={{ color: PAPER_DIM, marginBottom: "14px" }}>{video.description}</p>
-                  <VideoPendingBox />
+                  {video.youtubeId ? (
+                    <div style={{ position: "relative", paddingTop: "56.25%", borderRadius: "10px", overflow: "hidden", border: `1px solid ${BORDER}` }}>
+                      <iframe
+                        src={`https://www.youtube-nocookie.com/embed/${video.youtubeId}`}
+                        title={video.label}
+                        loading="lazy"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: 0 }}
+                      />
+                    </div>
+                  ) : (
+                    <VideoPendingBox />
+                  )}
                   {video.afterBullets && (
                     <ul className="checklist style3" style={{ marginTop: "16px" }}>
                       {video.afterBullets.map((b, j) => (

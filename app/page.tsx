@@ -420,15 +420,10 @@ export default function Home() {
                                                     </div>
                                                 </div>
                                             </div>
+                                            {/* Instructor meta-box removed — no real instructor is confirmed yet, and a
+                                                "[Instructor TBD]" placeholder next to a generic stock photo reads as broken,
+                                                not as pending content. */}
                                             <div className="btn-wrap">
-                                                <div className="meta-box">
-                                                    <div className="meta-thumb">
-                                                        <img src="/assets/img/course/course-thumb1-1.png" alt="avater" />
-                                                    </div>
-                                                    <div className="media-body">
-                                                        <h5 className="box-name"><a href="/team">[Instructor TBD]</a></h5>
-                                                    </div>
-                                                </div>
                                                 <a href={detailsHref} className="th-btn btn-sm style-border2">VIEW DETAILS<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
                                                     </svg></a>
@@ -597,15 +592,14 @@ export default function Home() {
 
             <section className="overflow-hidden position-relative z-index-common" data-bg-src="/assets/img/bg/cta-bg10-1.jpg">
                 <div className="cta-wrap10 space">
-                    {/* Right-hand slot intentionally empty: cta-thumb-291x497.png was an unrelated "LearnPro" product screenshot and was removed pending a real replacement. */}
                     <div className="container">
                         <div className="row justify-content-center align-items-center gy-4 gx-xl-5">
-                            <div className="col-xl-5 col-lg-6 col-md-8 col-10 order-xl-2">
-                                <div className="cta-photo th_fade_anim">
-                                    <img src="/assets/img/normal/cta-thumb-418x475.png" alt="Teacher leading a classroom" />
+                            <div className="cta-flank-col d-none d-lg-flex align-items-end justify-content-center">
+                                <div className="cta-photo cta-photo--cutout th_fade_anim">
+                                    <img src="/assets/img/normal/cta-cutout-student-left.png" alt="Student pointing toward the offer" />
                                 </div>
                             </div>
-                            <div className="col-xl-7 col-12 order-xl-1">
+                            <div className="cta-text-col">
                                 <div className="title-area text-center mb-0 cta-scrim">
                                     {/* TODO: confirm this 30%-off-first-100-teachers promotion is a real, currently-live offer with an actually-enforced 100-teacher cap before publishing this headline. A scarcity claim that isn't real is the kind of thing that damages trust if a customer notices later — do not apply this copy until I explicitly confirm the offer is real. */}
                                     <h2 className="sec-title text-white th-text-perspective"><span className="text-theme2">30%</span> Off Certification for Our First 100 Teachers</h2>
@@ -616,12 +610,17 @@ export default function Home() {
                                                 <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
                                             </svg>
                                         </a>
-                                        <a href="contact.html" className="th-btn style-border3">BECOME AN INSTRUCTOR
+                                        <a href="/support" className="th-btn style-border3">BECOME AN INSTRUCTOR
                                             <svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
                                             </svg>
                                         </a>
                                     </div>
+                                </div>
+                            </div>
+                            <div className="cta-flank-col d-none d-lg-flex align-items-end justify-content-center">
+                                <div className="cta-photo cta-photo--cutout th_fade_anim">
+                                    <img src="/assets/img/normal/cta-cutout-student-right.png" alt="Student holding a notebook" />
                                 </div>
                             </div>
                         </div>
