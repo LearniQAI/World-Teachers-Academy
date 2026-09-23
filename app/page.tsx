@@ -2,8 +2,17 @@ import VideoTestimonials from "@/components/home/VideoTestimonials";
 import TextTestimonials from "@/components/home/TextTestimonials";
 import HeroSearchForm from "@/components/home/HeroSearchForm";
 import { realCourses } from "@/lib/courses-catalog";
+import { getJobStats } from "@/lib/job-stats";
 
-export default function Home() {
+export const revalidate = 3600;
+
+// Job Portal section is hidden for now (kept in the code, not deleted). Flip to
+// true to bring it back — the live job stats are only fetched while it is shown.
+const SHOW_JOB_PORTAL: boolean = false;
+
+export default async function Home() {
+  const jobStats = SHOW_JOB_PORTAL ? await getJobStats() : { openRoles: null, countries: null };
+
   return (
     <>
             <div className="th-hero-wrapper hero-11" id="hero" data-bg-src="/assets/img/hero/hero_bg_11_1.png">
@@ -552,35 +561,61 @@ export default function Home() {
                     </div>
                 </div>
             </section>
-            <section className="space overflow-hidden" id="job-portal-sec">
+            {/* Job Portal section — commented out (disabled via SHOW_JOB_PORTAL) rather than deleted, in case it's needed again later */}
+            {SHOW_JOB_PORTAL && (
+            <section className="space overflow-hidden job-portal-sec" id="job-portal-sec">
                 <div className="container">
-                    <div className="row gy-40 gx-80 align-items-center">
+                    <div className="row gy-50 gx-80 align-items-center">
                         <div className="col-lg-6">
-                            <div className="img-box11">
-                                <div className="img1 th--hover-item th_fade_anim">
-                                    <div className="thumb th--hover-img" data-displacement="/assets/img/imghover/fluid.jpg" data-intensity="0.2" data-speedin="1" data-speedout="1">
-                                        <img className="img-cover" src="/assets/img/normal/about-job-portal-346x580.png" alt="Job Portal" />
+                            <div className="jp-visual th_fade_anim">
+                                <span className="jp-deco" aria-hidden="true" />
+                                <span className="jp-card" aria-hidden="true" />
+                                {/* Cutout generated from about-job-portal-346x580.png by scripts/cutout-job-portal.cjs. TODO: source is only 346px wide — swap in a higher-res photo for sharper high-DPI rendering when available. */}
+                                <img className="jp-girl" src="/assets/img/normal/job-portal-cutout.png" alt="Teacher thinking about her next job" width={341} height={492} />
+                                {jobStats.openRoles !== null && (
+                                    <div className="jp-chip jp-chip--roles">
+                                        <span className="jp-chip-icon">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2.5" stroke="currentColor" strokeWidth="2" /><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3 12.5h18" stroke="currentColor" strokeWidth="2" /></svg>
+                                        </span>
+                                        <span><strong>{jobStats.openRoles.toLocaleString("en-US")}+</strong> open roles</span>
                                     </div>
-                                </div>
+                                )}
+                                {jobStats.countries !== null && (
+                                    <div className="jp-chip jp-chip--countries">
+                                        <span className="jp-chip-icon">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" /><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3Z" stroke="currentColor" strokeWidth="2" /></svg>
+                                        </span>
+                                        <span>Jobs in <strong>{jobStats.countries}</strong> {jobStats.countries === 1 ? "country" : "countries"}</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div className="col-lg-6">
-                            <div className="title-area mb-35">
-                                <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Job Portal</span>
-                                <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Certified? Your Next Teaching Job Is Already Listed</span></h2>
-                                <p className="th_fade_anim">Browse verified teaching positions across multiple countries — updated regularly, with direct application links.</p>
-                            </div>
-                            <div className="btn-wrap th_fade_anim">
-                                <a href="/job-portal" className="th-btn">Browse Open Positions
-                                    <svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
-                                    </svg>
-                                </a>
+                            <div className="jp-content">
+                                <div className="title-area mb-0">
+                                    <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Job Portal</span>
+                                    <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Certified? Your Next Teaching Job Is Already Listed</span></h2>
+                                    <p className="th_fade_anim">Browse verified teaching positions across multiple countries — updated regularly, with direct application links.</p>
+                                </div>
+                                <ul className="jp-features th_fade_anim">
+                                    <li><span className="jp-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2 5 8.5l4.5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg></span>Teaching roles pulled from major job boards</li>
+                                    <li><span className="jp-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2 5 8.5l4.5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg></span>Listings refreshed daily, expired ones removed</li>
+                                    <li><span className="jp-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2 5 8.5l4.5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg></span>Apply on the original job listing</li>
+                                </ul>
+                                <div className="btn-wrap jp-actions th_fade_anim">
+                                    <a href="/job-portal" className="th-btn">Browse Open Positions
+                                        <svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
+                                        </svg>
+                                    </a>
+                                    <a href="/job-portal" className="jp-link">See jobs by country <span aria-hidden="true">→</span></a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
+            )}
 
             <section className="overflow-hidden position-relative z-index-common" data-bg-src="/assets/img/bg/cta-bg10-1.jpg">
                 <div className="cta-wrap10 space">
@@ -589,7 +624,7 @@ export default function Home() {
                     </div>
                     <div className="container">
                         <div className="row justify-content-center">
-                            <div className="col-xl-7 col-lg-9">
+                            <div className="col-xl-6 col-lg-9">
                                 <div className="title-area text-center mb-0">
                                     {/* TODO: confirm this 30%-off-first-100-teachers promotion is a real, currently-live offer with an actually-enforced 100-teacher cap before publishing this headline. A scarcity claim that isn't real is the kind of thing that damages trust if a customer notices later — do not apply this copy until I explicitly confirm the offer is real. */}
                                     <h2 className="sec-title text-white th-text-perspective"><span className="text-theme2">30%</span> Off Certification for Our First 100 Teachers</h2>

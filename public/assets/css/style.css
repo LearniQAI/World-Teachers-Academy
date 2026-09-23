@@ -29959,12 +29959,19 @@ span.select2-selection.select2-selection--single:focus {
 }
 /*# sourceMappingURL=style.css.map */
 
-/* Homepage CTA band (.cta-wrap10): size the template's absolutely
-   positioned cutouts by HEIGHT, not width. Each wrapper is stretched from
-   `top` down to the band's bottom edge (template sets bottom:0) and the
-   image fills that height, so the crop always sits on the bottom edge and the
-   head lands near the top of the band. Sizing by the template's widths
-   (330px / 220px at <=1500px) made our near-square right cutout far too short. */
+/* Homepage CTA band (.cta-wrap10): a shorter band than the template's
+   default `space` padding, with both cutouts filling it. Each wrapper is
+   stretched from `top` to the band's bottom edge (template sets bottom:0)
+   and the image takes 100% of that height, so the crop at the thighs sits on
+   the bottom edge and the girls scale with the band. The right wrapper starts
+   higher because its PNG has more transparent space above the hair
+   (52/1350px vs 17/1431px), which puts both head tops on the same line. */
+@media (min-width: 1200px) {
+  .cta-wrap10.space {
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+}
 .cta-wrap10 .cta-thumb-wrap10-1,
 .cta-wrap10 .cta-thumb-wrap10-2 {
   width: auto;
@@ -29972,10 +29979,12 @@ span.select2-selection.select2-selection--single:focus {
   pointer-events: none;
 }
 .cta-wrap10 .cta-thumb-wrap10-1 {
-  top: 24px;
+  top: 18px;
+  left: 15px;
 }
 .cta-wrap10 .cta-thumb-wrap10-2 {
-  top: 60px;
+  top: 8px;
+  right: 30px;
 }
 .cta-wrap10 .cta-thumb-wrap10-1 img,
 .cta-wrap10 .cta-thumb-wrap10-2 img {
@@ -29986,11 +29995,30 @@ span.select2-selection.select2-selection--single:focus {
 }
 @media (max-width: 1500px) {
   .cta-wrap10 .cta-thumb-wrap10-1 {
-    top: 90px;
+    left: 15px;
+    width: auto;
   }
   .cta-wrap10 .cta-thumb-wrap10-2 {
-    top: 150px;
+    right: 30px;
+    width: auto;
   }
+}
+@media (max-width: 1299px) {
+  .cta-wrap10 .cta-thumb-wrap10-1,
+  .cta-wrap10 .cta-thumb-wrap10-2 {
+    max-width: none;
+  }
+  .cta-wrap10 .cta-thumb-wrap10-1 {
+    left: 5px;
+  }
+  .cta-wrap10 .cta-thumb-wrap10-2 {
+    right: 20px;
+  }
+}
+.cta-wrap10 .title-area p {
+  max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .cta-wrap10 .btn-wrap {
   gap: 16px;
@@ -29998,6 +30026,222 @@ span.select2-selection.select2-selection--single:focus {
 @media (max-width: 575px) {
   .cta-wrap10 .btn-wrap {
     flex-direction: column;
+  }
+}
+
+/* Homepage Job Portal section (#job-portal-sec): cutout girl standing on a
+   short gradient card, her head/shoulders breaking out above it, with two
+   floating "glass" chips carrying live job stats (lib/job-stats.ts). The chips
+   are absolutely positioned inside .jp-visual, so rendering or omitting them
+   never shifts the layout. */
+/* Extra bottom space so the dark CTA band below starts after a clear gap. */
+.job-portal-sec.space {
+  padding-top: 90px;
+  padding-bottom: 90px;
+  margin-bottom: 60px;
+}
+.jp-visual {
+  position: relative;
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+.jp-card {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 70%;
+  border-radius: 32px;
+  background: linear-gradient(160deg, #EEF2FF 0%, #E0E7FF 100%);
+  z-index: 0;
+}
+.jp-deco {
+  position: absolute;
+  top: 8%;
+  left: -34px;
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  border: 14px solid #14B8A6;
+  opacity: 0.12;
+  z-index: 0;
+}
+/* Nudged left of centre so the top-right chip clears her face and hand. */
+.jp-visual .jp-girl {
+  position: relative;
+  margin-right: 60px;
+  z-index: 1;
+  display: block;
+  height: 470px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+}
+.jp-chip {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px 10px 10px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.86);
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
+  font-size: 14px;
+  line-height: 1.3;
+  color: var(--body-color);
+  white-space: nowrap;
+  -webkit-animation: jpFloat 5s ease-in-out infinite;
+          animation: jpFloat 5s ease-in-out infinite;
+}
+.jp-chip strong {
+  color: var(--title-color);
+  font-weight: 700;
+}
+.jp-chip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #EEF2FF;
+  color: #4F46E5;
+  flex: none;
+}
+/* Top-right: straddles the card's top edge (card top = 30% from the top). */
+.jp-chip--roles {
+  top: calc(30% - 24px);
+  right: -28px;
+}
+/* Bottom-left: overlaps the card's left edge near the bottom. */
+.jp-chip--countries {
+  bottom: 44px;
+  left: -20px;
+  -webkit-animation-delay: -2.5s;
+          animation-delay: -2.5s;
+}
+.jp-chip--countries .jp-chip-icon {
+  background: rgba(20, 184, 166, 0.12);
+  color: #0F766E;
+}
+@-webkit-keyframes jpFloat {
+  0%, 100% { -webkit-transform: translateY(0); transform: translateY(0); }
+  50% { -webkit-transform: translateY(-8px); transform: translateY(-8px); }
+}
+@keyframes jpFloat {
+  0%, 100% { -webkit-transform: translateY(0); transform: translateY(0); }
+  50% { -webkit-transform: translateY(-8px); transform: translateY(-8px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .jp-chip {
+    -webkit-animation: none;
+            animation: none;
+  }
+}
+.jp-content {
+  max-width: 540px;
+}
+.jp-content .title-area .sec-title {
+  font-size: clamp(30px, 3vw, 44px);
+  line-height: 1.2;
+  margin-bottom: 18px;
+}
+.jp-content .title-area p {
+  max-width: 520px;
+  margin-bottom: 0;
+}
+.jp-features {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0 32px;
+  display: grid;
+  gap: 12px;
+}
+.jp-features li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--title-color);
+  font-weight: 500;
+}
+.jp-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(20, 184, 166, 0.14);
+  color: #0F766E;
+  flex: none;
+}
+.jp-actions {
+  gap: 16px;
+}
+.jp-link {
+  font-weight: 600;
+  color: #4F46E5;
+  text-decoration: none;
+}
+.jp-link span {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+.jp-link:hover span {
+  transform: translateX(4px);
+}
+@media (max-width: 991px) {
+  .job-portal-sec.space {
+    padding-top: 70px;
+    padding-bottom: 70px;
+    margin-bottom: 30px;
+  }
+  .jp-visual {
+    max-width: 400px;
+  }
+  .jp-visual .jp-girl {
+    height: 400px;
+    margin-right: 40px;
+  }
+  .jp-deco {
+    left: -10px;
+    width: 120px;
+    height: 120px;
+    border-width: 10px;
+  }
+  .jp-chip {
+    font-size: 12px;
+    gap: 8px;
+    padding: 7px 12px 7px 7px;
+    border-radius: 14px;
+  }
+  .jp-chip-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+  }
+  .jp-chip--roles {
+    right: 8px;
+  }
+  .jp-chip--countries {
+    left: 8px;
+    bottom: 24px;
+  }
+}
+@media (max-width: 575px) {
+  .jp-visual .jp-girl {
+    height: 360px;
+  }
+  .jp-actions {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 
