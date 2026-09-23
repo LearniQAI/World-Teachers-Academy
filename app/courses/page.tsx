@@ -1,5 +1,6 @@
 import { searchCourses } from "@/lib/courses-catalog";
 import CourseSearchForm from "@/components/courses/CourseSearchForm";
+import TextTestimonials from "@/components/home/TextTestimonials";
 
 const DELAYS = [".3", ".5", ".7", ".3", ".5"];
 
@@ -126,271 +127,12 @@ Cta Area
           {/*==============================
 Testimonial Area
 ==============================*/}
-          <section className="testi-area-2 space overflow-hidden" id="testi-sec">
+          <section className="space overflow-hidden" id="testi-sec">
             <div className="container">
-              <div className="title-area text-center">
-                <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-1.svg" alt="img" />Testimonials</span>
-                <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Students Say&apos;s About us!</span></h2>
-              </div>
-              <div className="testi-slider2 slider-area">
-                <div className="swiper th-slider has-shadow" id="testiSlide2" data-slider-options='{"breakpoints":{"0":{"slidesPerView":1},"576":{"slidesPerView":"1"},"768":{"slidesPerView":"1"},"992":{"slidesPerView":"2"},"1200":{"slidesPerView":"3"}},"autoHeight": "true"}'>
-                  <div className="swiper-wrapper">
-                    <div className="swiper-slide th_fade_anim">
-                      <div className="testi-card2">
-                        <div className="box-icon">
-                          <img src="/assets/img/icon/quote2.svg" alt="icon" />
-                        </div>
-                        <h3 className="box-title">Start Learning Today</h3>
-                        <p className="box-text">Online education learning has revolutionized the way knowledge is shared and accessed, offering flexibility, convenience, and inclusivity for learners around the world.</p>
-                        <div className="testi-review-wrap">
-                          <span className="testi-card_review">
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                          </span>
-                          <span className="rating-title">4.8 (8k)</span>
-                        </div>
-                        <div className="testi-card-profile">
-                          <div className="box-thumb">
-                            <img src="/assets/img/testimonial/testi_2_1.png" alt="img" />
-                          </div>
-                          <div className="media-left">
-                            <h4 className="testi-card_name">Alex James</h4>
-                            <span className="testi-card_desig">Online Student</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="swiper-slide th_fade_anim">
-                      <div className="testi-card2">
-                        <div className="box-icon">
-                          <img src="/assets/img/icon/quote2.svg" alt="icon" />
-                        </div>
-                        <h3 className="box-title">Unlock Your Potential</h3>
-                        <p className="box-text">Personalized learning paths enable students to tailor their education to meet individual needs and goals, fostering a more engaging learning experience.</p>
-                        <div className="testi-review-wrap">
-                          <span className="testi-card_review">
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                          </span>
-                          <span className="rating-title">4.6 (5k)</span>
-                        </div>
-                        <div className="testi-card-profile">
-                          <div className="box-thumb">
-                            <img src="/assets/img/testimonial/testi_2_2.png" alt="img" />
-                          </div>
-                          <div className="media-left">
-                            <h4 className="testi-card_name">Maria Gonzalez</h4>
-                            <span className="testi-card_desig">Part-time Learner</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="swiper-slide th_fade_anim">
-                      <div className="testi-card2">
-                        <div className="box-icon">
-                          <img src="/assets/img/icon/quote2.svg" alt="icon" />
-                        </div>
-                        <h3 className="box-title">Join the Future of Education</h3>
-                        <p className="box-text">Innovative technologies such as AI and VR are enhancing online education, making it more interactive and effective, preparing students for the challenges of tomorrow.</p>
-                        <div className="testi-review-wrap">
-                          <span className="testi-card_review">
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                          </span>
-                          <span className="rating-title">4.9 (10k)</span>
-                        </div>
-                        <div className="testi-card-profile">
-                          <div className="box-thumb">
-                            <img src="/assets/img/testimonial/testi_2_3.png" alt="img" />
-                          </div>
-                          <div className="media-left">
-                            <h4 className="testi-card_name">David Lee</h4>
-                            <span className="testi-card_desig">Full-time Professional</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="swiper-slide th_fade_anim">
-                      <div className="testi-card2">
-                        <div className="box-icon">
-                          <img src="/assets/img/icon/quote2.svg" alt="icon" />
-                        </div>
-                        <h3 className="box-title">Expand Your Horizons</h3>
-                        <p className="box-text">With diverse course offerings and expert instructors, online education empowers learners to explore new fields and develop essential skills for the modern workforce.</p>
-                        <div className="testi-review-wrap">
-                          <span className="testi-card_review">
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                          </span>
-                          <span className="rating-title">4.8 (8k)</span>
-                        </div>
-                        <div className="testi-card-profile">
-                          <div className="box-thumb">
-                            <img src="/assets/img/testimonial/testi_2_4.png" alt="img" />
-                          </div>
-                          <div className="media-left">
-                            <h4 className="testi-card_name">Emily Chen</h4>
-                            <span className="testi-card_desig">Career Changer</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="swiper-slide th_fade_anim">
-                      <div className="testi-card2">
-                        <div className="box-icon">
-                          <img src="/assets/img/icon/quote2.svg" alt="icon" />
-                        </div>
-                        <h3 className="box-title">Transform Your Career</h3>
-                        <p className="box-text">Online certifications and degrees provide opportunities for advancement and can significantly enhance job prospects in competitive markets.</p>
-                        <div className="testi-review-wrap">
-                          <span className="testi-card_review">
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                          </span>
-                          <span className="rating-title">4.6 (5k)</span>
-                        </div>
-                        <div className="testi-card-profile">
-                          <div className="box-thumb">
-                            <img src="/assets/img/testimonial/testi_2_5.png" alt="img" />
-                          </div>
-                          <div className="media-left">
-                            <h4 className="testi-card_name">Michael Brown</h4>
-                            <span className="testi-card_desig">Aspiring Professional</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="swiper-slide th_fade_anim">
-                      <div className="testi-card2">
-                        <div className="box-icon">
-                          <img src="/assets/img/icon/quote2.svg" alt="icon" />
-                        </div>
-                        <h3 className="box-title">Join the Future of Education</h3>
-                        <p className="box-text">Innovative technologies such as AI and VR are enhancing online education, making it more interactive and effective, preparing students for the challenges of tomorrow.</p>
-                        <div className="testi-review-wrap">
-                          <span className="testi-card_review">
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                          </span>
-                          <span className="rating-title">4.9 (10k)</span>
-                        </div>
-                        <div className="testi-card-profile">
-                          <div className="box-thumb">
-                            <img src="/assets/img/testimonial/testi_2_6.png" alt="img" />
-                          </div>
-                          <div className="media-left">
-                            <h4 className="testi-card_name">David Lee</h4>
-                            <span className="testi-card_desig">Full-time Professional</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="swiper-slide th_fade_anim">
-                      <div className="testi-card2">
-                        <div className="box-icon">
-                          <img src="/assets/img/icon/quote2.svg" alt="icon" />
-                        </div>
-                        <h3 className="box-title">Pursue Your Passion</h3>
-                        <p className="box-text">Online education learning has revolutionized the way knowledge is shared and accessed, offering flexibility, convenience, and inclusivity for learners around the world.</p>
-                        <div className="testi-review-wrap">
-                          <span className="testi-card_review">
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                          </span>
-                          <span className="rating-title">4.8 (8k)</span>
-                        </div>
-                        <div className="testi-card-profile">
-                          <div className="box-thumb">
-                            <img src="/assets/img/testimonial/testi_2_7.png" alt="img" />
-                          </div>
-                          <div className="media-left">
-                            <h4 className="testi-card_name">Sophia Martinez</h4>
-                            <span className="testi-card_desig">Enthusiastic Learner</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="swiper-slide th_fade_anim">
-                      <div className="testi-card2">
-                        <div className="box-icon">
-                          <img src="/assets/img/icon/quote2.svg" alt="icon" />
-                        </div>
-                        <h3 className="box-title">Achieve Your Goals</h3>
-                        <p className="box-text">With diverse course offerings and expert instructors, online education empowers learners to explore new fields and develop essential skills for the modern workforce.</p>
-                        <div className="testi-review-wrap">
-                          <span className="testi-card_review">
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                          </span>
-                          <span className="rating-title">4.6 (5k)</span>
-                        </div>
-                        <div className="testi-card-profile">
-                          <div className="box-thumb">
-                            <img src="/assets/img/testimonial/testi_2_8.png" alt="img" />
-                          </div>
-                          <div className="media-left">
-                            <h4 className="testi-card_name">James Smith</h4>
-                            <span className="testi-card_desig">Goal-Oriented Student</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="swiper-slide th_fade_anim">
-                      <div className="testi-card2">
-                        <div className="box-icon">
-                          <img src="/assets/img/icon/quote2.svg" alt="icon" />
-                        </div>
-                        <h3 className="box-title">Join the Future of Education</h3>
-                        <p className="box-text">Innovative technologies such as AI and VR are enhancing online education, making it more interactive and effective, preparing students for the challenges of tomorrow.</p>
-                        <div className="testi-review-wrap">
-                          <span className="testi-card_review">
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                            <i className="fas fa-star"></i>
-                          </span>
-                          <span className="rating-title">4.9 (10k)</span>
-                        </div>
-                        <div className="testi-card-profile">
-                          <div className="box-thumb">
-                            <img src="/assets/img/testimonial/testi_2_9.png" alt="img" />
-                          </div>
-                          <div className="media-left">
-                            <h4 className="testi-card_name">David Lee</h4>
-                            <span className="testi-card_desig">Full-time Professional</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+              <div className="row justify-content-center">
+                <div className="col-12">
+                  <TextTestimonials variant="carousel" />
                 </div>
-                <button data-slider-prev="#testiSlide2" className="slider-arrow style3 slider-prev"><i className="far fa-arrow-left"></i></button>
-                <button data-slider-next="#testiSlide2" className="slider-arrow style3 slider-next"><i className="far fa-arrow-right"></i></button>
               </div>
             </div>
           </section>
@@ -405,7 +147,7 @@ Cta Area
             <div className="container">
               <div className="row gy-30 justify-content-center">
                 <div className="col-lg-6">
-                  <div className="cta-card2 bg-theme" data-bg-src="/assets/img/bg/cta-card-bg2-1.png">
+                  <div className="cta-card2 cta-card2-dark" style={{ background: "#0B0B0F" }}>
                     <div className="title-area mb-0">
                       <span className="sub-title text-white th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-2.svg" alt="img" />POPULAR COURSES</span>
                       <h2 className="sec-title text-white th_fade_anim"><span className="th-text-perspective">Get The Best Courses &amp; Upgrade Your Skills</span></h2>
@@ -415,13 +157,10 @@ Cta Area
                         </svg></a>
                       </div>
                     </div>
-                    <div className="box-thumb th_fade_anim">
-                      <img src="/assets/img/normal/cta-thumb2-1.png" alt="img" />
-                    </div>
                   </div>
                 </div>
                 <div className="col-lg-6">
-                  <div className="cta-card2 bg-black3" data-bg-src="/assets/img/bg/cta-card-bg2-1.png">
+                  <div className="cta-card2" style={{ background: "#F5F7FF" }}>
                     <div className="title-area mb-0">
                       <span className="sub-title th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-3.svg" alt="img" />POPULAR COURSES</span>
                       <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Get The Best Courses &amp; Upgrade Your Skills</span></h2>
@@ -430,9 +169,6 @@ Cta Area
                           <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
                         </svg></a>
                       </div>
-                    </div>
-                    <div className="box-thumb th_fade_anim">
-                      <img src="/assets/img/normal/cta-thumb2-2.png" alt="img" />
                     </div>
                   </div>
                 </div>

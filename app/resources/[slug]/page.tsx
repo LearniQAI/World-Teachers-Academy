@@ -145,7 +145,7 @@ export default async function ResourceDetails({
       {/*==============================
     Breadcumb
 ============================== */}
-      <div className="breadcumb-wrapper " data-bg-src="/assets/img/bg/breadcumb-bg.png">
+      <div className="breadcumb-wrapper " style={{ background: "#F5F7FF" }}>
         <div className="container">
           <div className="row">
             <div className="col-lg-9">

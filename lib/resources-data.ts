@@ -157,79 +157,6 @@ export const resources: Resource[] = [
     ],
   },
   {
-    slug: "tefl-vs-tesol-vs-celta",
-    title: "Full Breakdown: TEFL vs TESOL vs CELTA",
-    category: "Application Skills",
-    summary:
-      "Job listings often say “TEFL/TESOL/CELTA required” as if they're interchangeable — but they're genuinely not the same thing, and picking the wrong one for your goals can cost you time and money. Understanding what each certificate actually is helps you choose the right one for the market you're targeting, rather than guessing.",
-    videoPending: true,
-    videos: [
-      {
-        label: "TEFL vs TESOL vs CELTA Explained",
-        description:
-          "A short breakdown comparing the three certificates side by side. Watch this before you commit to a course — a clear visual walkthrough makes the differences much easier to grasp than reading acronyms in isolation.",
-      },
-    ],
-    sections: [
-      {
-        heading: "What Each Certificate Actually Means",
-        items: [
-          {
-            label: "TEFL",
-            tag: "MOST COMMON",
-            subtitle: "Teaching English as a Foreign Language",
-            description:
-              "The broadest and most common term worldwide. “TEFL” isn't owned by one organisation — it's a category, and course quality varies enormously between providers, from basic 40-hour online courses to in-depth 120-hour or 300+ hour diplomas. This variation is exactly why employers sometimes ask specifically about hours and accreditation, not just whether you're “TEFL certified.”",
-          },
-          {
-            label: "TESOL",
-            tag: "OFTEN INTERCHANGEABLE",
-            subtitle: "Teaching English to Speakers of Other Languages",
-            description:
-              "Often used interchangeably with TEFL, though TESOL programmes are somewhat more likely to have an academic or university affiliation, and the term is used more commonly in the US and Canada. In practice, most employers weigh the level, accreditation, and practical training content more than which of these two labels sits on the certificate.",
-          },
-          {
-            label: "CELTA",
-            tag: "PREMIUM MARKETS",
-            subtitle: "Certificate in Teaching English to Speakers of Other Languages",
-            description:
-              "A single, specific, Cambridge-administered qualification — not a category like TEFL or TESOL. It's intensive (typically 4-5 weeks full-time, or a longer part-time option), includes mandatory assessed teaching practice with real students, and carries strong, consistent name recognition, especially with British Council positions, university language departments, and premium schools across Europe and the Middle East. Trinity's CertTESOL is a well-regarded equivalent, accepted by most of the same employers.",
-          },
-        ],
-      },
-      {
-        heading: "Which One Do You Actually Need?",
-        bullets: [
-          "Most teaching jobs worldwide — particularly across Asia, Latin America, and online tutoring platforms — accept a standard, well-accredited 120-hour TEFL or TESOL certificate.",
-          "Premium language schools, British Council roles, and university language departments frequently prefer or require CELTA (or a recognised equivalent like Trinity CertTESOL).",
-          "A higher-level TEFL Diploma (Level 5 or equivalent) is a genuine middle ground — more academic weight and employer recognition than a basic TEFL, without CELTA's cost and intensity.",
-        ],
-      },
-    ],
-    doAndDont: [
-      {
-        do: "Check the specific job listing's wording carefully — “TEFL/TESOL/CELTA” usually means any of the three is accepted; “CELTA or equivalent” is more specific",
-        dont: "Don't assume the cheapest, shortest course is enough for competitive markets — a 40-hour basic certificate won't carry the same weight as a 120+ hour accredited one",
-      },
-      {
-        do: "Choose a course with real accreditation, not just a provider's own branding",
-        dont: "Don't assume TEFL and TESOL are functionally different — in most hiring contexts, they're treated the same",
-      },
-      {
-        do: "Go for at least 120 hours if you're aiming at a competitive market",
-        dont: "Don't assume CELTA is required everywhere — most jobs worldwide genuinely don't require it",
-      },
-      {
-        do: "Consider CELTA or Trinity CertTESOL if you're specifically targeting British Council roles, university positions, or premium European/Gulf schools",
-        dont: "Don't skip checking accreditation — an unaccredited “certificate” from an unknown provider may not be recognised at all",
-      },
-      {
-        do: "Keep your certificate and transcript accessible — schools may ask for proof of hours and accreditation body",
-        dont: "Don't choose based on the acronym alone — the hours, accreditation, and practical teaching component matter more than which of the three names is on the certificate",
-      },
-    ],
-  },
-  {
     slug: "getting-your-documents-ready",
     title: "Full Breakdown: Getting Your Documents Ready",
     category: "Application Skills",
@@ -605,6 +532,79 @@ export const resources: Resource[] = [
       {
         do: "Reflect after each lesson — notice what worked and what didn't, and adjust",
         dont: "Don't wing it without a plan — walking in unprepared is one of the fastest ways to lose control of a room",
+      },
+    ],
+  },
+  {
+    slug: "tefl-vs-tesol-vs-celta",
+    title: "Full Breakdown: TEFL vs TESOL vs CELTA",
+    category: "Application Skills",
+    summary:
+      "Job listings often say “TEFL/TESOL/CELTA required” as if they're interchangeable — but they're genuinely not the same thing, and picking the wrong one for your goals can cost you time and money. Understanding what each certificate actually is helps you choose the right one for the market you're targeting, rather than guessing.",
+    videoPending: true,
+    videos: [
+      {
+        label: "TEFL vs TESOL vs CELTA Explained",
+        description:
+          "A short breakdown comparing the three certificates side by side. Watch this before you commit to a course — a clear visual walkthrough makes the differences much easier to grasp than reading acronyms in isolation.",
+      },
+    ],
+    sections: [
+      {
+        heading: "What Each Certificate Actually Means",
+        items: [
+          {
+            label: "TEFL",
+            tag: "MOST COMMON",
+            subtitle: "Teaching English as a Foreign Language",
+            description:
+              "The broadest and most common term worldwide. “TEFL” isn't owned by one organisation — it's a category, and course quality varies enormously between providers, from basic 40-hour online courses to in-depth 120-hour or 300+ hour diplomas. This variation is exactly why employers sometimes ask specifically about hours and accreditation, not just whether you're “TEFL certified.”",
+          },
+          {
+            label: "TESOL",
+            tag: "OFTEN INTERCHANGEABLE",
+            subtitle: "Teaching English to Speakers of Other Languages",
+            description:
+              "Often used interchangeably with TEFL, though TESOL programmes are somewhat more likely to have an academic or university affiliation, and the term is used more commonly in the US and Canada. In practice, most employers weigh the level, accreditation, and practical training content more than which of these two labels sits on the certificate.",
+          },
+          {
+            label: "CELTA",
+            tag: "PREMIUM MARKETS",
+            subtitle: "Certificate in Teaching English to Speakers of Other Languages",
+            description:
+              "A single, specific, Cambridge-administered qualification — not a category like TEFL or TESOL. It's intensive (typically 4-5 weeks full-time, or a longer part-time option), includes mandatory assessed teaching practice with real students, and carries strong, consistent name recognition, especially with British Council positions, university language departments, and premium schools across Europe and the Middle East. Trinity's CertTESOL is a well-regarded equivalent, accepted by most of the same employers.",
+          },
+        ],
+      },
+      {
+        heading: "Which One Do You Actually Need?",
+        bullets: [
+          "Most teaching jobs worldwide — particularly across Asia, Latin America, and online tutoring platforms — accept a standard, well-accredited 120-hour TEFL or TESOL certificate.",
+          "Premium language schools, British Council roles, and university language departments frequently prefer or require CELTA (or a recognised equivalent like Trinity CertTESOL).",
+          "A higher-level TEFL Diploma (Level 5 or equivalent) is a genuine middle ground — more academic weight and employer recognition than a basic TEFL, without CELTA's cost and intensity.",
+        ],
+      },
+    ],
+    doAndDont: [
+      {
+        do: "Check the specific job listing's wording carefully — “TEFL/TESOL/CELTA” usually means any of the three is accepted; “CELTA or equivalent” is more specific",
+        dont: "Don't assume the cheapest, shortest course is enough for competitive markets — a 40-hour basic certificate won't carry the same weight as a 120+ hour accredited one",
+      },
+      {
+        do: "Choose a course with real accreditation, not just a provider's own branding",
+        dont: "Don't assume TEFL and TESOL are functionally different — in most hiring contexts, they're treated the same",
+      },
+      {
+        do: "Go for at least 120 hours if you're aiming at a competitive market",
+        dont: "Don't assume CELTA is required everywhere — most jobs worldwide genuinely don't require it",
+      },
+      {
+        do: "Consider CELTA or Trinity CertTESOL if you're specifically targeting British Council roles, university positions, or premium European/Gulf schools",
+        dont: "Don't skip checking accreditation — an unaccredited “certificate” from an unknown provider may not be recognised at all",
+      },
+      {
+        do: "Keep your certificate and transcript accessible — schools may ask for proof of hours and accreditation body",
+        dont: "Don't choose based on the acronym alone — the hours, accreditation, and practical teaching component matter more than which of the three names is on the certificate",
       },
     ],
   },

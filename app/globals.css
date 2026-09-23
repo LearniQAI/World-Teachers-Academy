@@ -399,3 +399,60 @@
 .th-mobile-menu ul li.country-menu__label {
   padding: 14px 0 4px 18px;
 }
+/* Courses CTA dark card: the default navy button disappears on near-black,
+   so make it white with dark text. */
+.cta-card2-dark .th-btn,
+.cta-card2-dark .th-btn:hover,
+.cta-card2-dark .th-btn:focus {
+  background: var(--white-color) !important;
+  color: var(--title-color) !important;
+}
+.cta-card2-dark .th-btn:after {
+  background: var(--white-color) !important;
+}
+/* /courses testimonial carousel: several boxed cards sliding right-to-left
+   (TextTestimonials variant="carousel"). */
+.testi-carousel .swiper-wrapper {
+  align-items: stretch;
+}
+.testi-carousel .swiper-slide {
+  height: auto;
+}
+.testi-carousel .testi-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #F5F7FF;
+  border: 1px solid #E2E5EE;
+  border-radius: 20px;
+  padding: 32px 30px;
+}
+.testi-carousel .testi-card .testi-meta-wrap {
+  margin-bottom: 24px;
+}
+.testi-carousel .testi-card .quote-icon img {
+  height: 44px;
+  width: auto;
+}
+.testi-carousel .testi-card .box-text {
+  font-size: 17px;
+  margin-bottom: 28px;
+  flex-grow: 1;
+}
+.testi-carousel .testi-card .testi-card-profile {
+  gap: 16px;
+}
+.testi-carousel .testi-card .testi-card-profile .box-thumb {
+  width: 72px;
+  height: 72px;
+  border-radius: 14px;
+}
+.testi-carousel .testi-card .testi-card_name {
+  font-size: 20px;
+}
+.testi-carousel .icon-box {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 40px;
+}
