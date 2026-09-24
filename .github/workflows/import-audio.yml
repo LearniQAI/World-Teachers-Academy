@@ -31,8 +31,6 @@ jobs:
     env:
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-      # Encoded files go to <runner temp>/wta-audio-import, outside the checkout (the script enforces this).
-      TMPDIR: ${{ runner.temp }}
     steps:
       - uses: actions/checkout@v4
 
@@ -78,6 +76,9 @@ jobs:
         env:
           ONLY: ${{ inputs.only }}
           FORCE: ${{ inputs.force }}
+          # Encoded files go to <runner temp>/wta-audio-import, outside the checkout (the script enforces this).
+          # runner.* isn't available in job-level env, only in steps.
+          TMPDIR: ${{ runner.temp }}
         run: |
           args=()
           ONLY="${ONLY//[[:space:]]/}"
