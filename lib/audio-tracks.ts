@@ -5,6 +5,182 @@ export type AudioTrack = { title: string; src: string; peaksSrc: string; duratio
 export type AudioTrackKind = "country" | "resource";
 
 export const audioTracks: Record<AudioTrackKind, Record<string, AudioTrack>> = {
-  "country": {},
-  "resource": {}
+  "country": {
+    "argentina": {
+      "title": "Teaching in Argentina: The Debate",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/argentina.mp3?v=00012742df",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/argentina.peaks.json?v=00012742df",
+      "durationSec": 1341.3
+    },
+    "brazil": {
+      "title": "Teaching in Brazil: The Debate",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/brazil.mp3?v=00f0f989bf",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/brazil.peaks.json?v=00f0f989bf",
+      "durationSec": 597.5
+    },
+    "brunei": {
+      "title": "Teaching in Brunei: The Debate",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/brunei.mp3?v=a01053868a",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/brunei.peaks.json?v=a01053868a",
+      "durationSec": 1169.9
+    },
+    "cambodia": {
+      "title": "Teaching in Cambodia: The Debate",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/cambodia.mp3?v=b0707eb10a",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/cambodia.peaks.json?v=b0707eb10a",
+      "durationSec": 727.2
+    },
+    "chile": {
+      "title": "Teaching in Chile: The Debate",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/chile.mp3?v=7c050bdfca",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/chile.peaks.json?v=7c050bdfca",
+      "durationSec": 1124
+    },
+    "china": {
+      "title": "Teaching in China: The Debate",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/china.mp3?v=423b91f41f",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/china.peaks.json?v=423b91f41f",
+      "durationSec": 1275.1
+    },
+    "colombia": {
+      "title": "Teaching in Colombia: The Debate",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/colombia.mp3?v=1d42742958",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/colombia.peaks.json?v=1d42742958",
+      "durationSec": 1327.3
+    },
+    "costa-rica": {
+      "title": "Teaching in Costa Rica: The Debate",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/costa-rica.mp3?v=9a455975fe",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/costa-rica.peaks.json?v=9a455975fe",
+      "durationSec": 1240.7
+    },
+    "france": {
+      "title": "Teaching in France: The Debate",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/france.mp3?v=8ea5e50354",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/france.peaks.json?v=8ea5e50354",
+      "durationSec": 1329
+    },
+    "italy": {
+      "title": "Teaching in Italy: The Debate",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/italy.mp3?v=42bbb07348",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/italy.peaks.json?v=42bbb07348",
+      "durationSec": 1176.5
+    },
+    "japan": {
+      "title": "Teaching in Japan: The Debate",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/japan.mp3?v=3967630505",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/japan.peaks.json?v=3967630505",
+      "durationSec": 1098.2
+    },
+    "kuwait": {
+      "title": "Teaching in Kuwait: The Debate",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/kuwait.mp3?v=c67fe41136",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/kuwait.peaks.json?v=c67fe41136",
+      "durationSec": 1155.2
+    },
+    "laos": {
+      "title": "Teaching in Laos & Myanmar: The Debate",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/laos.mp3?v=3c71494afc",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/laos.peaks.json?v=3c71494afc",
+      "durationSec": 1101.4
+    },
+    "mexico": {
+      "title": "Teaching in Mexico: The Debate",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/mexico.mp3?v=d06f4945ec",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/mexico.peaks.json?v=d06f4945ec",
+      "durationSec": 1163.3
+    },
+    "central-europe": {
+      "title": "Teaching in Central Europe: The Debate",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/central-europe.mp3?v=43dd54779d",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/central-europe.peaks.json?v=43dd54779d",
+      "durationSec": 1228.9
+    },
+    "qatar": {
+      "title": "Teaching in Qatar: The Debate",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/qatar.mp3?v=a46fc0ad9b",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/qatar.peaks.json?v=a46fc0ad9b",
+      "durationSec": 1175.4
+    },
+    "spain": {
+      "title": "Teaching in Spain: The Debate",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/spain.mp3?v=ffce7c887e",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/spain.peaks.json?v=ffce7c887e",
+      "durationSec": 1169.4
+    },
+    "taiwan": {
+      "title": "Teaching in Taiwan: The Debate",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/taiwan.mp3?v=ede15ebf29",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/taiwan.peaks.json?v=ede15ebf29",
+      "durationSec": 1236.1
+    },
+    "thailand": {
+      "title": "Teaching in Thailand: The Debate",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/thailand.mp3?v=2e95fe8158",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/thailand.peaks.json?v=2e95fe8158",
+      "durationSec": 1123.2
+    },
+    "uae": {
+      "title": "Teaching in the UAE: The Debate",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/uae.mp3?v=034909cf03",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/uae.peaks.json?v=034909cf03",
+      "durationSec": 841.7
+    },
+    "vietnam": {
+      "title": "Teaching in Vietnam: The Debate",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/vietnam.mp3?v=7ecbfd969a",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/countries/vietnam.peaks.json?v=7ecbfd969a",
+      "durationSec": 1330
+    }
+  },
+  "resource": {
+    "understanding-visas-work-permits": {
+      "title": "Understanding Visas & Work Permits",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/resources/understanding-visas-work-permits.mp3?v=d51cf209e6",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/resources/understanding-visas-work-permits.peaks.json?v=d51cf209e6",
+      "durationSec": 1409.8
+    },
+    "resume-design": {
+      "title": "How to Design Your Resume",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/resources/resume-design.mp3?v=6cf1ea46f9",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/resources/resume-design.peaks.json?v=6cf1ea46f9",
+      "durationSec": 1197.2
+    },
+    "reading-a-country-before-you-go": {
+      "title": "Reading a Country Before You Go",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/resources/reading-a-country-before-you-go.mp3?v=4bdcdce121",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/resources/reading-a-country-before-you-go.peaks.json?v=4bdcdce121",
+      "durationSec": 1354.7
+    },
+    "getting-your-documents-ready": {
+      "title": "Getting Your Documents Ready",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/resources/getting-your-documents-ready.mp3?v=e41c89c071",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/resources/getting-your-documents-ready.peaks.json?v=e41c89c071",
+      "durationSec": 1028.7
+    },
+    "classroom-management-from-day-one": {
+      "title": "Classroom Management From Day One",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/resources/classroom-management-from-day-one.mp3?v=c6a5c447a0",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/resources/classroom-management-from-day-one.peaks.json?v=c6a5c447a0",
+      "durationSec": 1237.1
+    },
+    "building-a-teaching-portfolio": {
+      "title": "Building a Teaching Portfolio",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/resources/building-a-teaching-portfolio.mp3?v=c4de182284",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/resources/building-a-teaching-portfolio.peaks.json?v=c4de182284",
+      "durationSec": 1208.1
+    },
+    "self-intro": {
+      "title": "Recording Your Self-Intro",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/resources/self-intro.mp3?v=56ba6c0f39",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/resources/self-intro.peaks.json?v=56ba6c0f39",
+      "durationSec": 724.8
+    },
+    "international-job-ready": {
+      "title": "International Job Ready",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/resources/international-job-ready.mp3?v=4ebe5e5718",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/resources/international-job-ready.peaks.json?v=4ebe5e5718",
+      "durationSec": 1174.3
+    }
+  }
 };
