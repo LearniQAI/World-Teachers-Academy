@@ -3,6 +3,8 @@ import { countries, getCountryBySlug } from "@/lib/countries-data";
 import type { Block, Tone } from "@/lib/countries-data";
 import CountryFlag from "@/components/layout/CountryFlag";
 import { countryMedia } from "@/lib/country-media";
+import { audioTracks } from "@/lib/audio-tracks";
+import AudioPlayer from "@/components/audio/AudioPlayer";
 
 const INDIGO = "#4F46E5";
 const ORANGE = "#F97316";
@@ -225,6 +227,10 @@ export default async function CountryDetails({ params }: { params: Promise<{ slu
 
   const { reading, videoScript, debateAudio } = country;
   const media = countryMedia[country.slug];
+  // Self-hosted debate audio; the Buzzsprout embed is only a fallback for countries without a track yet.
+  const track = audioTracks.country[country.slug];
+  const buzzsprout = track ? undefined : media?.audio;
+  const hasAudio = Boolean(track || buzzsprout);
 
   return (
     <>
@@ -284,10 +290,10 @@ export default async function CountryDetails({ params }: { params: Promise<{ slu
               )}
 
               {/* Video + debate audio players */}
-              {media && (
+              {(media?.youtubeId || hasAudio) && (
                 <div style={{ marginBottom: "48px" }}>
-                  {media.youtubeId && (
-                    <div style={{ marginBottom: media.audio ? "32px" : 0 }}>
+                  {media?.youtubeId && (
+                    <div style={{ marginBottom: hasAudio ? "32px" : 0 }}>
                       <SectionBar title={`Watch — Teaching in ${country.name}`} color={INDIGO} />
                       <div style={{ position: "relative", paddingTop: "56.25%", borderRadius: "12px", overflow: "hidden", border: `1px solid ${BORDER}`, background: INK_NAVY }}>
                         <iframe
@@ -301,18 +307,32 @@ export default async function CountryDetails({ params }: { params: Promise<{ slu
                       </div>
                     </div>
                   )}
-                  {media.audio && (
+                  {hasAudio && (
                     <div>
                       <SectionBar title={`Listen — Debate Audio: ${country.name}`} color={TEAL} />
-                      <iframe
-                        src={`https://www.buzzsprout.com/${media.audio.show}/episodes/${media.audio.id}-${media.audio.slug}?client_source=small_player&iframe=true`}
-                        title={`Teaching in ${country.name} — debate audio`}
-                        loading="lazy"
-                        width="100%"
-                        height="200"
-                        scrolling="no"
-                        style={{ border: 0, borderRadius: "12px", display: "block" }}
-                      />
+                      {track ? (
+                        <AudioPlayer
+                          src={track.src}
+                          peaksSrc={track.peaksSrc}
+                          title={track.title}
+                          subtitle={debateAudio?.title}
+                          durationSec={track.durationSec}
+                          trackId={`country:${country.slug}`}
+                          badge={<CountryFlag country={country} height={14} />}
+                        />
+                      ) : (
+                        buzzsprout && (
+                          <iframe
+                            src={`https://www.buzzsprout.com/${buzzsprout.show}/episodes/${buzzsprout.id}-${buzzsprout.slug}?client_source=small_player&iframe=true`}
+                            title={`Teaching in ${country.name} — debate audio`}
+                            loading="lazy"
+                            width="100%"
+                            height="200"
+                            scrolling="no"
+                            style={{ border: 0, borderRadius: "12px", display: "block" }}
+                          />
+                        )
+                      )}
                     </div>
                   )}
                 </div>

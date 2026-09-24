@@ -456,3 +456,41 @@
   gap: 12px;
   margin-top: 40px;
 }
+
+/* Resource detail hero (app/resources/[slug]). The template's
+   .breadcumb-content padding adds +145px on top to clear a transparent
+   overlay header; ours is solid, so that reads as dead space above the
+   title. Equal top/bottom padding keeps the title block vertically centred
+   against the photo circle, which sits at the image's vertical centre.
+   !important for the same load-order reason as the hero-11 rules above. */
+.breadcumb-wrapper--resource {
+  background-color: #F5F7FF !important;
+  background-image: url(/assets/img/bg/resource-hero-bg.jpg);
+  background-size: cover;
+  background-position: right center;
+  background-repeat: no-repeat;
+}
+.breadcumb-wrapper--resource .breadcumb-content {
+  padding: 96px 0 !important;
+}
+@media (max-width: 1199px) {
+  .breadcumb-wrapper--resource .breadcumb-content {
+    padding: 72px 0 !important;
+  }
+}
+/* Below 992px the template centres the text, so the photo would sit behind
+   it — drop the image and keep the plain tint. */
+@media (max-width: 991px) {
+  .breadcumb-wrapper--resource {
+    background-image: none;
+  }
+  .breadcumb-wrapper--resource .breadcumb-content {
+    padding: 56px 0 !important;
+  }
+}
+
+/* While the sticky audio mini-player is showing (components/audio/AudioPlayer sets this attribute),
+   lift the theme's scroll-to-top button above it: 60px bar + 12px gap on top of its usual 55px. */
+html[data-wta-mini-player] .scroll-top {
+  bottom: calc(127px + env(safe-area-inset-bottom, 0px));
+}

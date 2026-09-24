@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
 import { getResourceBySlug, type ResourceSection } from "@/lib/resources-data";
+import { audioTracks } from "@/lib/audio-tracks";
+import AudioPlayer from "@/components/audio/AudioPlayer";
 
 const INDIGO = "#4F46E5";
 const TEAL = "#14B8A6";
@@ -140,15 +142,17 @@ export default async function ResourceDetails({
     notFound();
   }
 
+  const track = audioTracks.resource[resource.slug];
+
   return (
     <>
       {/*==============================
     Breadcumb
 ============================== */}
-      <div className="breadcumb-wrapper " style={{ background: "#F5F7FF" }}>
+      <div className="breadcumb-wrapper breadcumb-wrapper--resource">
         <div className="container">
           <div className="row">
-            <div className="col-lg-9">
+            <div className="col-lg-7">
               <div className="breadcumb-content">
                 <span className="sub-title text-theme"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />{resource.category}</span>
                 <h1 className="breadcumb-title">{resource.title}</h1>
@@ -173,6 +177,23 @@ export default async function ResourceDetails({
               <p style={{ fontSize: "18px", color: INK_NAVY, lineHeight: 1.6, marginBottom: "40px" }}>
                 {resource.summary}
               </p>
+
+              {track && (
+                <div style={{ marginBottom: "40px" }}>
+                  <h3 style={{ fontSize: "18px", color: INK_NAVY, marginBottom: "14px" }}>
+                    <i className="fal fa-headphones me-2" style={{ color: TEAL }}></i>
+                    Listen to this guide
+                  </h3>
+                  <AudioPlayer
+                    src={track.src}
+                    peaksSrc={track.peaksSrc}
+                    title={track.title}
+                    subtitle={resource.category}
+                    durationSec={track.durationSec}
+                    trackId={`resource:${resource.slug}`}
+                  />
+                </div>
+              )}
 
               {resource.videos.map((video, i) => (
                 <div key={i} style={{ marginBottom: "40px" }}>

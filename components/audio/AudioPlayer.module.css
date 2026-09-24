@@ -1,0 +1,998 @@
+/* WTA audio player. Every row has a fixed height so the server-rendered card is already its final
+   size before hydration (no layout shift when the waveform, resume chip or error state appears). */
+
+.root,
+.mini {
+  --wta-navy: #0f172a;
+  --wta-indigo: #4f46e5;
+  --wta-teal: #14b8a6;
+  --wta-teal-light: #5eead4;
+  --wta-orange: #f97316;
+  --wta-muted: rgba(255, 255, 255, 0.72);
+  color: #fff;
+  font-family: var(--body-font, inherit);
+}
+
+.root *,
+.mini * {
+  box-sizing: border-box;
+}
+
+.root {
+  position: relative;
+  isolation: isolate;
+  box-sizing: border-box;
+  padding: 22px 24px 18px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background:
+    radial-gradient(120% 160% at 0% 0%, rgba(79, 70, 229, 0.38) 0%, rgba(79, 70, 229, 0) 55%),
+    radial-gradient(90% 140% at 100% 100%, rgba(20, 184, 166, 0.14) 0%, rgba(20, 184, 166, 0) 60%),
+    var(--wta-navy);
+  box-shadow:
+    0 24px 48px -24px rgba(79, 70, 229, 0.55),
+    0 2px 6px rgba(15, 23, 42, 0.25);
+}
+
+/* Shared button reset. Declared first: the specific classes below win on source order. */
+.btn {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:focus-visible,
+.range:focus-visible,
+.wave:focus-visible {
+  outline: 2px solid var(--wta-teal-light);
+  outline-offset: 3px;
+}
+
+/* ---------- layout + cover art ---------- */
+
+/* [cover] [header / play + waveform / controls]. The cover spans the three rows and centres
+   against them when they're taller than it. */
+.layout {
+  --cover-size: 168px;
+  display: grid;
+  grid-template-columns: var(--cover-size) minmax(0, 1fr);
+  grid-template-areas:
+    "cover header"
+    "cover main"
+    "cover controls";
+  column-gap: 24px;
+}
+
+.cover,
+.miniCover {
+  position: relative;
+  flex: none;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--wta-indigo), var(--wta-teal)); /* shows while the image loads */
+}
+
+.cover {
+  grid-area: cover;
+  align-self: center;
+  width: var(--cover-size);
+  height: var(--cover-size);
+  border-radius: 18px;
+  box-shadow: 0 18px 40px -16px rgba(0, 0, 0, 0.6);
+  transition:
+    transform 300ms ease,
+    box-shadow 300ms ease;
+}
+
+/* Hairline border drawn over the image, not under it. */
+.cover::after,
+.miniCover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.coverPlaying {
+  transform: scale(1.02);
+  box-shadow:
+    0 0 0 2px rgba(20, 184, 166, 0.55),
+    0 0 28px 2px rgba(20, 184, 166, 0.35),
+    0 18px 40px -16px rgba(0, 0, 0, 0.6);
+}
+
+.coverImg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.coverBadge {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.6);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 15px;
+  line-height: 1;
+}
+
+/* ---------- header ---------- */
+
+.header {
+  grid-area: header;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 44px;
+  margin-bottom: 14px;
+}
+
+.heading {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.eyebrow {
+  overflow: hidden;
+  color: var(--wta-teal-light);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 16px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.title {
+  margin-top: 2px;
+  overflow: hidden;
+  color: #fff;
+  font-family: var(--title-font, inherit);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 24px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.resume {
+  flex: none;
+  display: flex;
+  align-items: center;
+  height: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  transition: opacity 200ms ease;
+}
+
+.hidden {
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* The header row has a fixed height, so dropping the hidden chip out of the flow only gives its width
+   back to the title (which the cover art now shares the row with); nothing moves vertically. */
+.resume.hidden {
+  display: none;
+}
+
+.resumeMain {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 10px 0 12px;
+  border-radius: 999px 0 0 999px;
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.resumeDot {
+  width: 8px;
+  height: 8px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--wta-orange);
+}
+
+.resumeReset {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 100%;
+  border-left: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 0 999px 999px 0;
+  color: var(--wta-muted);
+}
+
+.resumeMain:hover,
+.resumeReset:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.narrowOnly {
+  display: none;
+}
+
+/* ---------- play button ---------- */
+
+.main {
+  grid-area: main;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 64px;
+}
+
+.play {
+  position: relative;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--wta-indigo);
+  color: #fff;
+  box-shadow:
+    0 8px 20px -6px rgba(79, 70, 229, 0.75),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  transition:
+    transform 150ms ease,
+    background-color 150ms ease;
+}
+
+.play:hover {
+  background: #5b53f0;
+}
+
+.play:active {
+  transform: scale(0.96);
+}
+
+.play::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.pulsing::after {
+  animation: pulse 2.2s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.55);
+  }
+  100% {
+    box-shadow: 0 0 0 16px rgba(79, 70, 229, 0);
+  }
+}
+
+/* Play ▶ ⇄ pause ❚❚ morph: two halves whose clip-path polygons tween between the triangle's halves
+   and the two bars (same point count, so it animates in every browser). */
+.icon {
+  position: relative;
+  display: block;
+  width: 18px;
+  height: 20px;
+  transform: translateX(2px); /* optical centre of the triangle */
+  transition: transform 200ms ease;
+}
+
+.icon::before,
+.icon::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: calc(50% + 0.5px); /* overlap to hide the seam */
+  background: currentColor;
+  transition: clip-path 220ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.icon::before {
+  left: 0;
+  clip-path: polygon(0 0, 100% 25%, 100% 75%, 0 100%);
+}
+
+.icon::after {
+  right: 0;
+  clip-path: polygon(0 25%, 100% 50%, 100% 50%, 0 75%);
+}
+
+.isPlaying .icon {
+  transform: none;
+}
+
+.isPlaying .icon::before {
+  clip-path: polygon(0 0, 68% 0, 68% 100%, 0 100%);
+}
+
+.isPlaying .icon::after {
+  clip-path: polygon(32% 0, 100% 0, 100% 100%, 32% 100%);
+}
+
+.spinner {
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  width: calc(100% + 10px);
+  height: calc(100% + 10px);
+  pointer-events: none;
+  animation: spin 0.9s linear infinite;
+}
+
+.spinner circle {
+  fill: none;
+  stroke: var(--wta-teal);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 40 110;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- waveform ---------- */
+
+.waveWrap {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 56px;
+}
+
+.wave {
+  position: relative;
+  height: 100%;
+  border-radius: 8px;
+  cursor: pointer;
+  touch-action: pan-y; /* horizontal drags scrub, vertical swipes still scroll the page */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Placeholder line until the canvas has painted (i.e. before hydration). */
+.wave::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  margin-top: -1px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.wave[data-painted]::before {
+  display: none;
+}
+
+.wave[aria-disabled="true"] {
+  cursor: default;
+}
+
+.canvas {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  padding: 3px 7px;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  color: var(--wta-navy);
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 16px;
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.error {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 4px;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.94);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.error > span {
+  flex: 1;
+  min-width: 0;
+}
+
+.retry {
+  flex: none;
+  height: 32px;
+  padding: 0 16px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.retry:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ---------- control row ---------- */
+
+.controls {
+  grid-area: controls;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  margin-top: 12px;
+  padding-left: 76px; /* line up with the waveform */
+}
+
+.time {
+  margin-right: auto;
+  color: var(--wta-muted);
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.timeSep {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.iconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.85);
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+.iconBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.speed {
+  min-width: 54px;
+  height: 28px;
+  margin-left: 4px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.speed:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.volume {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 6px;
+}
+
+.range {
+  width: 84px;
+  height: 4px;
+  margin: 0;
+  /* The template's global \`input\` rule adds 25px/45px padding, a border and a 0.4s transition. On an
+     84px slider that padding leaves the thumb ~14px of travel, so volume barely moves. */
+  padding: 0;
+  border: 0;
+  transition: none;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--wta-teal) var(--fill, 100%), rgba(255, 255, 255, 0.22) var(--fill, 100%));
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.range::-webkit-slider-thumb {
+  width: 12px;
+  height: 12px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.range::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.range::-moz-range-track {
+  background: transparent;
+}
+
+/* ---------- sticky mini-player ---------- */
+
+.mini {
+  position: fixed;
+  z-index: 9990; /* under the scroll-to-top button (10000) and menu overlays */
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 560px;
+  height: 60px;
+  margin: 0 auto;
+  padding: 0 6px 0 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.94);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 16px 40px -12px rgba(15, 23, 42, 0.6),
+    0 0 0 1px rgba(79, 70, 229, 0.15);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(calc(100% + 32px));
+  transition:
+    transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 200ms ease,
+    visibility 0s linear 280ms;
+}
+
+.miniOpen {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 200ms ease,
+    visibility 0s;
+}
+
+.miniTrack {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.miniFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--wta-indigo), var(--wta-teal)); /* scales with the fill, so it spans the played length */
+  transform-origin: 0 50%;
+}
+
+.miniCover {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+}
+
+.miniPlay {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--wta-indigo);
+  color: #fff;
+}
+
+.miniPlay .icon {
+  width: 14px;
+  height: 16px;
+}
+
+.miniTitle {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  height: 44px;
+  padding: 0 6px;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.miniName {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 18px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.miniTitle:hover .miniName {
+  text-decoration: underline;
+}
+
+.miniTime {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  line-height: 16px;
+}
+
+.miniClose {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.miniClose:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* ---------- light theme (default) ----------
+   Overrides only colours, shadows and backgrounds; every size above applies unchanged. The mini-player
+   is portalled outside .root, so it stays dark glass. Contrast (AA): eyebrow #0f766e ≥4.4:1 and total
+   time #475569 ≥6:1 across the card gradient; #0d9488 / #64748b fell below 4.5:1 on its tinted areas. */
+
+.light {
+  --wta-muted: #475569;
+  color: var(--wta-navy);
+  border: 1px solid rgba(79, 70, 229, 0.12);
+  background:
+    radial-gradient(70% 90% at 100% 0%, rgba(79, 70, 229, 0.1) 0%, rgba(79, 70, 229, 0) 70%),
+    radial-gradient(70% 90% at 0% 100%, rgba(20, 184, 166, 0.1) 0%, rgba(20, 184, 166, 0) 70%),
+    linear-gradient(135deg, #ffffff 0%, #f7f8ff 55%, #f0fdfa 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 20px 50px -20px rgba(79, 70, 229, 0.25);
+}
+
+.light .btn:focus-visible,
+.light .range:focus-visible,
+.light .wave:focus-visible {
+  outline: 2px solid var(--wta-indigo);
+  outline-offset: 2px;
+}
+
+.light .cover {
+  box-shadow:
+    0 0 0 4px #fff,
+    0 16px 36px -14px rgba(15, 23, 42, 0.35);
+}
+
+.light .coverPlaying {
+  box-shadow:
+    0 0 0 4px #fff,
+    0 0 0 6px rgba(20, 184, 166, 0.55),
+    0 0 28px 6px rgba(20, 184, 166, 0.3),
+    0 16px 36px -14px rgba(15, 23, 42, 0.35);
+}
+
+.light .coverBadge {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--wta-navy);
+}
+
+.light .eyebrow {
+  color: #0f766e;
+}
+
+.light .title {
+  color: var(--wta-navy);
+}
+
+.light .resume {
+  border-color: rgba(79, 70, 229, 0.15);
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.light .resumeReset {
+  border-left-color: rgba(79, 70, 229, 0.15);
+  color: #64748b;
+}
+
+.light .resumeMain:hover,
+.light .resumeReset:hover {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.light .play {
+  box-shadow:
+    0 10px 24px -8px rgba(79, 70, 229, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.light .pulsing::after {
+  animation-name: pulseLight;
+}
+
+@keyframes pulseLight {
+  0% {
+    box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.18);
+  }
+  30% {
+    box-shadow: 0 0 0 5px rgba(79, 70, 229, 0.18);
+  }
+  100% {
+    box-shadow: 0 0 0 16px rgba(79, 70, 229, 0);
+  }
+}
+
+/* Skeleton bars shimmering until the peaks arrive (the canvas paints over it after that). */
+.light .wave::before {
+  top: 30%;
+  height: 40%;
+  margin-top: 0;
+  border-radius: 0;
+  background: linear-gradient(90deg, #e2e8f0 0%, #f1f5f9 50%, #e2e8f0 100%) 0 0 / 200% 100%;
+  -webkit-mask: repeating-linear-gradient(90deg, #000 0 2px, transparent 2px 3.5px);
+  mask: repeating-linear-gradient(90deg, #000 0 2px, transparent 2px 3.5px);
+  animation: shimmer 1.4s linear infinite;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.light .tooltip {
+  background: var(--wta-navy);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+  color: #fff;
+}
+
+.light .error {
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.light .retry {
+  border-color: var(--wta-indigo);
+  background: #fff;
+  color: var(--wta-indigo);
+}
+
+.light .retry:hover {
+  background: #eef2ff;
+}
+
+.light .time {
+  color: var(--wta-navy);
+}
+
+.light .timeSep,
+.light .timeTotal {
+  color: #475569;
+}
+
+.light .iconBtn {
+  color: #334155;
+}
+
+.light .iconBtn:hover {
+  background: rgba(79, 70, 229, 0.08);
+  color: var(--wta-indigo);
+}
+
+.light .speed {
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.light .speed:hover {
+  background: #e0e7ff;
+}
+
+.light .range {
+  background:
+    linear-gradient(90deg, var(--wta-indigo), var(--wta-teal)) 0 0 / var(--fill, 100%) 100% no-repeat,
+    #e2e8f0;
+}
+
+.light .range::-webkit-slider-thumb {
+  box-shadow:
+    0 0 0 2px var(--wta-indigo),
+    0 1px 3px rgba(15, 23, 42, 0.25);
+}
+
+.light .range::-moz-range-thumb {
+  box-shadow:
+    0 0 0 2px var(--wta-indigo),
+    0 1px 3px rgba(15, 23, 42, 0.25);
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 767px) {
+  .layout {
+    --cover-size: 120px;
+    column-gap: 20px;
+  }
+}
+
+@media (max-width: 575px) {
+  .root {
+    padding: 18px 16px 14px;
+  }
+
+  /* Cover sits beside the eyebrow + title; the player rows go full width below. */
+  .layout {
+    --cover-size: 72px;
+    grid-template-areas:
+      "cover header"
+      "main main"
+      "controls controls";
+    column-gap: 14px;
+  }
+
+  .cover {
+    border-radius: 14px;
+  }
+
+  .coverBadge {
+    left: 4px;
+    bottom: 4px;
+    min-width: 24px;
+    height: 18px;
+    padding: 0 5px;
+    font-size: 11px;
+  }
+
+  .coverBadge svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  /* CountryFlag sizes its <img> inline; shrink it to fit the 18px pill. */
+  .coverBadge img {
+    width: 15px !important;
+    height: 10px !important;
+  }
+
+  .header {
+    height: 72px;
+    margin-bottom: 12px;
+  }
+
+  .title {
+    font-size: 16px;
+  }
+
+  .wideOnly {
+    display: none;
+  }
+
+  .narrowOnly {
+    display: inline;
+  }
+
+  .main {
+    gap: 12px;
+    height: 56px;
+  }
+
+  .play {
+    width: 52px;
+    height: 52px;
+  }
+
+  .waveWrap {
+    height: 48px;
+  }
+
+  .controls {
+    margin-top: 10px;
+    padding-left: 0;
+  }
+}
+
+/* Phones and tablets: the OS owns volume (iOS ignores element volume anyway). */
+@media (max-width: 575px), (hover: none) and (pointer: coarse) {
+  .volume {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icon,
+  .icon::before,
+  .icon::after,
+  .play,
+  .resume,
+  .iconBtn,
+  .mini,
+  .miniOpen {
+    transition: none;
+  }
+
+  .cover {
+    transition: none;
+  }
+
+  .coverPlaying {
+    transform: none; /* keep the glow ring as the "playing" cue, drop the zoom */
+  }
+
+  .pulsing::after,
+  .light .pulsing::after,
+  .spinner,
+  .light .wave::before {
+    animation: none; /* the static arc still marks "loading" */
+  }
+}
