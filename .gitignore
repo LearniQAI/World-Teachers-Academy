@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# raw Google Drive downloads cached by scripts/import-audio.ts
+/scripts/.audio-cache/

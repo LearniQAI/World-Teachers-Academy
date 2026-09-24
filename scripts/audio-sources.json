@@ -1,0 +1,33 @@
+[
+  { "kind": "country", "slug": "argentina", "title": "Teaching in Argentina: The Debate", "driveId": "1CBlOAV46UvRG4NEfIol6MRrMqS-pp0i_" },
+  { "kind": "country", "slug": "brazil", "title": "Teaching in Brazil: The Debate", "driveId": "1OrVSbFsAGHeXFC6lfrWy2DqlhM9_YXFw" },
+  { "kind": "country", "slug": "brunei", "title": "Teaching in Brunei: The Debate", "driveId": "12Rv1uajhz6oupZyldCO6SKwH2wpB66Kf" },
+  { "kind": "country", "slug": "cambodia", "title": "Teaching in Cambodia: The Debate", "driveId": "1msKu1Z9HE9hUn7mEmERqD81fSVjnYTtO" },
+  { "kind": "country", "slug": "chile", "title": "Teaching in Chile: The Debate", "driveId": "1ccOTwvj6jpE7QnkXcEtAbQJIlAKtAjpZ" },
+  { "kind": "country", "slug": "china", "title": "Teaching in China: The Debate", "driveId": "1CLjXseSkPtx2BO9QPzm7glG7tToZNSQz" },
+  { "kind": "country", "slug": "colombia", "title": "Teaching in Colombia: The Debate", "driveId": "19Nz5z88rwXbP3zH-1d-WG7E6y0JU53Xi" },
+  { "kind": "country", "slug": "costa-rica", "title": "Teaching in Costa Rica: The Debate", "driveId": "1v6OdThaHkyIGUFlsu5SaI426WFL9pYvr" },
+  { "kind": "country", "slug": "france", "title": "Teaching in France: The Debate", "driveId": "1nn_o1K1jZJ6s81Lc4-wn9TQDAFZ443y1" },
+  { "kind": "country", "slug": "italy", "title": "Teaching in Italy: The Debate", "driveId": "1Pf1mXINwzfG9b6cubjckLeKPANPKkpN6" },
+  { "kind": "country", "slug": "japan", "title": "Teaching in Japan: The Debate", "driveId": "1iA2cXRG0gRfveAodJFG5f1OCiAVu-ZX7" },
+  { "kind": "country", "slug": "kuwait", "title": "Teaching in Kuwait: The Debate", "driveId": "1owLh_FJA8X9LW2SJ5_9hWUTZRB2zF-9y" },
+  { "kind": "country", "slug": "laos", "title": "Teaching in Laos & Myanmar: The Debate", "driveId": "1yZY9l2ncXAxLb3EpD7bXEgPFKxO2JXn1" },
+  { "kind": "country", "slug": "mexico", "title": "Teaching in Mexico: The Debate", "driveId": "1b0AoWSXPXDMdNrJalRuoHS8ZU5hW0uMl" },
+  { "kind": "country", "slug": "central-europe", "title": "Teaching in Central Europe: The Debate", "driveId": "13OUo6i-MDnDQ98lOs2RK4vMehDREWIk4" },
+  { "kind": "country", "slug": "qatar", "title": "Teaching in Qatar: The Debate", "driveId": "1g5jOEjjcqhVO-_5kM6gFKQ5GZg78iIlX" },
+  { "kind": "country", "slug": "spain", "title": "Teaching in Spain: The Debate", "driveId": "1Uv4CMSzRWQPC6TFqRl4W-i7kqqvF8nUy" },
+  { "kind": "country", "slug": "taiwan", "title": "Teaching in Taiwan: The Debate", "driveId": "1pwwjvNgXzhwAzFLnyzHCYl5kbqSscL4A" },
+  { "kind": "country", "slug": "thailand", "title": "Teaching in Thailand: The Debate", "driveId": "1IneNVvR9TWIRj6h7uNmmGhzKrYXb4-VK" },
+  { "kind": "country", "slug": "uae", "title": "Teaching in the UAE: The Debate", "driveId": "1cSbJg4nUHNbF-ofEIrbx_gy53_5OpAA4" },
+  { "kind": "country", "slug": "vietnam", "title": "Teaching in Vietnam: The Debate", "driveId": "1hTti4FR8FtRWrnUgOJkp5RBeSU7jlH9w" },
+
+  { "kind": "resource", "slug": "understanding-visas-work-permits", "title": "Understanding Visas & Work Permits", "driveId": "1G0M_o48uEA33Kf4_SX8ZUXeWUioIuMgA" },
+  { "kind": "resource", "slug": "resume-design", "title": "How to Design Your Resume", "driveId": "1GT2qJ_imjP6D4_eZqPqTVzFBB0D4UWOI" },
+  { "kind": "resource", "slug": "reading-a-country-before-you-go", "title": "Reading a Country Before You Go", "driveId": "1fMBSRwQ9iZivgdUZ9e7vD-NcM_xc5Q-e" },
+  { "kind": "resource", "slug": "getting-your-documents-ready", "title": "Getting Your Documents Ready", "driveId": "15uXxohf3x18ErK3aTzuq80gc_NGn_AYA" },
+  { "kind": "resource", "slug": "classroom-management-from-day-one", "title": "Classroom Management From Day One", "driveId": "1Duk2y6igo9dLm4QwGnZ0_wQRKOLyek6W" },
+  { "kind": "resource", "slug": "building-a-teaching-portfolio", "title": "Building a Teaching Portfolio", "driveId": "1ThQ5jVAw1QZJDQ3NOHffSCW9iCDGGgvC" },
+
+  { "kind": "resource", "slug": "self-intro", "title": "Recording Your Self-Intro", "driveId": "1LoyqcM1hf-Sy0_L0WfIbVzEikX6QPLnA", "skipIfVideo": true },
+  { "kind": "resource", "slug": "international-job-ready", "title": "International Job Ready", "driveId": "1dXK0goti5BX1DQUQfZLfU2Q8rZSgskq0" }
+]
