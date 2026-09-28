@@ -489,6 +489,53 @@
   }
 }
 
+/* Country list + country detail hero (app/countries). Same pattern as the
+   resource hero above. */
+.breadcumb-wrapper--country {
+  background-color: #F5F7FF !important;
+  background-image: url(/assets/countries.png);
+  background-size: cover;
+  background-position: right center;
+  background-repeat: no-repeat;
+}
+.breadcumb-wrapper--country .breadcumb-content {
+  padding: 96px 0 !important;
+}
+/* Height is 60% of the image's natural ratio (1586x992), so `cover` trims
+   about 40% off the top/bottom; the text block is centred vertically. */
+@media (min-width: 992px) {
+  .breadcumb-wrapper--country {
+    aspect-ratio: 1586 / 595; /* 60% of the image's natural height */
+    display: flex;
+    align-items: center;
+  }
+  .breadcumb-wrapper--country > .container {
+    width: 100%;
+  }
+}
+@media (max-width: 1199px) {
+  .breadcumb-wrapper--country .breadcumb-content {
+    padding: 72px 0 !important;
+  }
+}
+
+/* Course detail hero (app/courses/[slug]). Same pattern as the resource hero. */
+.breadcumb-wrapper--course {
+  background-color: #F5F7FF !important;
+  background-image: url(/assets/img/bg/course-hero-bg.png);
+  background-size: cover;
+  background-position: right center;
+  background-repeat: no-repeat;
+}
+.breadcumb-wrapper--course .breadcumb-content {
+  padding: 118px 0 !important;
+}
+@media (max-width: 1199px) {
+  .breadcumb-wrapper--course .breadcumb-content {
+    padding: 88px 0 !important;
+  }
+}
+
 /* While the sticky audio mini-player is showing (components/audio/AudioPlayer sets this attribute),
    lift the theme's scroll-to-top button above it: 60px bar + 12px gap on top of its usual 55px. */
 html[data-wta-mini-player] .scroll-top {

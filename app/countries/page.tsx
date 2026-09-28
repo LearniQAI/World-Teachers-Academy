@@ -3,20 +3,13 @@ import CountryFlag from "@/components/layout/CountryFlag";
 
 const DELAYS = [".3", ".5", ".7"];
 
-// Light, premium hero backdrop (replaces the photo hero on country pages).
-const HERO_BG: React.CSSProperties = {
-  background:
-    "radial-gradient(1000px 400px at 85% 0%, rgba(79,70,229,0.10), transparent 60%), radial-gradient(800px 360px at 0% 100%, rgba(20,184,166,0.10), transparent 60%), linear-gradient(180deg, #FFFFFF 0%, #F3F5FB 100%)",
-  borderBottom: "1px solid #E2E5EE",
-};
-
 export default function Countries() {
   return (
     <>
       {/*==============================
     Breadcumb
 ============================== */}
-      <div className="breadcumb-wrapper " style={HERO_BG}>
+      <div className="breadcumb-wrapper breadcumb-wrapper--country">
         <div className="container">
           <div className="row">
             <div className="col-lg-7">

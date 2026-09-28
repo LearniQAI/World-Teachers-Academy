@@ -16,7 +16,7 @@ export default async function CourseDetails({
       {/*==============================
     Breadcumb
 ============================== */}
-      <div className="breadcumb-wrapper " style={{ background: "#F5F7FF" }}>
+      <div className="breadcumb-wrapper breadcumb-wrapper--course">
         <div className="container">
           <div className="row">
             <div className="col-lg-7">
