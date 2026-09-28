@@ -63,6 +63,7 @@ const TEAL = "#14B8A6";
 const INK_NAVY = "#0F172A";
 const PAPER_DIM = "#9AA4C0";
 const BORDER = "#E2E5EE";
+const JOBS_PAGE_SIZE = 10;
 
 function countryFlag(code: string): string {
   if (!/^[A-Za-z]{2}$/.test(code)) return "";
@@ -116,6 +117,10 @@ export default function JobPortal() {
   const [applyJob, setApplyJob] = useState<Job | null>(null);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalResults, setTotalResults] = useState(0);
+
   const [availableCountries, setAvailableCountries] = useState<string[]>([]);
   const [totalLive, setTotalLive] = useState<number | null>(null);
 
@@ -166,12 +171,17 @@ export default function JobPortal() {
     if (country !== "all") params.set("country", country);
     if (employmentType !== "all") params.set("employment_type", employmentType);
     if (keyword.trim()) params.set("keyword", keyword.trim());
+    params.set("page", String(page));
 
     const timeout = setTimeout(() => {
       setLoading(true);
       fetch(`/api/jobs?${params.toString()}`, { signal: controller.signal })
         .then((res) => res.json())
-        .then((data) => setJobs(data.jobs ?? []))
+        .then((data) => {
+          setJobs(data.jobs ?? []);
+          setTotalPages(typeof data.total_pages === "number" ? data.total_pages : 1);
+          setTotalResults(typeof data.total === "number" ? data.total : (data.jobs ?? []).length);
+        })
         .catch((err) => {
           if (err.name !== "AbortError") console.error(err);
         })
@@ -182,7 +192,30 @@ export default function JobPortal() {
       clearTimeout(timeout);
       controller.abort();
     };
-  }, [country, employmentType, keyword]);
+  }, [country, employmentType, keyword, page]);
+
+  function goToPage(next: number) {
+    const clamped = Math.min(Math.max(next, 1), totalPages);
+    if (clamped === page) return;
+    setPage(clamped);
+    const section = document.getElementById("job-portal-listings");
+    section?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  // A filter change resets to page 1 rather than staying on a page that may
+  // no longer exist for the new result set.
+  function handleKeywordChange(value: string) {
+    setKeyword(value);
+    setPage(1);
+  }
+  function handleCountryChange(value: string) {
+    setCountry(value);
+    setPage(1);
+  }
+  function handleEmploymentTypeChange(value: Job["employment_type"] | "all") {
+    setEmploymentType(value);
+    setPage(1);
+  }
 
   const countryOptions = useMemo(
     () => availableCountries.map((code) => ({ code, name: COUNTRY_NAMES[code] ?? code })),
@@ -196,11 +229,11 @@ export default function JobPortal() {
   const filterControls = (
     <FilterControls
       keyword={keyword}
-      setKeyword={setKeyword}
+      setKeyword={handleKeywordChange}
       country={country}
-      setCountry={setCountry}
+      setCountry={handleCountryChange}
       employmentType={employmentType}
-      setEmploymentType={setEmploymentType}
+      setEmploymentType={handleEmploymentTypeChange}
       countryOptions={countryOptions}
     />
   );
@@ -273,7 +306,11 @@ export default function JobPortal() {
                 : "Loading live positions..."}
             </span>
             <span style={{ fontWeight: 600, color: INK_NAVY }}>
-              {loading ? "Updating..." : `Showing ${jobs.length}`}
+              {loading
+                ? "Updating..."
+                : totalResults === 0
+                  ? "Showing 0"
+                  : `Showing ${(page - 1) * JOBS_PAGE_SIZE + 1}–${Math.min(page * JOBS_PAGE_SIZE, totalResults)} of ${totalResults}`}
             </span>
           </div>
         </div>
@@ -332,18 +369,21 @@ export default function JobPortal() {
       {/*==============================
     Job Listings
 ============================== */}
-      <section style={{ paddingTop: "24px", paddingBottom: "60px" }}>
+      <section id="job-portal-listings" style={{ paddingTop: "24px", paddingBottom: "60px" }}>
         <div className="container">
           {!loading && jobs.length === 0 ? (
             <div className="text-center" style={{ padding: "60px 0", color: PAPER_DIM }}>
               <p className="mb-0">No listings match your search — try adjusting the filters.</p>
             </div>
           ) : (
-            <div className="d-flex flex-column" style={{ gap: "10px" }}>
-              {jobs.map((job) => (
-                <JobRow key={job.id} job={job} onApply={() => setApplyJob(job)} />
-              ))}
-            </div>
+            <>
+              <div className="d-flex flex-column" style={{ gap: "10px" }}>
+                {jobs.map((job) => (
+                  <JobRow key={job.id} job={job} onApply={() => setApplyJob(job)} />
+                ))}
+              </div>
+              <Pagination page={page} totalPages={totalPages} onChange={goToPage} />
+            </>
           )}
         </div>
       </section>
@@ -506,6 +546,102 @@ function JobRow({ job, onApply }: { job: Job; onApply: () => void }) {
         </button>
       </div>
     </div>
+  );
+}
+
+function paginationRange(page: number, totalPages: number): (number | "ellipsis")[] {
+  const delta = 1;
+  const range: (number | "ellipsis")[] = [];
+  const start = Math.max(2, page - delta);
+  const end = Math.min(totalPages - 1, page + delta);
+
+  range.push(1);
+  if (start > 2) range.push("ellipsis");
+  for (let i = start; i <= end; i++) range.push(i);
+  if (end < totalPages - 1) range.push("ellipsis");
+  if (totalPages > 1) range.push(totalPages);
+
+  return range;
+}
+
+function Pagination({
+  page,
+  totalPages,
+  onChange,
+}: {
+  page: number;
+  totalPages: number;
+  onChange: (page: number) => void;
+}) {
+  if (totalPages <= 1) return null;
+
+  const pageButtonStyle = (active: boolean): React.CSSProperties => ({
+    minWidth: "36px",
+    height: "36px",
+    padding: "0 8px",
+    borderRadius: "8px",
+    border: `1px solid ${active ? INDIGO : BORDER}`,
+    background: active ? INDIGO : "#fff",
+    color: active ? "#fff" : INK_NAVY,
+    fontWeight: active ? 700 : 500,
+    fontSize: "13px",
+    cursor: "pointer",
+  });
+
+  return (
+    <nav
+      aria-label="Job listing pages"
+      className="d-flex justify-content-center align-items-center flex-wrap"
+      style={{ gap: "6px", marginTop: "32px" }}
+    >
+      <button
+        type="button"
+        onClick={() => onChange(page - 1)}
+        disabled={page === 1}
+        style={{
+          ...pageButtonStyle(false),
+          minWidth: "auto",
+          padding: "0 14px",
+          opacity: page === 1 ? 0.4 : 1,
+          cursor: page === 1 ? "default" : "pointer",
+        }}
+      >
+        Previous
+      </button>
+
+      {paginationRange(page, totalPages).map((entry, i) =>
+        entry === "ellipsis" ? (
+          <span key={`ellipsis-${i}`} style={{ color: PAPER_DIM, padding: "0 4px" }}>
+            …
+          </span>
+        ) : (
+          <button
+            key={entry}
+            type="button"
+            onClick={() => onChange(entry)}
+            aria-current={entry === page ? "page" : undefined}
+            style={pageButtonStyle(entry === page)}
+          >
+            {entry}
+          </button>
+        )
+      )}
+
+      <button
+        type="button"
+        onClick={() => onChange(page + 1)}
+        disabled={page === totalPages}
+        style={{
+          ...pageButtonStyle(false),
+          minWidth: "auto",
+          padding: "0 14px",
+          opacity: page === totalPages ? 0.4 : 1,
+          cursor: page === totalPages ? "default" : "pointer",
+        }}
+      >
+        Next
+      </button>
+    </nav>
   );
 }
 

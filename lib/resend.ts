@@ -7,7 +7,7 @@ const SIGNAL_INDIGO = "#4F46E5";
 
 export async function sendOtpEmail(email: string, code: string) {
   await resend.emails.send({
-    from: "World Teachers Academy <verify@worldteachersacademy.com>",
+    from: "World Teachers Academy <noreply@notify.worldteachers.academy>",
     to: email,
     subject: `Your verification code is ${code}`,
     html: `
