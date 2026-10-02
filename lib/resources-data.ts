@@ -2,10 +2,7 @@
 // client-provided source PDFs (WTA-*-Full-Breakdown.pdf). Replaces the
 // placeholder "Full guide coming soon" cards previously on /resources.
 //
-// Every source doc has a "[Insert walkthrough video link/embed here]" slot
-// with no real video yet — videos are modeled with no URL at all
-// (videoPending on the resource, no fake link) so the detail page can show
-// an honest "Video coming soon" state instead of a broken/fake embed.
+// Video entries can be linked to real YouTube walkthroughs when they are available.
 export interface ResourceVideo {
   label: string;
   description: string;
@@ -73,27 +70,6 @@ export const resources: Resource[] = [
         youtubeId: "YpBq2IjTy98",
         description:
           "A short tutorial covering structure, content, and how to use Canva to build it. Seeing the layout built step by step makes it much easier to replicate than trying to work it out from a written list alone. Watch this before you start building your own.",
-      },
-      {
-        label: "Good Self-Introduction Video — Sample 1",
-        youtubeId: "X4mM4GBYl6A",
-        description:
-          "Your resume is usually followed by your self-introduction video. Here is a strong example of how to present yourself on camera — notice the tone, pacing, and clarity.",
-      },
-      {
-        label: "Good Self-Introduction Video — Sample 2",
-        youtubeId: "Yclj1y_kaUM",
-        description: "Another example of a well-delivered self-introduction that is warm, concise, and professional.",
-      },
-      {
-        label: "Good Self-Introduction Video — Sample 3",
-        youtubeId: "0fA8RMOijiU",
-        description: "A third sample showing a different style — compare what they have in common.",
-      },
-      {
-        label: "Good Self-Introduction Video — Sample 4",
-        youtubeId: "-D-zaz7lYDo",
-        description: "One more example to learn from before you record your own.",
       },
     ],
     sections: [
@@ -163,6 +139,112 @@ export const resources: Resource[] = [
       {
         do: "Save your final version as a PDF before sending, so formatting doesn't shift on another device",
         dont: "Don't reuse the exact same resume for every application without checking it still fits what that school is asking for",
+      },
+    ],
+  },
+  {
+    slug: "self-introduction-video",
+    title: "How to Make a Strong Self-Introduction Video",
+    category: "Application Skills",
+    summary:
+      "Your self-introduction video gives a school a quick sense of your communication style, confidence, and classroom presence. Use these examples to understand what feels natural on camera, then record a short introduction that is clear, warm, and specific to the teaching role you want.",
+    videoPending: true,
+    videos: [
+      {
+        label: "Self-Introduction Video Example 1",
+        youtubeId: "X4mM4GBYl6A",
+        description:
+          "Watch for the opening, the level of detail, and how the speaker balances professionalism with personality. Notice how quickly you understand who they are and what they can offer a school.",
+      },
+      {
+        label: "Self-Introduction Video Example 2",
+        youtubeId: "Yclj1y_kaUM",
+        description:
+          "Compare the delivery and pacing with the first example. A strong introduction does not need to sound rehearsed; it needs to be easy to follow and relevant to teaching.",
+      },
+      {
+        label: "Self-Introduction Video Example 3",
+        youtubeId: "0fA8RMOijiU",
+        description:
+          "Use this example to assess camera framing, energy, and clarity. These small presentation choices affect how confidently your message comes across.",
+      },
+      {
+        label: "Self-Introduction Video Example 4",
+        youtubeId: "-D-zaz7lYDo",
+        description:
+          "Look for the details that make the introduction memorable without making it too long. Your goal is a focused first impression, not a complete life story.",
+      },
+    ],
+    sections: [
+      {
+        heading: "A Simple Structure That Works",
+        bullets: [
+          "Start with your name, where you are based, and the teaching role or age group you are interested in",
+          "Briefly mention your qualifications, teaching experience, and the subjects or skills you can offer",
+          "Share one specific strength or example that shows how you connect with learners",
+          "Explain why you want to teach internationally and what kind of school environment suits you",
+          "Close with a friendly invitation to continue the conversation and a clear thank-you",
+        ],
+      },
+      {
+        heading: "Before You Press Record",
+        items: [
+          {
+            label: "Choose a quiet, well-lit setting",
+            tag: "PRESENTATION",
+            description: "Face a window or place a light in front of you, keep the background tidy, and make sure your face is easy to see.",
+          },
+          {
+            label: "Keep the camera steady",
+            tag: "TECHNICAL",
+            description: "Position the camera at eye level and frame yourself from the chest or shoulders up. Test the sound before recording the final take.",
+          },
+          {
+            label: "Prepare points, not a script",
+            tag: "DELIVERY",
+            description: "Use a short outline so you sound natural. Reading every word can make your expression and eye contact feel distant.",
+          },
+          {
+            label: "Review the finished recording",
+            tag: "FINAL CHECK",
+            description: "Watch it once with the sound off for body language, then listen without looking at the screen for clarity and distracting noise.",
+          },
+        ],
+      },
+      {
+        heading: "What Schools Are Listening For",
+        paragraphs: [
+          "The strongest videos make it easy for a recruiter to picture you speaking with students and colleagues. Aim to communicate these qualities through your examples and delivery:",
+        ],
+        bullets: [
+          "Clear spoken English and a pace that is comfortable to follow",
+          "Warmth, patience, and genuine interest in helping students learn",
+          "Confidence that feels prepared rather than over-rehearsed",
+          "Relevant experience, qualifications, and availability stated accurately",
+          "Professional judgment about what to include and what to leave out",
+        ],
+      },
+    ],
+    doAndDont: [
+      {
+        do: "Keep the video focused and concise, usually around one to two minutes unless the school gives a different limit",
+        dont: "Don't apologise for your accent or spend most of the video discussing unrelated personal history",
+      },
+      {
+        do: "Look into the camera when making your key points and speak as though you are meeting a student or colleague",
+        dont: "Don't read from a page positioned below the camera or repeatedly look away from the viewer",
+      },
+      {
+        do: "Mention specific teaching experience, qualifications, and the age groups or subjects you can teach",
+        dont: "Don't make broad claims such as being passionate without giving one concrete example",
+      },
+      {
+        do: "Record a few takes and choose the one with the clearest sound and most natural delivery",
+        dont: "Don't upload a take with background noise, poor lighting, distracting filters, or visible editing mistakes",
+      },
+      {
+        do: "Name the file professionally and check the sharing permissions before sending it",
+        dont: "Don't send a private or broken link, or reuse an introduction that addresses a different school by name",
       },
     ],
   },
