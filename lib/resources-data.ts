@@ -75,15 +75,25 @@ export const resources: Resource[] = [
           "A short tutorial covering structure, content, and how to use Canva to build it. Seeing the layout built step by step makes it much easier to replicate than trying to work it out from a written list alone. Watch this before you start building your own.",
       },
       {
-        label: "Sample Resumes Worth Looking At",
+        label: "Good Self-Introduction Video — Sample 1",
+        youtubeId: "X4mM4GBYl6A",
         description:
-          "Looking at a few strong examples helps you see what “clean and professional” actually looks like in practice — not just in theory.",
-        afterBullets: [
-          "How much white space they leave (a cluttered resume feels overwhelming at a glance)",
-          "How they organise sections so the most important information is easy to find",
-          "How consistent the formatting is — fonts, spacing, bullet style",
-          "How they handle a professional photo, if one is included",
-        ],
+          "Your resume is usually followed by your self-introduction video. Here is a strong example of how to present yourself on camera — notice the tone, pacing, and clarity.",
+      },
+      {
+        label: "Good Self-Introduction Video — Sample 2",
+        youtubeId: "Yclj1y_kaUM",
+        description: "Another example of a well-delivered self-introduction that is warm, concise, and professional.",
+      },
+      {
+        label: "Good Self-Introduction Video — Sample 3",
+        youtubeId: "0fA8RMOijiU",
+        description: "A third sample showing a different style — compare what they have in common.",
+      },
+      {
+        label: "Good Self-Introduction Video — Sample 4",
+        youtubeId: "-D-zaz7lYDo",
+        description: "One more example to learn from before you record your own.",
       },
     ],
     sections: [

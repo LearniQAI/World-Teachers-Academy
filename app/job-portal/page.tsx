@@ -708,9 +708,13 @@ function ApplyModal({ job, onClose }: { job: Job; onClose: () => void }) {
     return () => clearInterval(timer);
   }, [resendCooldown]);
 
+  const [finalApplyUrl, setFinalApplyUrl] = useState(job.apply_url);
+
   function goToApplyUrl(applyUrl: string | null) {
+    const url = applyUrl ?? job.apply_url;
+    setFinalApplyUrl(url);
     setStep("done");
-    window.location.href = applyUrl ?? job.apply_url;
+    window.open(url, "_blank", "noopener,noreferrer");
   }
 
   async function requestCode(): Promise<boolean> {
@@ -937,7 +941,13 @@ function ApplyModal({ job, onClose }: { job: Job; onClose: () => void }) {
                 <i className="far fa-check"></i>
               </div>
               <p className="mb-0" style={{ fontSize: "14.5px", color: INK_NAVY }}>
-                Thanks! Redirecting you to the job posting...
+                Thanks! The job posting is opening in a new tab.
+              </p>
+              <p className="mb-0 mt-2" style={{ fontSize: "13px", color: PAPER_DIM }}>
+                Nothing opened?{" "}
+                <a href={finalApplyUrl} target="_blank" rel="noopener noreferrer" style={{ color: INDIGO }}>
+                  Open the job posting
+                </a>
               </p>
             </div>
           )}
