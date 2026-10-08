@@ -12,6 +12,14 @@ export interface ResourceVideo {
   // followed by a bullet list specifically about what to look for in those
   // examples — tied to that video, not a standalone section.
   afterBullets?: string[];
+  // Optional lead-in section rendered above this video (e.g. the self-intro
+  // guide's "Then watch a great example" before its example videos).
+  before?: ResourceSection;
+}
+
+export interface ResourceLink {
+  label: string;
+  href: string;
 }
 
 export interface ResourceItem {
@@ -19,6 +27,7 @@ export interface ResourceItem {
   tag?: string;
   subtitle?: string;
   description: string;
+  link?: ResourceLink;
 }
 
 export interface ResourceCallout {
@@ -29,6 +38,8 @@ export interface ResourceCallout {
 
 export interface ResourceSection {
   heading: string;
+  // Anchor target for in-page links (e.g. "#debate-audio").
+  id?: string;
   paragraphs?: string[];
   // Almost every section's paragraph is an intro line leading into its
   // bullets/items ("...that generally means they:"); the documents guide's
@@ -38,6 +49,7 @@ export interface ResourceSection {
   bullets?: string[];
   items?: ResourceItem[];
   callout?: ResourceCallout;
+  ctas?: ResourceLink[];
 }
 
 export interface DoAndDont {
@@ -51,9 +63,16 @@ export interface Resource {
   category: string;
   summary: string;
   videoPending: true;
+  // Optional sections between the summary and the audio player.
+  intro?: ResourceSection[];
+  // Replaces the default "Listen to this guide" heading above the audio player.
+  audioIntro?: ResourceSection;
   videos: ResourceVideo[];
   sections: ResourceSection[];
+  doAndDontHeading?: string;
   doAndDont: DoAndDont[];
+  // Optional sections after the Do's & Don'ts table.
+  closingSections?: ResourceSection[];
 }
 
 export const resources: Resource[] = [
@@ -147,10 +166,96 @@ export const resources: Resource[] = [
     title: "How to Make a Strong Self-Introduction Video",
     category: "Application Skills",
     summary:
-      "Your self-introduction video gives a school a quick sense of your communication style, confidence, and classroom presence. Use these examples to understand what feels natural on camera, then record a short introduction that is clear, warm, and specific to the teaching role you want.",
+      "Your CV tells them what you've done. Your video shows them who you are. When you're applying for a job overseas, your self-introduction video is often an employer's first chance to meet you — so treat it as seriously as your CV.",
     videoPending: true,
+    intro: [
+      {
+        heading: "Your First Impression Should Not Begin With a PDF",
+        paragraphs: [
+          "When you're applying for a job overseas, you don't have the luxury of simply walking into an employer's office, introducing yourself, shaking their hand and showing them why you're the right person for the job. You're thousands of kilometres away, and the employer may never meet you face-to-face until you've already been shortlisted.",
+          "So what can you do? Give them the opportunity to meet you through your camera.",
+          "A well-made self-introduction video can help an employer hear your voice, see your personality, understand your communication style and get a sense of the professional you could become in their organisation.",
+        ],
+        callout: {
+          heading: "Treat it as seriously as your CV.",
+          text: "That's why at World Teachers Academy, we believe your self-introduction video should be treated as seriously as your CV.",
+        },
+      },
+      {
+        heading: "Before You Press Record: Stop. Watch. Listen. Learn.",
+        paragraphs: [
+          "Don't pick up your phone and immediately start recording. Your first video doesn't have to be your final video.",
+          "Before you introduce yourself to an international employer, take a moment to learn from people who have already gone through the process. At World Teachers Academy, we've created a preparation experience to help you understand what employers may notice — and what can make your introduction work for or against you.",
+        ],
+        callout: {
+          heading: "Your first step is not recording.",
+          text: "Your first step is learning.",
+        },
+      },
+    ],
+    audioIntro: {
+      heading: "Listen to the Expats' Debate",
+      id: "debate-audio",
+      paragraphs: [
+        "Hear what other expats have to say. Listen to our Expats' Debate Audio, where people who have experience living, working or applying for opportunities abroad discuss the Do's and Don'ts of Self-Introduction Videos.",
+        "Hear different perspectives. Listen to real experiences. Pay attention to the small things people often overlook.",
+      ],
+      callout: {
+        heading: "“I wish I had known this before I recorded my first video.”",
+        text: "You may hear someone say exactly that. It's the kind of lesson we want you to learn before you make the same mistake.",
+      },
+    },
     videos: [
       {
+        label: "World Teachers Academy Preparation Video",
+        youtubeId: "rWCZsCRdOAg",
+        description:
+          "After listening to the debate, watch this preparation video. We'll walk you through the important elements of presenting yourself professionally on camera.",
+        before: {
+          heading: "Watch the Preparation Video",
+          id: "preparation-video",
+          paragraphs: ["See what a good introduction should look like. You'll learn about:"],
+          bullets: [
+            "Where to position your camera",
+            "Lighting",
+            "Background",
+            "Clothing",
+            "Body language",
+            "Eye contact",
+            "Voice and communication",
+            "What to say — and what not to say",
+            "How long your video should be",
+            "How to avoid sounding rehearsed",
+            "How to present yourself professionally",
+          ],
+          callout: {
+            heading: "Don't just hear the advice.",
+            text: "Watch how it is done.",
+          },
+        },
+      },
+      {
+        before: {
+          heading: "Then Watch a Great Example",
+          id: "example-videos",
+          paragraphs: [
+            "See the difference for yourself. Before you record your own introduction, watch a good example self-introduction video. Don't simply watch it — study it. Ask yourself:",
+          ],
+          bullets: [
+            "What made me want to keep watching?",
+            "How did the person introduce themselves?",
+            "Did they look confident?",
+            "Was their background appropriate?",
+            "Could I hear them clearly?",
+            "Did they sound natural?",
+            "Did their personality come through?",
+            "Did they make me want to know more about them?",
+          ],
+          callout: {
+            heading: "This isn't about copying somebody else's personality or script.",
+            text: "It's about understanding what professional presentation looks like.",
+          },
+        },
         label: "Self-Introduction Video Example 1",
         youtubeId: "X4mM4GBYl6A",
         description:
@@ -177,74 +282,226 @@ export const resources: Resource[] = [
     ],
     sections: [
       {
-        heading: "A Simple Structure That Works",
-        bullets: [
-          "Start with your name, where you are based, and the teaching role or age group you are interested in",
-          "Briefly mention your qualifications, teaching experience, and the subjects or skills you can offer",
-          "Share one specific strength or example that shows how you connect with learners",
-          "Explain why you want to teach internationally and what kind of school environment suits you",
-          "Close with a friendly invitation to continue the conversation and a clear thank-you",
+        heading: "Now It's Your Turn",
+        paragraphs: [
+          "Don't copy the person. Learn from the standard.",
+          "The goal isn't to become someone else. You have your own story, your own experience, your own personality and your own reasons for wanting to work abroad. Your video should reflect you — but you should present that version of yourself at your professional best.",
         ],
       },
       {
-        heading: "Before You Press Record",
+        heading: "Your Self-Introduction Video Is Your Digital Handshake",
+        paragraphs: [
+          "A great introduction video doesn't need to be expensive. You don't need a professional film crew, an expensive camera or a complicated studio. What you need is preparation, clarity, confidence and professionalism.",
+        ],
+        callout: {
+          heading: "Your goal is simple:",
+          text: "Make the employer want to know more about you.",
+        },
+      },
+      {
+        heading: "What Should You Say?",
+        paragraphs: [
+          "Your introduction video should give the employer a clear picture of who you are without turning into a long speech. A strong introduction can include:",
+        ],
         items: [
           {
-            label: "Choose a quiet, well-lit setting",
-            tag: "PRESENTATION",
-            description: "Face a window or place a light in front of you, keep the background tidy, and make sure your face is easy to see.",
+            label: "01 — Introduce Yourself",
+            description: "Tell the employer your name and where you're currently based. Speak naturally. Smile. Look into the camera.",
           },
           {
-            label: "Keep the camera steady",
-            tag: "TECHNICAL",
-            description: "Position the camera at eye level and frame yourself from the chest or shoulders up. Test the sound before recording the final take.",
+            label: "02 — Tell Them What You Do",
+            description: "Briefly explain your professional background. Keep it relevant to the position you're applying for.",
           },
           {
-            label: "Prepare points, not a script",
-            tag: "DELIVERY",
-            description: "Use a short outline so you sound natural. Reading every word can make your expression and eye contact feel distant.",
+            label: "03 — Show Your Experience",
+            description:
+              "Don't simply list everything on your CV. Choose the experience that matters most for the position, and tell them what you've actually done.",
           },
           {
-            label: "Review the finished recording",
-            tag: "FINAL CHECK",
-            description: "Watch it once with the sound off for body language, then listen without looking at the screen for clarity and distracting noise.",
+            label: "04 — Show Your Personality",
+            description:
+              "This is one of the biggest advantages of video. Let the employer see the person behind the qualifications. Your personality can come through without you having to say “I am a friendly and enthusiastic person.” Let them see it.",
+          },
+          {
+            label: "05 — Explain Why You Want the Opportunity",
+            description:
+              "Tell them why you're interested in working internationally and why the particular role interests you. Avoid sounding like you're reading a generic script you've sent to 50 employers. Make it personal.",
+          },
+          {
+            label: "06 — End With Confidence",
+            description:
+              "Thank the employer for taking the time to watch your video, and let them know you'd welcome the opportunity to discuss the position further. Then finish with confidence — not desperation, not uncertainty, but professional confidence.",
           },
         ],
       },
       {
-        heading: "What Schools Are Listening For",
-        paragraphs: [
-          "The strongest videos make it easy for a recruiter to picture you speaking with students and colleagues. Aim to communicate these qualities through your examples and delivery:",
-        ],
+        heading: "What Employers Can See That a CV Cannot",
         bullets: [
-          "Clear spoken English and a pace that is comfortable to follow",
-          "Warmth, patience, and genuine interest in helping students learn",
-          "Confidence that feels prepared rather than over-rehearsed",
-          "Relevant experience, qualifications, and availability stated accurately",
-          "Professional judgment about what to include and what to leave out",
+          "Your CV can tell an employer “I have excellent communication skills.” Your video can demonstrate them.",
+          "Your CV can say “I am confident working with people from different cultures.” Your video can give them a first impression of how you communicate.",
+          "Your CV can say “I am professional.” Your video can show them how you present yourself.",
+        ],
+        paragraphs: ["That's the difference."],
+        paragraphsPosition: "after",
+      },
+      {
+        heading: "Before You Record: Set Your Standard",
+        paragraphs: [
+          "At World Teachers Academy, we don't want you to simply submit an application. We want you to present yourself professionally. Before recording, check:",
+        ],
+        items: [
+          { label: "Your Background", description: "Choose a clean, professional environment." },
+          { label: "Your Appearance", description: "Dress appropriately for the position you're applying for." },
+          { label: "Your Lighting", description: "Make sure your face is clearly visible." },
+          { label: "Your Sound", description: "Record somewhere quiet where your voice can be heard clearly." },
+          { label: "Your Camera", description: "Keep the camera stable and approximately at eye level." },
+          { label: "Your Body Language", description: "Sit or stand naturally. Look into the camera. Smile when appropriate." },
+          { label: "Your Message", description: "Know what you want to say before you press record." },
+          {
+            label: "Your Time",
+            description:
+              "Keep the video focused. Don't make the employer work through a 10-minute life story to understand who you are.",
+          },
         ],
       },
     ],
+    doAndDontHeading: "Don't Make These Common Mistakes",
     doAndDont: [
       {
-        do: "Keep the video focused and concise, usually around one to two minutes unless the school gives a different limit",
-        dont: "Don't apologise for your accent or spend most of the video discussing unrelated personal history",
+        do: "Use the video to add something your CV cannot — your employer already has your CV",
+        dont: "Don't read your CV word-for-word",
       },
       {
-        do: "Look into the camera when making your key points and speak as though you are meeting a student or colleague",
-        dont: "Don't read from a page positioned below the camera or repeatedly look away from the viewer",
+        do: "Choose your setting carefully — your environment becomes part of your first impression",
+        dont: "Don't record in a messy environment",
       },
       {
-        do: "Mention specific teaching experience, qualifications, and the age groups or subjects you can teach",
-        dont: "Don't make broad claims such as being passionate without giving one concrete example",
+        do: "Imagine the camera is the employer, and talk to them",
+        dont: "Don't look at yourself instead of the camera",
       },
       {
-        do: "Record a few takes and choose the one with the clearest sound and most natural delivery",
-        dont: "Don't upload a take with background noise, poor lighting, distracting filters, or visible editing mistakes",
+        do: "Slow down. Breathe. Speak clearly.",
+        dont: "Don't speak too quickly — nervousness often makes people rush",
       },
       {
-        do: "Name the file professionally and check the sharing permissions before sending it",
-        dont: "Don't send a private or broken link, or reuse an introduction that addresses a different school by name",
+        do: "Sound like yourself — professionally",
+        dont: "Don't use complicated words — you don't need to sound like a politician",
+      },
+      {
+        do: "Create enough interest for the employer to want the next conversation",
+        dont: "Don't make the video too long — your goal is not to tell your entire life story",
+      },
+    ],
+    closingSections: [
+      {
+        heading: "Your Phone Is Enough",
+        paragraphs: [
+          "You don't need a Hollywood production. A modern smartphone can produce a perfectly usable introduction video when you get the basics right:",
+        ],
+        bullets: [
+          "Clean background",
+          "Good lighting",
+          "Clear sound",
+          "Stable camera",
+          "Professional appearance",
+          "Confident communication",
+        ],
+        callout: {
+          heading: "The technology isn't the most important part.",
+          text: "You are.",
+        },
+      },
+      {
+        heading: "Your Video Should Answer One Important Question",
+        paragraphs: [
+          "Don't try to prove everything in one video. Give the employer a reason to continue the conversation.",
+          "Your CV gives them your professional history. Your qualifications give them evidence of your education. Your self-introduction video gives them something different: a first glimpse of you.",
+        ],
+        callout: {
+          text: "“Why should I want to meet this person?”",
+        },
+      },
+      {
+        heading: "From Application to Opportunity",
+        paragraphs: [
+          "At World Teachers Academy, we want our candidates to understand that international recruitment is different from applying for a job down the road. You may be applying from another city, another country, or even another continent. You may not get the opportunity to walk into the employer's office and introduce yourself personally — so your digital presence has to work harder.",
+          "Together, these tell your story:",
+        ],
+        bullets: [
+          "Your CV",
+          "Your professional photograph",
+          "Your qualifications",
+          "Your communication",
+          "Your self-introduction video",
+        ],
+      },
+      {
+        heading: "Don't Send Your CV First. Prepare Your Introduction First.",
+        paragraphs: [
+          "Before an employer sees your resume, ask yourself: “If this employer could meet me for 60–90 seconds, what would I want them to remember?” That's what your video should communicate.",
+        ],
+        bullets: [
+          "Not perfection — preparation.",
+          "Not pretending to be someone you're not — professional presentation.",
+          "Not a memorised speech — a genuine introduction.",
+        ],
+      },
+      {
+        heading: "Your Video Preparation Journey",
+        paragraphs: ["Complete these steps before recording:"],
+        items: [
+          {
+            label: "Listen",
+            tag: "STEP 1",
+            description: "Listen to the Expats' Debate Audio about the Do's and Don'ts of self-introduction videos.",
+            link: { label: "Listen now", href: "#debate-audio" },
+          },
+          {
+            label: "Watch",
+            tag: "STEP 2",
+            description:
+              "Watch the World Teachers Academy preparation video and learn how to position yourself professionally on camera.",
+            link: { label: "Watch the video", href: "#preparation-video" },
+          },
+          {
+            label: "Study",
+            tag: "STEP 3",
+            description:
+              "Watch a good example self-introduction video before making your own. Study what works. Notice the details. Think about how you can apply the principles to your own personality and experience.",
+            link: { label: "Watch the examples", href: "#example-videos" },
+          },
+          {
+            label: "Record",
+            tag: "STEP 4",
+            description:
+              "Now you're ready. Set up your camera. Take a breath. Look into the lens. And introduce yourself to the world.",
+          },
+        ],
+      },
+      {
+        heading: "We Help You Present the Professional You",
+        paragraphs: [
+          "We don't want you to simply send applications around the world and hope somebody responds. We want you to understand how international employers experience your application. That's why we encourage every candidate to set their professional standard before submitting their resume.",
+        ],
+        callout: {
+          heading: "Your opportunity may begin long before the interview.",
+          text: "It may begin the moment an employer presses ▶ Play.",
+        },
+      },
+      {
+        heading: "Ready to Record?",
+        paragraphs: [
+          "Your next opportunity could start with a 90-second introduction.",
+          "Listen. Watch. Study. Prepare. Then press record — and introduce the world to the professional behind your CV.",
+        ],
+        callout: {
+          heading: "World Teachers Academy",
+          text: "Prepare. Present. Connect. Go Global.",
+        },
+        ctas: [
+          { label: "Learn how to create your self-introduction video", href: "#preparation-video" },
+          { label: "Prepare for your global job opportunity", href: "/job-portal" },
+        ],
       },
     ],
   },

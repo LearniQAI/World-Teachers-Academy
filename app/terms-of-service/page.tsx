@@ -7,7 +7,7 @@ import PageHero from "@/components/layout/PageHero";
 import PolicySection, { type PolicySectionData } from "@/components/legal/PolicySection";
 
 const LAST_UPDATED = "[Date TBD — set to the actual publish date, not the drafting date]";
-const TERMS_CONTACT_EMAIL = "[Legal/terms contact email TBD]";
+const TERMS_CONTACT_EMAIL = "hello@worldteachers.academy";
 
 const sections: PolicySectionData[] = [
   {

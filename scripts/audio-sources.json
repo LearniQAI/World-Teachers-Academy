@@ -29,5 +29,6 @@
   { "kind": "resource", "slug": "building-a-teaching-portfolio", "title": "Building a Teaching Portfolio", "driveId": "1ThQ5jVAw1QZJDQ3NOHffSCW9iCDGGgvC" },
 
   { "kind": "resource", "slug": "self-intro", "title": "Recording Your Self-Intro", "driveId": "1LoyqcM1hf-Sy0_L0WfIbVzEikX6QPLnA", "skipIfVideo": true },
+  { "kind": "resource", "slug": "self-introduction-video", "title": "Self-Introduction Videos: The Expats' Debate", "driveId": "16ABnXYwWwhxKca7CoJ0Ut2a4pxEie7i5" },
   { "kind": "resource", "slug": "international-job-ready", "title": "International Job Ready", "driveId": "1dXK0goti5BX1DQUQfZLfU2Q8rZSgskq0" }
 ]

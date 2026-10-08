@@ -10,6 +10,12 @@ const PAPER_DIM = "#6B7280";
 const BORDER = "#E2E5EE";
 const DONT_RED = "#E01717";
 
+const ARROW_ICON = (
+  <svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5" />
+  </svg>
+);
+
 // TODO: once real videos exist for these guides, replace this pending state
 // with the actual embed — do NOT wire a fake/placeholder video URL before then.
 function VideoPendingBox() {
@@ -30,12 +36,13 @@ function VideoPendingBox() {
   );
 }
 
-function Section({ section }: { section: ResourceSection }) {
+// marginBottom shrinks when the section leads straight into a player or video.
+function Section({ section, marginBottom = "40px" }: { section: ResourceSection; marginBottom?: string }) {
   const paragraphsBefore = section.paragraphsPosition !== "after" ? section.paragraphs : undefined;
   const paragraphsAfter = section.paragraphsPosition === "after" ? section.paragraphs : undefined;
 
   return (
-    <div style={{ marginBottom: "40px" }}>
+    <div id={section.id} style={{ marginBottom, scrollMarginTop: "120px" }}>
       <h3 style={{ fontSize: "20px", color: INK_NAVY, marginBottom: "14px" }}>{section.heading}</h3>
 
       {paragraphsBefore?.map((p, i) => (
@@ -70,6 +77,12 @@ function Section({ section }: { section: ResourceSection }) {
                 <p style={{ fontStyle: "italic", color: PAPER_DIM, fontSize: "14px", margin: "0 0 8px" }}>{item.subtitle}</p>
               )}
               <p style={{ color: INK_NAVY, margin: 0, fontSize: "15px" }}>{item.description}</p>
+              {item.link && (
+                <a href={item.link.href} style={{ display: "inline-block", marginTop: "10px", color: INDIGO, fontSize: "14px", fontWeight: 600 }}>
+                  {item.link.label}
+                  {ARROW_ICON}
+                </a>
+              )}
             </div>
           ))}
         </div>
@@ -126,6 +139,17 @@ function Section({ section }: { section: ResourceSection }) {
           )}
         </div>
       )}
+
+      {section.ctas && (
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "14px", marginTop: "24px" }}>
+          {section.ctas.map((cta, i) => (
+            <a key={cta.href} href={cta.href} className={`th-btn ${i === 0 ? "style5" : "style2"}`}>
+              {cta.label.toUpperCase()}
+              {ARROW_ICON}
+            </a>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -178,12 +202,20 @@ export default async function ResourceDetails({
                 {resource.summary}
               </p>
 
+              {resource.intro?.map((section, i) => (
+                <Section key={i} section={section} />
+              ))}
+
               {track && (
                 <div style={{ marginBottom: "40px" }}>
-                  <h3 style={{ fontSize: "18px", color: INK_NAVY, marginBottom: "14px" }}>
-                    <i className="fal fa-headphones me-2" style={{ color: TEAL }}></i>
-                    Listen to this guide
-                  </h3>
+                  {resource.audioIntro ? (
+                    <Section section={resource.audioIntro} marginBottom="20px" />
+                  ) : (
+                    <h3 style={{ fontSize: "18px", color: INK_NAVY, marginBottom: "14px" }}>
+                      <i className="fal fa-headphones me-2" style={{ color: TEAL }}></i>
+                      Listen to this guide
+                    </h3>
+                  )}
                   <AudioPlayer
                     src={track.src}
                     peaksSrc={track.peaksSrc}
@@ -197,6 +229,7 @@ export default async function ResourceDetails({
 
               {resource.videos.map((video, i) => (
                 <div key={i} style={{ marginBottom: "40px" }}>
+                  {video.before && <Section section={video.before} marginBottom="28px" />}
                   <h3 style={{ fontSize: "18px", color: INK_NAVY, marginBottom: "10px" }}>
                     <i className="fal fa-play-circle me-2" style={{ color: INDIGO }}></i>
                     Watch: {video.label}
@@ -230,8 +263,8 @@ export default async function ResourceDetails({
                 <Section key={i} section={section} />
               ))}
 
-              <h3 style={{ fontSize: "20px", color: INK_NAVY, marginBottom: "16px" }}>Do&apos;s &amp; Don&apos;ts</h3>
-              <div style={{ display: "flex", flexDirection: "column", gap: "1px", border: `1px solid ${BORDER}`, borderRadius: "10px", overflow: "hidden" }}>
+              <h3 style={{ fontSize: "20px", color: INK_NAVY, marginBottom: "16px" }}>{resource.doAndDontHeading ?? "Do's & Don'ts"}</h3>
+              <div style={{ display: "flex", flexDirection: "column", gap: "1px", border: `1px solid ${BORDER}`, borderRadius: "10px", overflow: "hidden", marginBottom: resource.closingSections ? "40px" : undefined }}>
                 <div className="d-none d-md-flex" style={{ background: "#FAFBFF" }}>
                   <div style={{ flex: 1, padding: "12px 20px", fontWeight: 700, color: TEAL }}>
                     <i className="fas fa-check me-2"></i>DO
@@ -247,6 +280,10 @@ export default async function ResourceDetails({
                   </div>
                 ))}
               </div>
+
+              {resource.closingSections?.map((section, i, all) => (
+                <Section key={i} section={section} marginBottom={i === all.length - 1 ? "0" : "40px"} />
+              ))}
             </div>
           </div>
         </div>

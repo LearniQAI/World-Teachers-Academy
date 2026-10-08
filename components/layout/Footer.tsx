@@ -89,8 +89,7 @@ export default function Footer() {
                                                 </svg>
                                             </div>
                                             <div className="box-details">
-                                                {/* [Full business address TBD] — placeholder per user's own flag; only the city/country is confirmed real. */}
-                                                <p className="box-text">[Full business address TBD]</p>
+                                                <p className="box-text">267 Oak Avenue Ferndale, Randburg</p>
                                                 <p className="box-text">Johannesburg, South Africa</p>
                                             </div>
                                         </div>
@@ -102,8 +101,7 @@ export default function Footer() {
                                                 </svg>
                                             </div>
                                             <div className="box-details">
-                                                <p className="box-text"><a href="mailto:" className="box-link">[email@worldteachersacademy.com]</a></p>
-                                                <p className="box-text"><a href="mailto:" className="box-link">[email@worldteachersacademy.com]</a></p>
+                                                <p className="box-text"><a href="mailto:hello@worldteachers.academy" className="box-link">hello@worldteachers.academy</a></p>
                                             </div>
                                         </div>
                                         <div className="th-social style6">

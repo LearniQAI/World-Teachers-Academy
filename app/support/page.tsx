@@ -2,7 +2,7 @@ import PageHero from "@/components/layout/PageHero";
 
 // TODO: confirm the real support inbox and typical response time with the
 // business before publishing — both are placeholders below.
-const SUPPORT_EMAIL = "[Support email TBD — provide your real support inbox]";
+const SUPPORT_EMAIL = "hello@worldteachers.academy";
 const RESPONSE_TIME = "[Typical response time TBD — e.g. \"within 1-2 business days\"]";
 
 const SEND_ICON = (
@@ -57,7 +57,7 @@ export default function Support() {
                   <div className="box-details">
                     <p className="box-text">Email</p>
                     <p className="box-text">
-                      <a href="mailto:" className="box-link">{SUPPORT_EMAIL}</a>
+                      <a href={`mailto:${SUPPORT_EMAIL}`} className="box-link">{SUPPORT_EMAIL}</a>
                     </p>
                   </div>
                 </div>

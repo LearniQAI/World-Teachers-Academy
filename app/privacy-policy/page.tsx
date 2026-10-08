@@ -8,8 +8,8 @@ import PageHero from "@/components/layout/PageHero";
 import PolicySection, { type PolicySectionData } from "@/components/legal/PolicySection";
 
 const LAST_UPDATED = "[Date TBD — set to the actual publish date, not the drafting date]";
-const PRIVACY_CONTACT_EMAIL = "[Privacy contact email TBD]";
-const BUSINESS_ADDRESS = "[Full business address TBD] — Johannesburg, South Africa";
+const PRIVACY_CONTACT_EMAIL = "hello@worldteachers.academy";
+const BUSINESS_ADDRESS = "267 Oak Avenue Ferndale, Randburg, Johannesburg, South Africa";
 
 const sections: PolicySectionData[] = [
   {

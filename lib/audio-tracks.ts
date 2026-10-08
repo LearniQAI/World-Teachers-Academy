@@ -176,6 +176,12 @@ export const audioTracks: Record<AudioTrackKind, Record<string, AudioTrack>> = {
       "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/resources/self-intro.peaks.json?v=56ba6c0f39",
       "durationSec": 724.8
     },
+    "self-introduction-video": {
+      "title": "Self-Introduction Videos: The Expats' Debate",
+      "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/resources/self-introduction-video.mp3?v=32eaa088e2",
+      "peaksSrc": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/resources/self-introduction-video.peaks.json?v=32eaa088e2",
+      "durationSec": 724.8
+    },
     "international-job-ready": {
       "title": "International Job Ready",
       "src": "https://nxwmtcsezswjrignajdm.supabase.co/storage/v1/object/public/audio/resources/international-job-ready.mp3?v=4ebe5e5718",
