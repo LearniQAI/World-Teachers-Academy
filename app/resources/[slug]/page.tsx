@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { notFound } from "next/navigation";
 import { getResourceBySlug, type ResourceSection } from "@/lib/resources-data";
 import { audioTracks } from "@/lib/audio-tracks";
@@ -36,13 +37,38 @@ function VideoPendingBox() {
   );
 }
 
+// Small rounded icon badge used on card-style block headers (video/audio
+// headings, do's-&-don'ts columns) — matches the icon treatment already
+// established on the /resources card grid (.resource-card__icon).
+function IconBadge({ icon, color, bg }: { icon: string; color: string; bg: string }) {
+  return (
+    <span
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "40px",
+        height: "40px",
+        borderRadius: "12px",
+        background: bg,
+        color,
+        fontSize: "17px",
+        flexShrink: 0,
+      }}
+      aria-hidden="true"
+    >
+      <i className={icon}></i>
+    </span>
+  );
+}
+
 // marginBottom shrinks when the section leads straight into a player or video.
 function Section({ section, marginBottom = "40px" }: { section: ResourceSection; marginBottom?: string }) {
   const paragraphsBefore = section.paragraphsPosition !== "after" ? section.paragraphs : undefined;
   const paragraphsAfter = section.paragraphsPosition === "after" ? section.paragraphs : undefined;
 
   return (
-    <div id={section.id} style={{ marginBottom, scrollMarginTop: "120px" }}>
+    <div id={section.id} className="th_fade_anim" style={{ marginBottom, scrollMarginTop: "120px" }}>
       <h3 style={{ fontSize: "20px", color: INK_NAVY, marginBottom: "14px" }}>{section.heading}</h3>
 
       {paragraphsBefore?.map((p, i) => (
@@ -53,8 +79,13 @@ function Section({ section, marginBottom = "40px" }: { section: ResourceSection;
 
       {section.items && (
         <div style={{ display: "flex", flexDirection: "column", gap: "14px", marginBottom: "14px" }}>
-          {section.items.map((item) => (
-            <div key={item.label} style={{ border: `1px solid ${BORDER}`, borderRadius: "10px", padding: "18px 20px" }}>
+          {section.items.map((item, i) => (
+            <div
+              key={item.label}
+              className="th_fade_anim resource-item-card"
+              data-delay={String(0.1 + i * 0.08)}
+              style={{ border: `1px solid ${BORDER}`, borderRadius: "12px", padding: "18px 20px", background: "#fff" }}
+            >
               <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap", marginBottom: item.subtitle ? "2px" : "8px" }}>
                 <h4 style={{ fontSize: "16px", fontWeight: 700, color: INK_NAVY, margin: 0 }}>{item.label}</h4>
                 {item.tag && (
@@ -198,7 +229,7 @@ export default async function ResourceDetails({
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-xl-9 col-lg-10">
-              <p style={{ fontSize: "18px", color: INK_NAVY, lineHeight: 1.6, marginBottom: "40px" }}>
+              <p className="th_fade_anim" style={{ fontSize: "18px", color: INK_NAVY, lineHeight: 1.6, marginBottom: "40px" }}>
                 {resource.summary}
               </p>
 
@@ -206,65 +237,88 @@ export default async function ResourceDetails({
                 <Section key={i} section={section} />
               ))}
 
-              {track && (
-                <div style={{ marginBottom: "40px" }}>
-                  {resource.audioIntro ? (
-                    <Section section={resource.audioIntro} marginBottom="20px" />
-                  ) : (
-                    <h3 style={{ fontSize: "18px", color: INK_NAVY, marginBottom: "14px" }}>
-                      <i className="fal fa-headphones me-2" style={{ color: TEAL }}></i>
-                      Listen to this guide
-                    </h3>
-                  )}
-                  <AudioPlayer
-                    src={track.src}
-                    peaksSrc={track.peaksSrc}
-                    title={track.title}
-                    subtitle={resource.category}
-                    durationSec={track.durationSec}
-                    trackId={`resource:${resource.slug}`}
-                  />
-                </div>
-              )}
+              {(() => {
+                const audioBlock = track && (
+                  <div className="th_fade_anim resource-media-card" style={{ marginBottom: "40px" }}>
+                    {resource.audioIntro ? (
+                      <Section section={resource.audioIntro} marginBottom="20px" />
+                    ) : (
+                      <h3 style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "18px", color: INK_NAVY, marginBottom: "16px" }}>
+                        <IconBadge icon="fal fa-headphones" color={TEAL} bg="rgba(20, 184, 166, 0.1)" />
+                        Listen to this guide
+                      </h3>
+                    )}
+                    <AudioPlayer
+                      src={track.src}
+                      peaksSrc={track.peaksSrc}
+                      title={track.title}
+                      subtitle={resource.category}
+                      durationSec={track.durationSec}
+                      trackId={`resource:${resource.slug}`}
+                    />
+                  </div>
+                );
 
-              {resource.videos.map((video, i) => (
-                <div key={i} style={{ marginBottom: "40px" }}>
-                  {video.before && <Section section={video.before} marginBottom="28px" />}
-                  <h3 style={{ fontSize: "18px", color: INK_NAVY, marginBottom: "10px" }}>
-                    <i className="fal fa-play-circle me-2" style={{ color: INDIGO }}></i>
-                    Watch: {video.label}
-                  </h3>
-                  <p style={{ color: PAPER_DIM, marginBottom: "14px" }}>{video.description}</p>
-                  {video.youtubeId ? (
-                    <div style={{ position: "relative", paddingTop: "56.25%", borderRadius: "10px", overflow: "hidden", border: `1px solid ${BORDER}` }}>
-                      <iframe
-                        src={`https://www.youtube-nocookie.com/embed/${video.youtubeId}`}
-                        title={video.label}
-                        loading="lazy"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowFullScreen
-                        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: 0 }}
-                      />
-                    </div>
-                  ) : (
-                    <VideoPendingBox />
-                  )}
-                  {video.afterBullets && (
-                    <ul className="checklist style3" style={{ marginTop: "16px" }}>
-                      {video.afterBullets.map((b, j) => (
-                        <li key={j}>{b}</li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              ))}
+                // Default (no audioAfterVideo set): audio renders after the
+                // last video, i.e. the plain single-video case like
+                // resume-design. self-introduction-video sets 0 so the audio
+                // lands right after the main prep video (index 0), ahead of
+                // the "watch an example" videos that follow it — clamped so
+                // an out-of-range index still renders the audio somewhere
+                // rather than silently dropping it.
+                const insertAudioAfter =
+                  resource.videos.length > 0 ? Math.min(resource.audioAfterVideo ?? resource.videos.length - 1, resource.videos.length - 1) : -1;
+
+                return (
+                  <>
+                    {resource.videos.map((video, i) => (
+                      <Fragment key={i}>
+                        <div className="th_fade_anim resource-media-card" style={{ marginBottom: "40px" }}>
+                          {video.before && <Section section={video.before} marginBottom="28px" />}
+                          <h3 style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "18px", color: INK_NAVY, marginBottom: "10px" }}>
+                            <IconBadge icon="fal fa-play" color={INDIGO} bg="rgba(79, 70, 229, 0.1)" />
+                            Watch: {video.label}
+                          </h3>
+                          <p style={{ color: PAPER_DIM, marginBottom: "14px" }}>{video.description}</p>
+                          {video.youtubeId ? (
+                            <div style={{ position: "relative", paddingTop: "56.25%", borderRadius: "10px", overflow: "hidden", border: `1px solid ${BORDER}` }}>
+                              <iframe
+                                src={`https://www.youtube-nocookie.com/embed/${video.youtubeId}`}
+                                title={video.label}
+                                loading="lazy"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowFullScreen
+                                style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: 0 }}
+                              />
+                            </div>
+                          ) : (
+                            <VideoPendingBox />
+                          )}
+                          {video.afterBullets && (
+                            <ul className="checklist style3" style={{ marginTop: "16px" }}>
+                              {video.afterBullets.map((b, j) => (
+                                <li key={j}>{b}</li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                        {i === insertAudioAfter && audioBlock}
+                      </Fragment>
+                    ))}
+                    {resource.videos.length === 0 && audioBlock}
+                  </>
+                );
+              })()}
 
               {resource.sections.map((section, i) => (
                 <Section key={i} section={section} />
               ))}
 
-              <h3 style={{ fontSize: "20px", color: INK_NAVY, marginBottom: "16px" }}>{resource.doAndDontHeading ?? "Do's & Don'ts"}</h3>
-              <div style={{ display: "flex", flexDirection: "column", gap: "1px", border: `1px solid ${BORDER}`, borderRadius: "10px", overflow: "hidden", marginBottom: resource.closingSections ? "40px" : undefined }}>
+              <h3 className="th_fade_anim" style={{ fontSize: "20px", color: INK_NAVY, marginBottom: "16px" }}>{resource.doAndDontHeading ?? "Do's & Don'ts"}</h3>
+              <div
+                className="th_fade_anim"
+                style={{ display: "flex", flexDirection: "column", gap: "1px", border: `1px solid ${BORDER}`, borderRadius: "10px", overflow: "hidden", marginBottom: resource.closingSections ? "40px" : undefined }}
+              >
                 <div className="d-none d-md-flex" style={{ background: "#FAFBFF" }}>
                   <div style={{ flex: 1, padding: "12px 20px", fontWeight: 700, color: TEAL }}>
                     <i className="fas fa-check me-2"></i>DO
@@ -274,7 +328,7 @@ export default async function ResourceDetails({
                   </div>
                 </div>
                 {resource.doAndDont.map((pair, i) => (
-                  <div className="d-flex flex-column flex-md-row" key={i} style={{ borderTop: `1px solid ${BORDER}` }}>
+                  <div className="d-flex flex-column flex-md-row do-dont-row" key={i} style={{ borderTop: `1px solid ${BORDER}` }}>
                     <div style={{ flex: 1, padding: "16px 20px", color: INK_NAVY }}>{pair.do}</div>
                     <div style={{ flex: 1, padding: "16px 20px", color: INK_NAVY, borderLeft: `1px solid ${BORDER}` }}>{pair.dont}</div>
                   </div>

@@ -12,14 +12,29 @@ export default function PageHero({
   title,
   subhead,
   crumb,
+  image,
+  imageAlt,
 }: {
   eyebrow: string;
   title: string;
   subhead?: string;
   crumb: string;
+  // Optional photo background (see .page-hero--photo in globals.css). Pages
+  // that don't pass this keep the plain gradient background unchanged.
+  image?: string;
+  imageAlt?: string;
 }) {
   return (
-    <div className="breadcumb-wrapper " style={HERO_BG}>
+    <div
+      className={`breadcumb-wrapper${image ? " page-hero--photo" : ""}`}
+      style={image ? undefined : HERO_BG}
+    >
+      {image && (
+        <>
+          <img src={image} alt={imageAlt ?? ""} className="page-hero__image" />
+          <div className="page-hero__fade" aria-hidden="true" />
+        </>
+      )}
       <div className="container">
         <div className="row">
           <div className="col-lg-9">

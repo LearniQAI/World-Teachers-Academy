@@ -26,9 +26,16 @@ export const metadata: Metadata = {
   manifest: "/assets/favicons/site.webmanifest",
 };
 
+// suppressHydrationWarning below: some browser extensions (e.g. password
+// managers, bridge/injector extensions) add attributes like xk-pk-bridge /
+// xk-injected to <html> before React hydrates. That's a client-only DOM
+// mutation outside our control, not a real server/client markup mismatch —
+// without this, React logs a hydration-error warning for an attribute we
+// never rendered. This is shallow (only covers <html>'s own attributes), so
+// it won't hide a genuine mismatch elsewhere in the tree.
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html className="no-js" lang="zxx" dir="ltr">
+    <html className="no-js" lang="zxx" dir="ltr" suppressHydrationWarning>
       <head>
         <meta name="theme-color" content="#ffffff" />
         <meta name="msapplication-TileColor" content="#ffffff" />

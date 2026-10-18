@@ -67,6 +67,13 @@ export interface Resource {
   intro?: ResourceSection[];
   // Replaces the default "Listen to this guide" heading above the audio player.
   audioIntro?: ResourceSection;
+  // Where the audio guide renders relative to `videos` (0-based index into
+  // that array): the audio block is inserted immediately after
+  // videos[audioAfterVideo]. Omit to default to after all videos (the plain
+  // single-video case, e.g. resume-design). self-introduction-video sets 0 so
+  // the debate audio lands right after the main prep video, before the
+  // "watch an example" videos that follow it.
+  audioAfterVideo?: number;
   videos: ResourceVideo[];
   sections: ResourceSection[];
   doAndDontHeading?: string;
@@ -165,6 +172,7 @@ export const resources: Resource[] = [
     slug: "self-introduction-video",
     title: "How to Make a Strong Self-Introduction Video",
     category: "Application Skills",
+    audioAfterVideo: 0,
     summary:
       "Your CV tells them what you've done. Your video shows them who you are. When you're applying for a job overseas, your self-introduction video is often an employer's first chance to meet you — so treat it as seriously as your CV.",
     videoPending: true,
