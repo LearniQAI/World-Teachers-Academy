@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { courseHref, formatLaunchDate, type CourseCatalogEntry } from "@/lib/courses-catalog";
 import LaunchCountdown from "@/components/courses/LaunchCountdown";
 
-// One course card, used on the homepage carousel and on /courses.
+// One course card, used on the homepage course grid and on /courses.
 // Every course is free. No lesson or student counts, no prices, no ratings,
 // and no links to the old template course-details page.
 
@@ -53,14 +53,22 @@ export default function CourseCard({
       </Heading>
       <p className="wta-course-summary">{course.summary}</p>
 
-      {!isOpen && (
+      {!isOpen && course.launchAt && (
         <LaunchCountdown launchAt={course.launchAt} dateLabel={formatLaunchDate(course.launchAt)} />
+      )}
+      {!isOpen && !course.launchAt && (
+        <div className="wta-countdown wta-countdown--tba">
+          <p className="wta-countdown__date">Launch date to be announced</p>
+          <p className="wta-countdown__note">This programme is in final development. Check back soon.</p>
+        </div>
       )}
 
       <div className="btn-wrap">
         {isOpen && href ? (
           <a href={href} className="th-btn btn-sm">Start Learning for Free<Arrow /></a>
         ) : href ? (
+          // Coming Soon courses may link to an information page only — never to
+          // a page where a visitor can enrol in an unfinished course.
           <a href={href} className="th-btn btn-sm style-border2">View Course Profile<Arrow /></a>
         ) : (
           <span className="th-btn btn-sm style-border2 wta-btn-disabled" aria-disabled="true">Coming Soon</span>

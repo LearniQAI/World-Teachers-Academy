@@ -13,7 +13,8 @@
 //
 // launchAt is a fixed timestamp written with the Johannesburg offset (+02:00,
 // no daylight saving), so the countdown is the same on every device and after
-// a refresh.
+// a refresh. Courses without a confirmed launch date use launchAt: null and
+// show "Coming Soon" with no countdown — never an invented deadline.
 //
 // profileUrl is the link to the course's profile page. Leave it null until the
 // page exists — the card then shows no link instead of a dead or template page.
@@ -26,8 +27,12 @@ export interface CourseCatalogEntry {
   /** Card image, or null to show the designed title banner instead. */
   image: string | null;
   status: CourseStatus;
-  /** Launch time, ISO 8601 with +02:00 offset (Africa/Johannesburg). */
-  launchAt: string;
+  /**
+   * Planned launch time, ISO 8601 with +02:00 offset (Africa/Johannesburg).
+   * Only set it for a GENUINE planned date — it drives a public countdown.
+   * null = "Coming Soon" with no date and no countdown.
+   */
+  launchAt: string | null;
   /** Course profile page, or null when it doesn't exist yet. */
   profileUrl: string | null;
   /** Hours label shown on the designed banner when there is no image. */
@@ -47,15 +52,21 @@ export const realCourses: CourseCatalogEntry[] = [
     launchAt: "2026-11-12T09:00:00+02:00",
     // LMS course 43748ec6-0bfa-419b-9209-1f09ed8a8b2e (published, free).
     profileUrl: "https://learn.worldteachers.academy/professional-online-teaching-tutoring-certification",
+    // Owner-approved website title (12 Nov 2026). The LMS title stays
+    // "Professional Online Teaching & Tutoring Certification" — do not change
+    // production course data without approval. "120 Hour" is the intended
+    // programme structure until learning hours and assessments are verified.
     hours: "120 Hours",
     summary:
-      "Build the skills to plan, deliver and manage professional online lessons, communicate with learners and prepare for your teaching practicum.",
+      "Build the skills, confidence and practical experience to prepare for professional online teaching and tutoring opportunities worldwide.",
   },
   {
     slug: "tefl-certificate-130-hour",
     title: "TEFL Certificate — 130 Hour",
     image: "/assets/telf-130.jpeg",
     status: "coming_soon",
+    // Exists in the LMS (fcf2852d-…, 25 lessons). 17 Nov is the planned
+    // second release from the owner's 5-day schedule — confirm before launch.
     launchAt: "2026-11-17T09:00:00+02:00",
     profileUrl: null,
     summary: "Your first step to teaching English in classrooms at home and abroad.",
@@ -65,7 +76,7 @@ export const realCourses: CourseCatalogEntry[] = [
     title: "Diploma — 320 Hour",
     image: "/assets/diploma320.jpeg",
     status: "coming_soon",
-    launchAt: "2026-11-22T09:00:00+02:00",
+    launchAt: null,
     profileUrl: null,
     summary: "Deepen your teaching practice with a broader professional diploma.",
   },
@@ -74,7 +85,7 @@ export const realCourses: CourseCatalogEntry[] = [
     title: "Advanced Diploma — 395 Hour",
     image: "/assets/adv-diploma%20395%20hours.jpeg",
     status: "coming_soon",
-    launchAt: "2026-11-27T09:00:00+02:00",
+    launchAt: null,
     profileUrl: null,
     summary: "Advanced training for educators ready to take on more responsibility.",
   },
@@ -83,7 +94,7 @@ export const realCourses: CourseCatalogEntry[] = [
     title: "TEFL Comprehensive — 520 Hours",
     image: "/assets/520%20hours.jpeg",
     status: "coming_soon",
-    launchAt: "2026-12-02T09:00:00+02:00",
+    launchAt: null,
     profileUrl: null,
     summary: "Our most complete TEFL programme, from first lessons to specialist skills.",
   },
@@ -92,7 +103,7 @@ export const realCourses: CourseCatalogEntry[] = [
     title: "Supply Chain Management",
     image: "/assets/supply%20chain.jpeg",
     status: "coming_soon",
-    launchAt: "2026-12-07T09:00:00+02:00",
+    launchAt: null,
     profileUrl: null,
     summary: "A professional course in planning, sourcing and moving goods efficiently.",
   },

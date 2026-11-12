@@ -173,7 +173,11 @@
   letter-spacing: 0.08em;
   color: #cbd5e1;
 }
-.wta-countdown--pending .wta-countdown__note {
+.wta-countdown--tba {
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+}
+.wta-countdown--pending .wta-countdown__note,
+.wta-countdown--tba .wta-countdown__note {
   margin: 0;
   font-size: 14px;
   color: #e2e8f0;
@@ -199,5 +203,47 @@
   }
   .wta-course-banner__title {
     font-size: 19px;
+  }
+}
+
+/* Hover: gentle lift, deeper shadow, slow image zoom. Transform-only, so no layout shift. */
+.wta-course-card {
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.3s cubic-bezier(0.2, 0.7, 0.2, 1), border-color 0.3s;
+}
+.wta-course-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 44px -18px rgba(15, 23, 42, 0.28);
+  border-color: #c7d2fe;
+}
+.wta-course-card .box-img img,
+.wta-course-card .wta-course-banner {
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.wta-course-card:hover .box-img img,
+.wta-course-card:hover .wta-course-banner {
+  transform: scale(1.04);
+}
+.wta-course-card .th-btn svg {
+  transition: transform 0.2s;
+}
+.wta-course-card .th-btn:hover svg {
+  transform: translateX(4px);
+}
+.wta-course-card .th-btn:focus-visible,
+.wta-course-card a:focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .wta-course-card,
+  .wta-course-card .box-img img,
+  .wta-course-card .wta-course-banner,
+  .wta-course-card .th-btn svg {
+    transition: none;
+  }
+  .wta-course-card:hover,
+  .wta-course-card:hover .box-img img,
+  .wta-course-card:hover .wta-course-banner {
+    transform: none;
   }
 }
