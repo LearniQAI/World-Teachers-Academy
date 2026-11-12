@@ -396,3 +396,66 @@
 @media (max-width: 575px) {
   .img-box11 .about-tag { left: auto !important; right: 0 !important; transform: scale(0.72) !important; transform-origin: top right; }
 }
+
+/* ---- Promotional banner: "Free Training. Global Opportunities." ---- */
+.wta-journey-wrap { padding: 40px 0; }
+.wta-journey {
+  position: relative; overflow: hidden; isolation: isolate;
+  display: grid; grid-template-columns: minmax(0, 46fr) minmax(0, 54fr); align-items: end;
+  border-radius: 18px; color: #fff;
+  background:
+    radial-gradient(ellipse at 78% 40%, rgba(80, 70, 230, 0.32), transparent 62%),
+    linear-gradient(90deg, #0b0b26 0%, #0e0f2f 45%, #17165a 100%);
+}
+.wta-journey__content { position: relative; z-index: 2; padding: 64px 0 64px 56px; align-self: center; }
+.wta-journey__eyebrow { display: inline-block; color: #FF791F; font-size: 15px; font-weight: 700; letter-spacing: 2px; }
+.wta-journey h2 {
+  color: #fff; font-size: clamp(30px, 3.1vw, 46px); font-weight: 800; line-height: 1.15;
+  letter-spacing: -0.01em; margin: 18px 0 20px;
+}
+.wta-journey h2 span { display: block; }
+.wta-journey p { color: #D9D8E8; font-size: 17px; line-height: 1.7; margin: 0 0 30px; max-width: 560px; }
+.wta-journey__actions { display: flex; flex-wrap: wrap; gap: 14px; }
+.wta-journey__btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 52px; padding: 14px 26px; border-radius: 50px;
+  font-size: 14px; font-weight: 700; letter-spacing: 0.02em; text-decoration: none;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+.wta-journey__btn:hover { transform: translateY(-2px); }
+.wta-journey__btn:focus-visible { outline: 3px solid #FF791F; outline-offset: 3px; }
+.wta-journey__btn--primary { background: #5146E8; color: #fff; box-shadow: 0 10px 30px rgba(81, 70, 232, 0.45); }
+.wta-journey__btn--primary:hover { background: #4338CA; color: #fff; }
+.wta-journey__btn--secondary { border: 2px solid #fff; color: #fff; }
+.wta-journey__btn--secondary:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+.wta-journey__image { position: relative; z-index: 1; align-self: end; }
+.wta-journey__image picture, .wta-journey__image img { display: block; width: 100%; height: auto; }
+/* Soft left edge so the photo melts into the banner background. */
+.wta-journey__image img {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 22%);
+          mask-image: linear-gradient(90deg, transparent 0%, #000 22%);
+}
+@media (max-width: 1199px) {
+  .wta-journey__content { padding: 48px 0 48px 40px; }
+  .wta-journey p { font-size: 16px; }
+}
+@media (max-width: 991px) {
+  .wta-journey { grid-template-columns: 1fr; text-align: center;
+    background: radial-gradient(ellipse at 50% 100%, rgba(80, 70, 230, 0.3), transparent 65%), #0e0f2f; }
+  .wta-journey__content { padding: 56px 28px 8px; }
+  .wta-journey p { margin-left: auto; margin-right: auto; }
+  .wta-journey__actions { justify-content: center; }
+  .wta-journey__image img {
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 16%);
+            mask-image: linear-gradient(90deg, transparent 0%, #000 16%);
+  }
+}
+@media (max-width: 768px) {
+  .wta-journey-wrap { padding: 24px 0; }
+  .wta-journey { border-radius: 14px; }
+  .wta-journey__content { padding: 44px 18px 4px; }
+  .wta-journey__eyebrow { font-size: 12px; letter-spacing: 1px; }
+  .wta-journey__actions { flex-direction: column; align-items: center; }
+  .wta-journey__btn { width: 100%; max-width: 320px; }
+}
+@media (prefers-reduced-motion: reduce) { .wta-journey__btn { transition: none; } }

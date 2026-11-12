@@ -458,36 +458,34 @@ export default async function Home() {
             </section>
             )}
 
-            <section className="overflow-hidden position-relative z-index-common" data-bg-src="/assets/img/bg/cta-bg10-1.jpg">
-                <div className="cta-wrap10 space">
-                    <div className="cta-thumb-wrap10-1 th_fade_anim">
-                        <img src="/assets/img/normal/cta-cutout-student-left.png" alt="Student pointing toward the offer" />
-                    </div>
-                    <div className="container">
-                        <div className="row justify-content-center">
-                            <div className="col-xl-6 col-lg-9">
-                                <div className="title-area text-center mb-0">
-                                    {/* The template's "30% off for the first 100" offer was not a confirmed promotion; every course is free while we launch. */}
-                                    <h2 className="sec-title text-white th-text-perspective"><span className="text-theme2">Free</span> Training for Your International Career</h2>
-                                    <p className="fw-semibold text-white th_fade_anim mb-0 mt-30">Every course is free while we launch. Start today and prepare for opportunities at home and abroad.</p>
-                                    <div className="btn-wrap mt-40 th_fade_anim justify-content-center">
-                                        <a href="/courses" className="th-btn">START FOR FREE
-                                            <svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
-                                            </svg>
-                                        </a>
-                                        <a href="/support" className="th-btn style-border3">BECOME AN INSTRUCTOR
-                                            <svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
+            {/* Promotional banner (owner-approved reference, 13 Nov 2026). Text and buttons are HTML;
+                the professionals are one separate image extracted from the owner's reference. */}
+            <section className="wta-journey-wrap" aria-labelledby="wta-journey-title">
+                <div className="container">
+                    <div className="wta-journey">
+                        <div className="wta-journey__content">
+                            <span className="wta-journey__eyebrow">YOUR GLOBAL JOURNEY STARTS HERE</span>
+                            <h2 id="wta-journey-title">
+                                Free Training. Global Opportunities.
+                                <span>A Future Without Borders.</span>
+                            </h2>
+                            <p>
+                                Whatever your profession or ambition, start preparing for opportunities at home and abroad.
+                                Explore countries, understand international employment requirements, and build the skills
+                                and confidence to take your career further.
+                            </p>
+                            <div className="wta-journey__actions">
+                                <a href="/courses" className="wta-journey__btn wta-journey__btn--primary">EXPLORE FREE TRAINING <span aria-hidden="true">&rarr;</span></a>
+                                <a href="/countries" className="wta-journey__btn wta-journey__btn--secondary">EXPLORE COUNTRIES <span aria-hidden="true">&rarr;</span></a>
                             </div>
                         </div>
-                    </div>
-                    <div className="cta-thumb-wrap10-2 th_fade_anim">
-                        <img src="/assets/img/normal/cta-cutout-student-right.png" alt="Student holding a notebook" />
+                        <div className="wta-journey__image">
+                            <picture>
+                                <source type="image/webp" srcSet="/images/global-professionals-600.webp 591w, /images/global-professionals.webp 1182w" sizes="(min-width: 992px) 55vw, 100vw" />
+                                <img src="/images/global-professionals.png" width={1182} height={724} loading="lazy" decoding="async"
+                                    alt="Professionals from different industries preparing for international careers" />
+                            </picture>
+                        </div>
                     </div>
                 </div>
             </section>
