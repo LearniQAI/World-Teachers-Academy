@@ -29,7 +29,7 @@ export default function TextTestimonials({ variant = "fade" }: { variant?: "fade
         <>
             <div className={isCarousel ? "title-area text-center" : "title-area"}>
                 <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="" />Testimonials</span>
-                <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">What Trainer Says</span></h2>
+                <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">What Our Learners Say</span></h2>
             </div>
             <div className={isCarousel ? "slider-area testi-carousel th_fade_anim" : "slider-area testi-slider7 th_fade_anim"}>
                 <div className="swiper th-slider" id={sliderId} data-slider-options={JSON.stringify(SLIDER_OPTIONS[variant])}>
@@ -40,16 +40,6 @@ export default function TextTestimonials({ variant = "fade" }: { variant?: "fade
                                     <div className="testi-meta-wrap">
                                         <div className="quote-icon">
                                             <img src="/assets/img/icon/quote5.svg" alt="" />
-                                        </div>
-                                        <div className="testi-review-wrap">
-                                            <h3 className="rating-title"><strong>4.9</strong>/5.0</h3>
-                                            <span className="testi-card_review">
-                                                <i className="fas fa-star"></i>
-                                                <i className="fas fa-star"></i>
-                                                <i className="fas fa-star"></i>
-                                                <i className="fas fa-star"></i>
-                                                <i className="fas fa-star"></i>
-                                            </span>
                                         </div>
                                     </div>
                                     <p className="box-text">“{t.quote}”</p>

@@ -1,3 +1,4 @@
+import { START_TRAINING_URL } from "@/lib/site";
 import { searchCourses } from "@/lib/courses-catalog";
 import CourseSearchForm from "@/components/courses/CourseSearchForm";
 import CourseCard from "@/components/courses/CourseCard";
@@ -66,13 +67,13 @@ Cta Area
               <div className="row gy-40 justify-content-between align-items-center">
                 <div className="col-xxl-6 col-xl-7 col-lg-7">
                   <div className="title-area mb-0 text-lg-start text-center">
-                    <h2 className="sec-title text-white">Every course is free <span className="fw-normal">right now.</span></h2>
-                    <p className="text-white mb-0 mt-30">Start with our open course today. New programmes open on the dates shown above.</p>
+                    <h2 className="sec-title text-white">Every course is <span className="fw-normal">free.</span></h2>
+                    <p className="text-white mb-0 mt-30">Start the Professional Online Teaching &amp; Tutoring Certification today. The other programmes open on the dates shown above.</p>
                   </div>
                 </div>
                 <div className="col-lg-auto">
                   <div className="btn-wrap justify-content-center">
-                    <a href="/support" className="th-btn style5">GET STARTED NOW<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <a href={START_TRAINING_URL} className="th-btn style5">START FREE TRAINING<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
                     </svg></a>
                   </div>
@@ -105,10 +106,10 @@ Cta Area
                 <div className="col-lg-6">
                   <div className="cta-card2 cta-card2-dark" style={{ background: "#0B0B0F" }}>
                     <div className="title-area mb-0">
-                      <span className="sub-title text-white th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-2.svg" alt="" />POPULAR COURSES</span>
-                      <h2 className="sec-title text-white th_fade_anim"><span className="th-text-perspective">Get The Best Courses &amp; Upgrade Your Skills</span></h2>
+                      <span className="sub-title text-white th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-2.svg" alt="" />Free Resources</span>
+                      <h2 className="sec-title text-white th_fade_anim"><span className="th-text-perspective">Prepare Your CV, Video &amp; Portfolio</span></h2>
                       <div className="btn-wrap mt-45 th_fade_anim">
-                        <a href="/support" className="th-btn style5">JOIN WITH US<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <a href="/resources" className="th-btn style5">EXPLORE RESOURCES<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
                         </svg></a>
                       </div>
@@ -118,10 +119,10 @@ Cta Area
                 <div className="col-lg-6">
                   <div className="cta-card2" style={{ background: "#F5F7FF" }}>
                     <div className="title-area mb-0">
-                      <span className="sub-title th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-3.svg" alt="" />POPULAR COURSES</span>
-                      <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Get The Best Courses &amp; Upgrade Your Skills</span></h2>
+                      <span className="sub-title th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-3.svg" alt="" />Need Help?</span>
+                      <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Questions About a Course? Ask Us</span></h2>
                       <div className="btn-wrap mt-40 th_fade_anim">
-                        <a href="/support" className="th-btn style6">JOIN WITH US<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <a href="/support" className="th-btn style6">CONTACT SUPPORT<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
                         </svg></a>
                       </div>
