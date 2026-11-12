@@ -290,3 +290,15 @@
     animation: none;
   }
 }
+
+/* Support page: note under the form heading */
+.wta-support-note {
+  margin: 14px 0 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #475569;
+}
+.wta-support-note a {
+  color: #4f46e5;
+  font-weight: 600;
+}
