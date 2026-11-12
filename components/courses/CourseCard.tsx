@@ -36,7 +36,8 @@ export default function CourseCard({
           ) : (
             <span className="wta-course-banner" role="img" aria-label={course.title}>
               <span className="wta-course-banner__kicker">World Teachers Academy</span>
-              <span className="wta-course-banner__title">{course.title}</span>
+              <span className="wta-course-banner__title">{course.title.replace(/\s+—\s+\d+\s*Hours?$/, "")}</span>
+              {course.hours && <span className="wta-course-banner__hours">{course.hours}</span>}
             </span>
           )}
         </MaybeLink>

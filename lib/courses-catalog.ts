@@ -30,6 +30,8 @@ export interface CourseCatalogEntry {
   launchAt: string;
   /** Course profile page, or null when it doesn't exist yet. */
   profileUrl: string | null;
+  /** Hours label shown on the designed banner when there is no image. */
+  hours?: string;
   /** One line under the title. */
   summary: string;
 }
@@ -39,12 +41,13 @@ export const LAUNCH_TIME_ZONE = "Africa/Johannesburg";
 export const realCourses: CourseCatalogEntry[] = [
   {
     slug: "professional-online-teaching-tutoring-certification",
-    title: "Professional Online Teaching & Tutoring Certification",
+    title: "Professional Online Teaching & Tutoring Certification — 120 Hour",
     image: null,
     status: "open",
     launchAt: "2026-11-12T09:00:00+02:00",
     // LMS course 43748ec6-0bfa-419b-9209-1f09ed8a8b2e (published, free).
     profileUrl: "https://learn.worldteachers.academy/professional-online-teaching-tutoring-certification",
+    hours: "120 Hours",
     summary:
       "Build the skills to plan, deliver and manage professional online lessons, communicate with learners and prepare for your teaching practicum.",
   },

@@ -5,6 +5,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 100%;
 }
 .wta-course-card .box-img {
   margin-bottom: 20px;
@@ -54,6 +55,38 @@
   font-size: 22px;
   font-weight: 700;
   line-height: 1.25;
+}
+
+.wta-course-banner__hours {
+  align-self: flex-start;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: #fff;
+  color: #312e81;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* Homepage course grid (replaces the carousel) */
+.wta-course-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+}
+.wta-course-grid > div {
+  display: flex;
+}
+@media (max-width: 1199px) {
+  .wta-course-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 767px) {
+  .wta-course-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
 }
 
 /* Status pill */
