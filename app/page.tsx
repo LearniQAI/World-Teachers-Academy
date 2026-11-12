@@ -139,10 +139,8 @@ export default async function Home() {
             
             <div className="space-bottom overflow-hidden" id="about-sec">
                 <div className="about-bg-shape11-1 d-xxl-block d-none shape-mockup" data-speed="0.8" data-top="15%" data-left="5%">
-                    <img src="/assets/img/shape/course_shape5_1.png" alt="img" />
                 </div>
                 <div className="about-bg-shape10-2 shape-mockup d-xxl-block d-none" data-speed="0.9" data-bottom="15%" data-right="5%">
-                    <img src="/assets/img/shape/about_shape3_2.png" alt="img" />
                 </div>
                 <div className="about-wrap11 space-bottom">
                     <div className="container">
@@ -244,11 +242,9 @@ export default async function Home() {
             <section className="space bg-smoke3 overflow-hidden" id="course-sec">
                 <div className="course-bg-shape7-1 shape-mockup" data-speed="0.9" data-left="6%" data-bottom="30%">
                     <div className="thumb">
-                        <img src="/assets/img/shape/course_shape7_1.png" alt="img" />
                     </div>
                 </div>
                 <div className="course-bg-shape7-2 shape-mockup th_fade_anim" data-speed="1.08" data-right="3%" data-top="30%">
-                    <img src="/assets/img/shape/about_shape1_1.png" alt="img" />
                 </div>
                 <div className="container">
                     <div className="row justify-content-center align-items-center">
@@ -358,7 +354,7 @@ export default async function Home() {
                         <div className="col-xl-5">
                             <div className="title-area mb-50">
                                 <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Why Choose World Teachers Academy</span>
-                                <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Learn From People Who Have Done It</span></h2>
+                                <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Learn From Real-World Experience</span></h2>
                                 <p className="th_fade_anim">Every course here is built by professionals who have genuinely lived and worked abroad — not a generic curriculum written by people who never have. That&apos;s the difference between a certificate and real preparation.</p>
                                 <div className="btn-wrap mt-40 th_fade_anim">
                                     <a href="about.html" className="th-btn">Get Started
@@ -499,7 +495,6 @@ export default async function Home() {
             {false && (
             <section className="space bg-smoke3 overflow-hidden">
                 <div className="event-bg-shape3-1 shape-mockup th_fade_anim d-xxl-block d-none" data-speed="0.9" data-left="4%" data-top="10%">
-                    <img src="/assets/img/shape/event_shape2_1.png" alt="img" />
                 </div>
                 <div className="container">
                     <div className="row justify-content-center">
@@ -647,7 +642,6 @@ Video Testimonials Area
 
             <section className="testi-area-1 space overflow-hidden" id="testi-sec">
                 <div className="testi-bg-shape8-1 shape-mockup th_fade_anim d-xxl-block d-none" data-speed="0.9" data-left="6%" data-top="7%">
-                    <img src="/assets/img/shape/testi_shape8_1.png" alt="img" />
                 </div>
                 <div className="container">
                     <div className="row gy-40 gx-80">
@@ -804,7 +798,6 @@ FAQ Area
 ==============================*/}
             <div className="space overflow-hidden">
                 <div className="faq-bg-shape4-1 d-xxl-block d-none shape-mockup th_fade_anim" data-speed="0.9" data-left="4%" data-top="10%">
-                    <img src="/assets/img/shape/faq_shape1_1.png" alt="img" />
                 </div>
                 <div className="faq-bg-shape4-2 d-xxl-block d-none shape-mockup th_fade_anim" data-speed="0.9" data-right="0%" data-bottom="5%">
                     <img src="/assets/img/shape/faq_shape4_1.png" alt="img" />
