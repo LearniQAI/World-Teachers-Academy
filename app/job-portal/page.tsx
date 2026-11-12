@@ -7,8 +7,12 @@ import CountrySelector, { type CountryOption } from "@/components/jobs/CountrySe
 import { FLAGS } from "@/lib/flags";
 import { COUNTRY_GUIDES } from "@/lib/country-guides-index";
 import { formatSalary } from "@/lib/job-salary";
+import { JobTrustDetails, JobTrustLine, ReportJob } from "@/components/jobs/JobTrust";
+import type { TrustFields } from "@/lib/job-trust";
 
-export interface Job {
+// Fields marked optional exist only after docs/proposals/2026-11-job-verification.sql
+// is applied; the page works with or without them.
+export interface Job extends TrustFields {
   id: string;
   title: string;
   description: string | null;
@@ -21,6 +25,8 @@ export interface Job {
   currency: string | null;
   apply_url: string;
   posted_at: string | null;
+  salary_period?: "year" | "month" | "week" | "day" | "hour" | null;
+  salary_is_predicted?: boolean | null;
 }
 
 const COUNTRY_NAMES: Record<string, string> = {
@@ -525,6 +531,7 @@ function JobRow({ job, onApply }: { job: Job; onApply: () => void }) {
             {snippet}
           </p>
         )}
+        <JobTrustLine job={job} />
       </div>
 
       <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
@@ -973,9 +980,7 @@ function ApplyModal({ job, onClose }: { job: Job; onClose: () => void }) {
 
           {step === "form" && (
             <form onSubmit={handleFormSubmit}>
-              <p style={{ fontSize: "13.5px", color: PAPER_DIM, marginBottom: "20px" }}>
-                {job.company_name ?? "Confidential Employer"} &mdash; {placeLabel(job.city, job.country)}
-              </p>
+              <JobTrustDetails job={job} place={placeLabel(job.city, job.country)} />
 
               <div
                 style={{
@@ -1101,6 +1106,12 @@ function ApplyModal({ job, onClose }: { job: Job; onClose: () => void }) {
                 {sendingCode ? "Sending code..." : "Continue"}
               </button>
             </form>
+          )}
+
+          {step === "form" && (
+            <div style={{ marginTop: "18px", paddingTop: "14px", borderTop: `1px solid ${BORDER}` }}>
+              <ReportJob jobId={job.id} />
+            </div>
           )}
 
           {step === "code" && (
