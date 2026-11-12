@@ -54,10 +54,11 @@ export const realCourses: CourseCatalogEntry[] = [
   {
     slug: "professional-online-teaching-tutoring-certification",
     title: "Professional Online Teaching & Tutoring Certification — 120 Hour",
-    // Owner-supplied photo. Until public/images/online-tutor.png is added, the
-    // card falls back to the designed banner (see CourseCard), never a broken image.
-    image: "/images/online-tutor.png",
-    imageAlt: "Professional online tutor teaching a student through a video lesson",
+    // Owner-supplied photo (12 Nov 2026). If the file is ever missing, the card
+    // falls back to the designed banner (see CourseImage), never a broken image.
+    image: "/images/cape-town-online-teacher.png",
+    imageAlt:
+      "Black female online teacher teaching from her home in Cape Town, South Africa, with Table Mountain in the background",
     status: "open",
     launchAt: "2026-11-12T09:00:00+02:00",
     // LMS course 43748ec6-0bfa-419b-9209-1f09ed8a8b2e (published, free).
