@@ -359,9 +359,9 @@
     linear-gradient(135deg, var(--c1) 0%, var(--c2) 100%);
 }
 .category-card3.wta-cat:after { background: var(--c2); opacity: 0.55; }
-.wta-cat--teaching { --c1: #5B5BE6; --c2: #4338CA; --tag: #4338CA; }
-.wta-cat--career   { --c1: #0F766E; --c2: #115E59; --tag: #0F766E; }
-.wta-cat--abroad   { --c1: #C2410C; --c2: #9A3412; --tag: #9A3412; }
+.category-card3.wta-cat--teaching { --c1: #5B5BE6; --c2: #4338CA; --tag: #4338CA; }
+.category-card3.wta-cat--career   { --c1: #0F766E; --c2: #115E59; --tag: #0F766E; }
+.category-card3.wta-cat--abroad   { --c1: #C2410C; --c2: #9A3412; --tag: #9A3412; }
 .wta-cat__top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 24px; }
 .wta-cat__icon {
   width: 60px; height: 60px; flex: none; display: grid; place-items: center;
