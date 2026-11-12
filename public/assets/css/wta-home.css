@@ -308,8 +308,9 @@
   position: relative;
   width: 100%;
   border-radius: 20px;
-  box-shadow: 0 24px 60px rgba(30, 27, 75, 0.18);
 }
+/* Shadow on the picture only, so it never wraps the badge below it on phones. */
+.global-career-hero picture { box-shadow: 0 24px 60px rgba(30, 27, 75, 0.18); overflow: hidden; }
 .global-career-hero picture,
 .global-career-hero img:not(.wta-badge img) {
   display: block;
