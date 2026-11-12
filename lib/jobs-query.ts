@@ -33,8 +33,10 @@ function norm(s: string | null | undefined): string {
     .replace(/\s+/g, " ")
     .trim();
 }
+// Same rule as fingerprint() in supabase/functions/_shared/jobs/normalise.ts:
+// the city is cut at the first comma ("Leeds, West Yorkshire" = "Leeds").
 export function duplicateKey(r: LightRow): string {
-  return `${norm(r.title)}|${norm(r.company_name)}|${norm(r.city)}|${r.country}`;
+  return `${norm(r.title)}|${norm(r.company_name)}|${norm((r.city ?? "").split(",")[0])}|${r.country}`;
 }
 
 export async function relevantJobIndex(filters: JobFilters): Promise<LightRow[]> {

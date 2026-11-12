@@ -1,0 +1,158 @@
+// Job import, version 2 — NOT DEPLOYED, NOT SCHEDULED.
+// Requires docs/proposals/2026-11-job-verification.sql on the target project.
+//
+// Differences from ingest-jobs (v1):
+//   * every feed/country is a "run" (begin_source_run → upsert_feed_jobs per
+//     page → finish_source_run); the database decides what to remove, using
+//     the two-complete-misses rule and the outage guard;
+//   * a run is only "complete" when every page AND every detail request
+//     succeeded — a single failure pauses removals for that feed;
+//   * closing dates, salary periods, Adzuna salary estimates and eligibility
+//     are stored; titles are tagged relevant / not relevant;
+//   * the environment guard (guard.ts) refuses to run against the wrong project,
+//     and only feeds listed in JOBS_FEEDS_ENABLED run.
+import { createClient, type SupabaseClient } from "npm:@supabase/supabase-js@2";
+import { stripHtml } from "../../../lib/html-text.ts";
+import { checkEnvironment } from "../_shared/jobs/guard.ts";
+import {
+  normaliseAdzuna, normaliseReed, normaliseTeachingVacancy, normaliseUsaJob,
+  type AdzunaJob, type NormalisedJob, type ReedJob, type TeachingVacancy, type UsaJob,
+} from "../_shared/jobs/normalise.ts";
+
+const ADZUNA_MARKETS = ["za", "gb", "us", "ca", "au", "sg", "in", "de", "fr", "nl"];
+const ADZUNA_PAGES = 1; // 50 results per market; raising it multiplies API calls (see the cost table)
+const UA = "WorldTeachersAcademy-JobImport/2.0";
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/** Retries network errors, 429 and 5xx with back-off. Throws after the last attempt. */
+async function getJson<T>(url: string, init: RequestInit = {}, attempts = 4): Promise<T> {
+  let last: unknown;
+  for (let i = 0; i < attempts; i++) {
+    try {
+      const res = await fetch(url, { ...init, signal: AbortSignal.timeout(20_000) });
+      if (res.ok) return (await res.json()) as T;
+      last = new Error(`${res.status} from ${new URL(url).host}`);
+      if (res.status !== 429 && res.status < 500) break; // 4xx other than 429: do not hammer
+      const retryAfter = Number(res.headers.get("retry-after"));
+      await sleep(Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : 2000 * 2 ** i);
+    } catch (e) {
+      last = e;
+      await sleep(2000 * 2 ** i);
+    }
+  }
+  throw last;
+}
+
+type RunSummary = { source: string; scope: string; result?: unknown; error?: string; skipped?: string };
+
+async function runFeed(db: SupabaseClient, dryRun: boolean, source: string, scope: string,
+                       pages: AsyncGenerator<NormalisedJob[]>): Promise<RunSummary> {
+  if (dryRun) {
+    let n = 0;
+    for await (const p of pages) n += p.length;
+    return { source, scope, result: { dry_run: true, fetched: n } };
+  }
+  const { data: runId, error: e1 } = await db.rpc("begin_source_run", { p_source: source, p_scope: scope });
+  if (e1) return { source, scope, error: e1.message };
+  if (runId === null) return { source, scope, skipped: "another run is in progress" };
+  let complete = true;
+  let error: string | null = null;
+  try {
+    for await (const page of pages) {
+      if (page.length === 0) continue;
+      const { error: e2 } = await db.rpc("upsert_feed_jobs", { p_run_id: runId, p_jobs: page });
+      if (e2) throw new Error(e2.message);
+    }
+  } catch (e) {
+    complete = false;
+    error = e instanceof Error ? e.message : String(e);
+  }
+  const { data, error: e3 } = await db.rpc("finish_source_run", { p_run_id: runId, p_complete: complete, p_error: error });
+  return { source, scope, result: data, error: e3?.message ?? error ?? undefined };
+}
+
+// --- providers -----------------------------------------------------------------------------
+async function* adzunaPages(market: string, appId: string, appKey: string) {
+  for (let page = 1; page <= ADZUNA_PAGES; page++) {
+    const url = `https://api.adzuna.com/v1/api/jobs/${market}/search/${page}?app_id=${appId}&app_key=${appKey}` +
+      `&results_per_page=50&what=teacher&content-type=application/json`;
+    const data = await getJson<{ results: AdzunaJob[] }>(url);
+    yield data.results.map((j) => normaliseAdzuna(j, market));
+    if (data.results.length < 50) return;
+    await sleep(500);
+  }
+}
+
+async function* reedPages(apiKey: string) {
+  const headers = { Authorization: "Basic " + btoa(`${apiKey}:`), "User-Agent": UA };
+  const ids = new Set<number>();
+  for (let skip = 0; skip < 1000; skip += 100) {
+    const s = await getJson<{ results: { jobId: number }[]; totalResults: number }>(
+      `https://www.reed.co.uk/api/1.0/search?keywords=teacher&locationName=UK&resultsToTake=100&resultsToSkip=${skip}`, { headers });
+    s.results.forEach((r) => ids.add(r.jobId));
+    if (skip + 100 >= s.totalResults || s.results.length === 0) break;
+    await sleep(300);
+  }
+  const all = [...ids];
+  for (let i = 0; i < all.length; i += 25) {
+    // Promise.all, not allSettled: a failed detail request must make the run incomplete,
+    // otherwise that job would look "missing from the feed".
+    const details = await Promise.all(all.slice(i, i + 25).map((id) =>
+      getJson<ReedJob>(`https://www.reed.co.uk/api/1.0/jobs/${id}`, { headers })));
+    yield details.map((d) => normaliseReed(d, stripHtml));
+    await sleep(300);
+  }
+}
+
+async function* teachingVacancyPages() {
+  let url: string | null = "https://teaching-vacancies.service.gov.uk/api/v1/jobs.json";
+  // The DfE API does not return source data when no referrer is given.
+  const headers = { "User-Agent": UA, Referer: "https://worldteachers.academy/job-portal" };
+  for (let n = 0; url && n < 200; n++) {
+    const data: { data?: TeachingVacancy[]; links?: { next?: string | null } } = await getJson(url, { headers });
+    yield (data.data ?? []).map((j) => normaliseTeachingVacancy(j, stripHtml));
+    url = data.links?.next ?? null;
+    await sleep(500);
+  }
+}
+
+async function* usajobsPages(email: string, key: string) {
+  const headers = { Host: "data.usajobs.gov", "User-Agent": email, "Authorization-Key": key };
+  // 1710 Education and Vocational Training, 1701 General Education and Training, 1750 Instructional Systems
+  for (let page = 1; page <= 20; page++) {
+    const data = await getJson<{ SearchResult: { SearchResultItems: UsaJob[]; UserArea?: { NumberOfPages?: string } } }>(
+      `https://data.usajobs.gov/api/search?JobCategoryCode=1710;1701;1750&ResultsPerPage=500&Page=${page}`, { headers });
+    yield data.SearchResult.SearchResultItems.map(normaliseUsaJob);
+    if (page >= Number(data.SearchResult.UserArea?.NumberOfPages ?? 1)) return;
+    await sleep(1000);
+  }
+}
+
+Deno.serve(async () => {
+  const guard = checkEnvironment(Deno.env);
+  if (!guard.ok) return new Response(JSON.stringify({ refused: guard.reason }), { status: 412 });
+  const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+  const out: RunSummary[] = [];
+
+  if (guard.feeds.has("adzuna")) {
+    for (const m of ADZUNA_MARKETS) {
+      out.push(await runFeed(db, guard.dryRun, "adzuna", m.toUpperCase(),
+        adzunaPages(m, Deno.env.get("ADZUNA_APP_ID")!, Deno.env.get("ADZUNA_APP_KEY")!)));
+      await sleep(500);
+    }
+  }
+  if (guard.feeds.has("reed")) out.push(await runFeed(db, guard.dryRun, "reed", "GB", reedPages(Deno.env.get("REED_API_KEY")!)));
+  if (guard.feeds.has("teaching_vacancies")) out.push(await runFeed(db, guard.dryRun, "teaching_vacancies", "GB", teachingVacancyPages()));
+  if (guard.feeds.has("usajobs")) {
+    out.push(await runFeed(db, guard.dryRun, "usajobs", "*",
+      usajobsPages(Deno.env.get("USAJOBS_EMAIL")!, Deno.env.get("USAJOBS_API_KEY")!)));
+  }
+
+  if (!guard.dryRun) {
+    await db.rpc("expire_jobs");
+    await db.rpc("mark_duplicates");
+  }
+  return new Response(JSON.stringify({ project: guard.projectRef, runs: out }, null, 2), {
+    headers: { "Content-Type": "application/json" },
+  });
+});

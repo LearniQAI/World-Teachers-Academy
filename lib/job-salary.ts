@@ -15,12 +15,20 @@
 //   that currency (at or above ANNUAL_FLOOR). Below that, the period is
 //   unknown, so the amount is shown with "rate as advertised" instead of
 //   guessing per day / per hour / per month.
+// - When the source states the period (Teaching Vacancies, USAJOBS, Reed's
+//   salary type → stored as salary_period), that period is shown instead.
+// - Adzuna marks some salaries as its own estimate (salary_is_predicted).
+//   An estimate is not what the employer advertised, so it is not shown.
 
 export type SalaryInput = {
   salary_min: number | null;
   salary_max: number | null;
   currency: string | null;
+  salary_period?: "year" | "month" | "week" | "day" | "hour" | null;
+  salary_is_predicted?: boolean | null;
 };
+
+const PERIOD_TEXT = { year: " a year", month: " a month", week: " a week", day: " a day", hour: " an hour" } as const;
 
 // Lowest figure we treat as an annual salary, per currency. Chosen well below
 // any full-time annual teaching salary in these markets and well above typical
@@ -44,18 +52,22 @@ function amount(n: number): string {
   return n.toLocaleString("en-GB", { maximumFractionDigits: 2 });
 }
 
-export function formatSalary({ salary_min, salary_max, currency }: SalaryInput): {
+export function formatSalary({ salary_min, salary_max, currency, salary_period, salary_is_predicted }: SalaryInput): {
   text: string;
   specified: boolean;
 } {
   const min = salary_min != null && salary_min > 0 ? salary_min : null;
   const max = salary_max != null && salary_max > 0 ? salary_max : null;
-  if (min == null && max == null) return { text: SALARY_NOT_SPECIFIED, specified: false };
+  if ((min == null && max == null) || salary_is_predicted) return { text: SALARY_NOT_SPECIFIED, specified: false };
 
   const code = currency ? `${currency} ` : "";
   const top = (max ?? min)!;
   const floor = currency ? ANNUAL_FLOOR[currency] : undefined;
-  const period = floor != null && top >= floor ? " a year" : " · rate as advertised";
+  const period = salary_period
+    ? PERIOD_TEXT[salary_period]
+    : floor != null && top >= floor
+      ? " a year"
+      : " · rate as advertised";
 
   let text: string;
   if (min != null && max != null) text = `${code}${min === max ? amount(min) : `${amount(min)}–${amount(max)}`}`;
