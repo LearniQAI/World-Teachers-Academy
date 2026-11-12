@@ -248,3 +248,45 @@
     transform: none;
   }
 }
+
+/* Countdown motion: each changing number slides in from above; a soft "live"
+   dot pulses beside the launch date. Off for reduced-motion visitors. */
+.wta-countdown__num {
+  position: relative;
+  overflow: hidden;
+  height: 1.15em;
+}
+.wta-countdown__digit {
+  display: block;
+}
+.wta-countdown__digit.is-live {
+  animation: wta-count-in 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.wta-countdown__live {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: #f2a93b;
+  vertical-align: 1px;
+  animation: wta-live-pulse 2s ease-in-out infinite;
+}
+.wta-countdown__unit:last-child .wta-countdown__num {
+  color: #fcd34d;
+}
+@keyframes wta-count-in {
+  0% { transform: translateY(-100%); opacity: 0; }
+  60% { transform: translateY(10%); opacity: 1; }
+  100% { transform: none; opacity: 1; }
+}
+@keyframes wta-live-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(242, 169, 59, 0.55); }
+  50% { box-shadow: 0 0 0 6px rgba(242, 169, 59, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wta-countdown__digit.is-live,
+  .wta-countdown__live {
+    animation: none;
+  }
+}

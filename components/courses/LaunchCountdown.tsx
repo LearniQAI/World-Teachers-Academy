@@ -58,13 +58,23 @@ export default function LaunchCountdown({
 
   return (
     <div className="wta-countdown">
-      <p className="wta-countdown__date">Launching {dateLabel}</p>
+      <p className="wta-countdown__date">
+        <span className="wta-countdown__live" aria-hidden="true" />
+        Launching {dateLabel}
+      </p>
       {/* Screen readers get the date once; the ticking digits are hidden from them. */}
       <div className="wta-countdown__units" aria-hidden="true">
         {UNITS.map((u, i) => (
           <div className="wta-countdown__unit" key={u.key}>
             <span className="wta-countdown__num">
-              {parts === null ? "--" : String(parts[i]).padStart(2, "0")}
+              {/* Keyed by its value: each time a number changes, React mounts a new
+                  span and its CSS slide-in animation plays (wta-courses.css). */}
+              <span
+                key={parts === null ? "--" : parts[i]}
+                className={parts === null ? "wta-countdown__digit" : "wta-countdown__digit is-live"}
+              >
+                {parts === null ? "--" : String(parts[i]).padStart(2, "0")}
+              </span>
             </span>
             <span className="wta-countdown__label">{u.label}</span>
           </div>
