@@ -37,8 +37,12 @@ export default async function Home() {
                                         <img src="/assets/img/hero/hero_thumb3_2.png" alt="img" />
                                     </div>
                                     <div className="hero-thumb-info jump">
-                                        {/* TODO: confirm the real learner count shown in this badge image, or remove the badge. */}
-                                        <img src="/assets/img/hero/hero_thumb-info11_1.png" alt="img" />
+                                        {/* Replaces the template image "275k+ Assigned Students" (unverified figure). */}
+                                        <div className="wta-badge wta-badge--stack">
+                                            <img src="/assets/img/hero/wta-badge-icon.png" alt="" width={64} height={64} />
+                                            <strong>Free</strong>
+                                            <span>Courses open now</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -63,16 +67,16 @@ export default async function Home() {
                     <div className="container">
                         <div className="row gy-4 justify-content-center text-center stat-strip">
                             <div className="col-6 col-md-3">
-                                <div className="counter-card"><div className="media-body"><h2 className="box-number"><span className="counter-number">500</span>+</h2><p className="box-text">Learners Certified</p></div></div>
+                                <div className="counter-card"><div className="media-body"><h2 className="box-number">Free</h2><p className="box-text">Online Courses</p></div></div>
                             </div>
                             <div className="col-6 col-md-3">
-                                <div className="counter-card"><div className="media-body"><h2 className="box-number"><span className="counter-number">50</span>+</h2><p className="box-text">Partner Organisations</p></div></div>
+                                <div className="counter-card"><div className="media-body"><h2 className="box-number">Global</h2><p className="box-text">Country Guides</p></div></div>
                             </div>
                             <div className="col-6 col-md-3">
-                                <div className="counter-card"><div className="media-body"><h2 className="box-number"><span className="counter-number">20</span>+</h2><p className="box-text">Countries</p></div></div>
+                                <div className="counter-card"><div className="media-body"><h2 className="box-number">Verified</h2><p className="box-text">Job Listings</p></div></div>
                             </div>
                             <div className="col-6 col-md-3">
-                                <div className="counter-card"><div className="media-body"><h2 className="box-number"><span className="counter-number">150</span>+</h2><p className="box-text">Active Job Listings</p></div></div>
+                                <div className="counter-card"><div className="media-body"><h2 className="box-number">Direct</h2><p className="box-text">Applications</p></div></div>
                             </div>
                         </div>
                     </div>
@@ -106,149 +110,27 @@ export default async function Home() {
                         </div>
                     </div>
                     <div className="category-slider3 th_fade_anim">
-                        {/* TODO: add one supporting line per certification card once course names are finalised. These cards still link to the template page course.html. */}
-                        <div className="swiper th-slider has-shadow" id="categorySlider3" data-slider-options='{"breakpoints":{"0":{"slidesPerView":"1"},"526":{"slidesPerView":"2"},"768":{"slidesPerView":"3"},"991":{"slidesPerView":"4"},"1200":{"slidesPerView":"5"},"1400":{"slidesPerView":"5"}}}'>
+                                                <div className="swiper th-slider has-shadow" id="categorySlider3" data-slider-options='{"breakpoints":{"0":{"slidesPerView":"1"},"526":{"slidesPerView":"2"},"768":{"slidesPerView":"3"},"991":{"slidesPerView":"4"},"1200":{"slidesPerView":"5"},"1400":{"slidesPerView":"5"}}}'>
                             <div className="swiper-wrapper">
-                                <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#4F46E5" data-border="#A5B4FC">
-                                        <div className="box-icon">
-                                            <img src="/assets/img/icon/category/category3-1.svg" alt="Image" />
+                                {/* Cards and destinations: CATEGORY_CARDS at the bottom of this file.
+                                    Listed twice so the looping slider always has enough slides. */}
+                                {[...CATEGORY_CARDS, ...CATEGORY_CARDS].map((card, i) => (
+                                    <div className="swiper-slide th_fade_anim" key={`${card.title}-${i}`}>
+                                        <div className="category-card3" data-theme-color={card.color} data-border={card.border}>
+                                            <div className="box-icon">
+                                                <img src={card.icon} alt="" />
+                                            </div>
+                                            <h3 className="box-title">
+                                                {card.href ? <a href={card.href}>{card.title[0]} <br /> {card.title[1]}</a> : <span>{card.title[0]} <br /> {card.title[1]}</span>}
+                                            </h3>
+                                            {card.href ? (
+                                                <a className="icon-btn style8" href={card.href} aria-label={`${card.title.join(" ")}`}><CategoryArrow /></a>
+                                            ) : (
+                                                <span className="wta-category-soon">Coming soon</span>
+                                            )}
                                         </div>
-                                        <h3 className="box-title"><a href="course.html">TEFL / TESOL <br /> Certification </a></h3>
-                                        <a className="icon-btn style8" href="course-details.html">
-                                            <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
-                                            </svg>
-                                        </a>
                                     </div>
-                                </div>
-
-                                <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#14B8A6" data-border="#5EEAD4">
-                                        <div className="box-icon">
-                                            <img src="/assets/img/icon/category/category3-2.svg" alt="Image" />
-                                        </div>
-                                        <h3 className="box-title"><a href="course.html">Career <br /> Readiness</a></h3>
-                                        <a className="icon-btn style8" href="course-details.html">
-                                            <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#334155" data-border="#CBD5E1">
-                                        <div className="box-icon">
-                                            <img src="/assets/img/icon/category/category3-3.svg" alt="Image" />
-                                        </div>
-                                        <h3 className="box-title"><a href="course.html">Curriculum <br /> Design</a></h3>
-                                        <a className="icon-btn style8" href="course-details.html">
-                                            <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#0F766E" data-border="#5EEAD4">
-                                        <div className="box-icon">
-                                            <img src="/assets/img/icon/category/category3-4.svg" alt="Image" />
-                                        </div>
-                                        <h3 className="box-title"><a href="course.html">Special Education <br /> Training</a></h3>
-                                        <a className="icon-btn style8" href="course-details.html">
-                                            <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#F97316" data-border="#FDBA74">
-                                        <div className="box-icon">
-                                            <img src="/assets/img/icon/category/category3-5.svg" alt="Image" />
-                                        </div>
-                                        <h3 className="box-title"><a href="course.html">Digital Skills <br /> &amp; Tools</a></h3>
-                                        <a className="icon-btn style8" href="course-details.html">
-                                            <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#4F46E5" data-border="#A5B4FC">
-                                        <div className="box-icon">
-                                            <img src="/assets/img/icon/category/category3-1.svg" alt="Image" />
-                                        </div>
-                                        <h3 className="box-title"><a href="course.html">TEFL / TESOL <br /> Certification </a></h3>
-                                        <a className="icon-btn style8" href="course-details.html">
-                                            <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#14B8A6" data-border="#5EEAD4">
-                                        <div className="box-icon">
-                                            <img src="/assets/img/icon/category/category3-2.svg" alt="Image" />
-                                        </div>
-                                        <h3 className="box-title"><a href="course.html">Career <br /> Readiness</a></h3>
-                                        <a className="icon-btn style8" href="course-details.html">
-                                            <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#334155" data-border="#CBD5E1">
-                                        <div className="box-icon">
-                                            <img src="/assets/img/icon/category/category3-3.svg" alt="Image" />
-                                        </div>
-                                        <h3 className="box-title"><a href="course.html">Curriculum <br /> Design</a></h3>
-                                        <a className="icon-btn style8" href="course-details.html">
-                                            <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#0F766E" data-border="#5EEAD4">
-                                        <div className="box-icon">
-                                            <img src="/assets/img/icon/category/category3-4.svg" alt="Image" />
-                                        </div>
-                                        <h3 className="box-title"><a href="course.html">Special Education <br /> Training</a></h3>
-                                        <a className="icon-btn style8" href="course-details.html">
-                                            <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#F97316" data-border="#FDBA74">
-                                        <div className="box-icon">
-                                            <img src="/assets/img/icon/category/category3-5.svg" alt="Image" />
-                                        </div>
-                                        <h3 className="box-title"><a href="course.html">Digital Skills <br /> &amp; Tools</a></h3>
-                                        <a className="icon-btn style8" href="course-details.html">
-                                            <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
-
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -279,10 +161,10 @@ export default async function Home() {
                                     </div>
                                     <div className="about-tag th_fade_anim">
                                         <div className="about-experience-tag">
-                                            <span className="circle-title-anime">Years Of Experience ** Years Of Experience **</span>
+                                            <span className="circle-title-anime">Your Future Has No Borders ** Work Abroad **</span>
                                         </div>
                                         <div className="year-counter">
-                                            <div className="box-title"><span className="counter-number">10</span></div>
+                                            <div className="box-title wta-circle-word">WTA</div>
                                         </div>
                                     </div>
                                 </div>
@@ -324,8 +206,8 @@ export default async function Home() {
                                     <img src="/assets/img/icon/about-card-icon11-1.svg" alt="img" />
                                 </div>
                                 <div className="box-details">
-                                    <h3 className="box-title"><span className="text-theme">320+</span> Learners Trained</h3>
-                                    <p className="box-text">Real people, genuinely certified and prepared — not a projection.</p>
+                                    <h3 className="box-title"><span className="text-theme">Free</span> Online Training</h3>
+                                    <p className="box-text">Every course is free while we launch, so you can start building skills today.</p>
                                 </div>
                             </div>
                         </div>
@@ -335,8 +217,8 @@ export default async function Home() {
                                     <img src="/assets/img/icon/about-card-icon11-2.svg" alt="img" />
                                 </div>
                                 <div className="box-details">
-                                    <h3 className="box-title"><span className="text-theme">200+</span> Partner Organisations</h3>
-                                    <p className="box-text">A real, growing network of organisations that hire our graduates directly.</p>
+                                    <h3 className="box-title"><span className="text-theme">Global</span> Country Guides</h3>
+                                    <p className="box-text">Practical guides to living and working in countries around the world.</p>
                                 </div>
                             </div>
                         </div>
@@ -346,7 +228,7 @@ export default async function Home() {
                                     <img src="/assets/img/icon/about-card-icon11-3.svg" alt="img" />
                                 </div>
                                 <div className="box-details">
-                                    <h3 className="box-title">Job Listings Updated Daily</h3>
+                                    <h3 className="box-title"><span className="text-theme">Verified</span> Job Listings</h3>
                                     <p className="box-text">Browse verified international vacancies and apply directly on the employer&apos;s own website.</p>
                                 </div>
                             </div>
@@ -414,31 +296,29 @@ export default async function Home() {
                     <div className="counter-wrap1 bg-theme th_fade_anim p-lg-0">
                         <div className="counter-card">
                             <div className="media-body">
-                                <h2 className="box-number text-white"><span className="counter-number">3.9</span>k+</h2>
-                                <p className="box-text">Learners Certified</p>
+                                <h2 className="box-number text-white">Free</h2>
+                                <p className="box-text">Courses to Start Today</p>
                             </div>
                         </div>
                         <div className="divider"></div>
                         <div className="counter-card">
                             <div className="media-body">
-                                {/* TODO: "85+" predates the real 5-course catalog wired in above and is now
-                                    inconsistent with it — confirm the real course count with the client. */}
-                                <h2 className="box-number text-white"><span className="counter-number">85</span>+</h2>
-                                <p className="box-text">Courses Available</p>
+                                <h2 className="box-number text-white">Online</h2>
+                                <p className="box-text">Learn From Anywhere</p>
                             </div>
                         </div>
                         <div className="divider"></div>
                         <div className="counter-card">
                             <div className="media-body">
-                                <h2 className="box-number text-white"><span className="counter-number">320</span>+</h2>
-                                <p className="box-text">Verified Instructors</p>
+                                <h2 className="box-number text-white">Global</h2>
+                                <p className="box-text">Career Opportunities</p>
                             </div>
                         </div>
                         <div className="divider"></div>
                         <div className="counter-card">
                             <div className="media-body">
-                                <h2 className="box-number text-white"><span className="counter-number">5.5</span>k+</h2>
-                                <p className="box-text">Job Placements Facilitated</p>
+                                <h2 className="box-number text-white">Direct</h2>
+                                <p className="box-text">Applications to Employers</p>
                             </div>
                         </div>
                         <div className="divider"></div>
@@ -459,12 +339,18 @@ export default async function Home() {
                                         <img src="/assets/Why-choose-section.jpeg" alt="Student holding books" />
                                     </div>
                                     <div className="why-info-card11-1 jump">
-                                        {/* TODO: confirm replacement stat before changing — candidate is "200+ Partner Schools" but confirm this doesn't duplicate Section 4's stat awkwardly, or remove the badge entirely. */}
-                                        <img src="/assets/img/hero/hero_thumb-info3_1.png" alt="img" />
+                                        {/* Replaces the template image "275k+ Assigned Students" (unverified figure). */}
+                                        <div className="wta-badge">
+                                            <img src="/assets/img/hero/wta-badge-icon.png" alt="" width={56} height={56} />
+                                            <div><strong>Free</strong><span>Online training</span></div>
+                                        </div>
                                     </div>
                                     <div className="why-info-card11-2 jump-reverse">
-                                        {/* TODO: replace with a real scheduled session snippet (e.g. "TEFL Foundations — Live Q&A, Today at 6:00 PM") once a real session exists, or remove this widget entirely if no live sessions are scheduled yet. */}
-                                        <img src="/assets/img/hero/hero_thumb-info11_2.png" alt="img" />
+                                        {/* Replaces the template image "User Experience Class, Today at 12.00 PM" (not a real session). */}
+                                        <div className="wta-badge wta-badge--wide">
+                                            <img src="/assets/img/hero/wta-badge-icon.png" alt="" width={56} height={56} />
+                                            <div><strong>Online Teaching &amp; Tutoring</strong><span>Free — enrolment open now</span></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -584,11 +470,11 @@ export default async function Home() {
                         <div className="row justify-content-center">
                             <div className="col-xl-6 col-lg-9">
                                 <div className="title-area text-center mb-0">
-                                    {/* TODO: confirm this 30%-off-first-100-teachers promotion is a real, currently-live offer with an actually-enforced 100-teacher cap before publishing this headline. A scarcity claim that isn't real is the kind of thing that damages trust if a customer notices later — do not apply this copy until I explicitly confirm the offer is real. */}
-                                    <h2 className="sec-title text-white th-text-perspective"><span className="text-theme2">30%</span> Off Certification for Our First 100 Learners</h2>
-                                    <p className="fw-semibold text-white th_fade_anim mb-0 mt-30">Get certified and get matched with real international opportunities — join early and lock in founder pricing.</p>
+                                    {/* The template's "30% off for the first 100" offer was not a confirmed promotion; every course is free while we launch. */}
+                                    <h2 className="sec-title text-white th-text-perspective"><span className="text-theme2">Free</span> Training for Your International Career</h2>
+                                    <p className="fw-semibold text-white th_fade_anim mb-0 mt-30">Every course is free while we launch. Start today and prepare for opportunities at home and abroad.</p>
                                     <div className="btn-wrap mt-40 th_fade_anim justify-content-center">
-                                        <a href="/courses" className="th-btn">JOIN WITH US
+                                        <a href="/courses" className="th-btn">START FOR FREE
                                             <svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
                                             </svg>
@@ -938,8 +824,8 @@ FAQ Area
                                         <img src="/assets/img/normal/faq-3-notes.jpg" alt="Handwritten notes beside a stack of books" />
                                     </div>
                                     <div className="box-details">
-                                        <h3 className="box-title"><span className="counter-number">10</span>K +</h3>
-                                        <p className="box-text">Active students</p>
+                                        <h3 className="box-title">Free</h3>
+                                        <p className="box-text">Courses open now</p>
                                     </div>
                                 </div>
                                 </div>
@@ -1025,5 +911,25 @@ FAQ Area
                 </div>
             </div>
     </>
+  );
+}
+
+// Homepage category cards: teaching, professional skills and international
+// career preparation. Each links to a real page, or shows "Coming soon" when
+// the destination doesn't exist yet (never a template placeholder page).
+const CATEGORY_CARDS: { title: [string, string]; href: string | null; icon: string; color: string; border: string }[] = [
+  { title: ["TEFL / TESOL", "Certification"], href: "/courses?q=TEFL", icon: "/assets/img/icon/category/category3-1.svg", color: "#4F46E5", border: "#A5B4FC" },
+  { title: ["Online Teaching", "& Tutoring"], href: "/courses?q=Online", icon: "/assets/img/icon/category/category3-2.svg", color: "#14B8A6", border: "#5EEAD4" },
+  { title: ["Career", "Readiness"], href: "/resources", icon: "/assets/img/icon/category/category3-3.svg", color: "#334155", border: "#CBD5E1" },
+  { title: ["Working", "Abroad"], href: "/countries", icon: "/assets/img/icon/category/category3-4.svg", color: "#0F766E", border: "#5EEAD4" },
+  { title: ["International", "Job Search"], href: "/job-portal", icon: "/assets/img/icon/category/category3-5.svg", color: "#F97316", border: "#FDBA74" },
+  { title: ["Digital Skills", "& Tools"], href: null, icon: "/assets/img/icon/category/category3-5.svg", color: "#7C3AED", border: "#C4B5FD" },
+];
+
+function CategoryArrow() {
+  return (
+    <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor" />
+    </svg>
   );
 }

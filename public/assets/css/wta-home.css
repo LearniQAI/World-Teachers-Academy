@@ -243,3 +243,57 @@
   .wta-cta__box { padding: 40px 28px; }
   .wta-faq__list summary { font-size: 17px; }
 }
+
+/* ---- Homepage (template layout): text badges that replace the template's
+   figure images ("275k+ Assigned Students", "User Experience Class"). Same
+   footprint as the images they replace: white card, soft shadow. ---- */
+.wta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 14px 22px 14px 14px;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.12);
+  min-width: 240px;
+  text-align: left;
+}
+.wta-badge img { flex: none; border-radius: 12px; }
+.wta-badge strong {
+  display: block;
+  font-size: 26px;
+  line-height: 1.1;
+  color: #0F172A;
+  font-weight: 700;
+}
+.wta-badge span { display: block; font-size: 15px; line-height: 1.4; color: #475569; }
+.wta-badge--wide { min-width: 340px; }
+.wta-badge--wide strong { font-size: 20px; }
+.wta-badge--stack {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+  width: 150px;
+  padding: 16px;
+}
+.wta-badge--stack strong { font-size: 30px; }
+.wta-circle-word { font-size: 26px !important; letter-spacing: 1px; }
+.wta-category-soon {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  padding: 6px 14px;
+}
+@media (max-width: 575px) {
+  .wta-badge { min-width: 0; padding: 10px 14px 10px 10px; gap: 10px; }
+  .wta-badge img { width: 40px; height: 40px; }
+  .wta-badge strong { font-size: 18px; }
+  .wta-badge span { font-size: 13px; }
+  .wta-badge--wide { min-width: 0; }
+  .wta-badge--stack { width: 120px; }
+}
