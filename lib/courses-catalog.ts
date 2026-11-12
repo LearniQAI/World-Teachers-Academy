@@ -24,8 +24,10 @@ export type CourseStatus = "open" | "coming_soon";
 export interface CourseCatalogEntry {
   slug: string;
   title: string;
-  /** Card image, or null to show the designed title banner instead. */
+  /** Card image (path under /public), or null to show the designed title banner instead. */
   image: string | null;
+  /** Alt text for the card image; defaults to the course title. */
+  imageAlt?: string;
   status: CourseStatus;
   /**
    * Planned launch time, ISO 8601 with +02:00 offset (Africa/Johannesburg).
@@ -47,7 +49,10 @@ export const realCourses: CourseCatalogEntry[] = [
   {
     slug: "professional-online-teaching-tutoring-certification",
     title: "Professional Online Teaching & Tutoring Certification — 120 Hour",
-    image: null,
+    // Owner-supplied photo. Until public/images/online-tutor.png is added, the
+    // card falls back to the designed banner (see CourseCard), never a broken image.
+    image: "/images/online-tutor.png",
+    imageAlt: "Professional online tutor teaching a student through a video lesson",
     status: "open",
     launchAt: "2026-11-12T09:00:00+02:00",
     // LMS course 43748ec6-0bfa-419b-9209-1f09ed8a8b2e (published, free).

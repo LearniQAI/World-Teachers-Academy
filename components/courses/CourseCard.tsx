@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { courseHref, formatLaunchDate, type CourseCatalogEntry } from "@/lib/courses-catalog";
 import LaunchCountdown from "@/components/courses/LaunchCountdown";
+import CourseImage from "@/components/courses/CourseImage";
 
 // One course card, used on the homepage course grid and on /courses.
 // Every course is free. No lesson or student counts, no prices, no ratings,
@@ -31,15 +32,17 @@ export default function CourseCard({
     <div className={`course-card wta-course-card ${isOpen ? "is-open" : "is-coming-soon"}`}>
       <div className="box-img">
         <MaybeLink href={href}>
-          {course.image ? (
-            <img src={course.image} alt={course.title} />
-          ) : (
-            <span className="wta-course-banner" role="img" aria-label={course.title}>
-              <span className="wta-course-banner__kicker">World Teachers Academy</span>
-              <span className="wta-course-banner__title">{course.title.replace(/\s+—\s+\d+\s*Hours?$/, "")}</span>
-              {course.hours && <span className="wta-course-banner__hours">{course.hours}</span>}
-            </span>
-          )}
+          <CourseImage
+            src={course.image}
+            alt={course.imageAlt ?? course.title}
+            fallback={
+              <span className="wta-course-banner" role="img" aria-label={course.title}>
+                <span className="wta-course-banner__kicker">World Teachers Academy</span>
+                <span className="wta-course-banner__title">{course.title.replace(/\s+—\s+\d+\s*Hours?$/, "")}</span>
+                {course.hours && <span className="wta-course-banner__hours">{course.hours}</span>}
+              </span>
+            }
+          />
         </MaybeLink>
         <span className="box-price wta-price">Free</span>
       </div>

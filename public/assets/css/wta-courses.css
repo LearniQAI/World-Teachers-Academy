@@ -8,6 +8,7 @@
   width: 100%;
 }
 .wta-course-card .box-img {
+  border-radius: 16px;
   margin-bottom: 20px;
   aspect-ratio: 752 / 440;
   background: #eef0ff;
