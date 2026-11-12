@@ -16,6 +16,11 @@
 // a refresh. Courses without a confirmed launch date use launchAt: null and
 // show "Coming Soon" with no countdown — never an invented deadline.
 //
+// Owner-approved release schedule (12 Nov 2026), one course every five days
+// at 09:00 Johannesburg time: 12 Nov (open), 17 Nov, 22 Nov, 27 Nov, 2 Dec,
+// 7 Dec. These dates are a plan, not a switch: a passed date shows
+// "Launch update pending" until the course is deliberately opened here.
+//
 // profileUrl is the link to the course's profile page. Leave it null until the
 // page exists — the card then shows no link instead of a dead or template page.
 
@@ -70,8 +75,7 @@ export const realCourses: CourseCatalogEntry[] = [
     title: "TEFL Certificate — 130 Hour",
     image: "/assets/telf-130.jpeg",
     status: "coming_soon",
-    // Exists in the LMS (fcf2852d-…, 25 lessons). 17 Nov is the planned
-    // second release from the owner's 5-day schedule — confirm before launch.
+    // Exists in the LMS (fcf2852d-…, 25 lessons).
     launchAt: "2026-11-17T09:00:00+02:00",
     profileUrl: null,
     summary: "Your first step to teaching English in classrooms at home and abroad.",
@@ -81,7 +85,7 @@ export const realCourses: CourseCatalogEntry[] = [
     title: "Diploma — 320 Hour",
     image: "/assets/diploma320.jpeg",
     status: "coming_soon",
-    launchAt: null,
+    launchAt: "2026-11-22T09:00:00+02:00",
     profileUrl: null,
     summary: "Deepen your teaching practice with a broader professional diploma.",
   },
@@ -90,7 +94,7 @@ export const realCourses: CourseCatalogEntry[] = [
     title: "Advanced Diploma — 395 Hour",
     image: "/assets/adv-diploma%20395%20hours.jpeg",
     status: "coming_soon",
-    launchAt: null,
+    launchAt: "2026-11-27T09:00:00+02:00",
     profileUrl: null,
     summary: "Advanced training for educators ready to take on more responsibility.",
   },
@@ -99,7 +103,7 @@ export const realCourses: CourseCatalogEntry[] = [
     title: "TEFL Comprehensive — 520 Hours",
     image: "/assets/520%20hours.jpeg",
     status: "coming_soon",
-    launchAt: null,
+    launchAt: "2026-12-02T09:00:00+02:00",
     profileUrl: null,
     summary: "Our most complete TEFL programme, from first lessons to specialist skills.",
   },
@@ -108,7 +112,7 @@ export const realCourses: CourseCatalogEntry[] = [
     title: "Supply Chain Management",
     image: "/assets/supply%20chain.jpeg",
     status: "coming_soon",
-    launchAt: null,
+    launchAt: "2026-12-07T09:00:00+02:00",
     profileUrl: null,
     summary: "A professional course in planning, sourcing and moving goods efficiently.",
   },
