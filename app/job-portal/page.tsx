@@ -715,7 +715,6 @@ function NoOpenings({ code, onExploreAll }: { code: string; onExploreAll: () => 
   );
 }
 
-const RESEND_COOLDOWN_SECONDS = 30;
 
 // Job details dialog. External vacancies open on the original job site
 // directly: no name, email or verification code is asked for, and WTA does
