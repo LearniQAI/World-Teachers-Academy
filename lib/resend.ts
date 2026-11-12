@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { emailAllowed } from "./email-allowlist";
 
 // Preview builds have no RESEND_API_KEY (production-only in Vercel) and the SDK
 // throws at import without one. The placeholder lets the build finish; sends in
@@ -17,6 +18,10 @@ const SIGNAL_INDIGO = "#4F46E5";
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "World Teachers Academy <noreply@notify.worldteachers.academy>";
 
 export async function sendOtpEmail(email: string, code: string) {
+  if (!emailAllowed(email)) {
+    // Staging: this address is not on EMAIL_TEST_ALLOWLIST, so nothing is sent.
+    throw new Error("Email sending is restricted to approved test addresses on this staging site.");
+  }
   // The Resend SDK never throws on an API-level failure (invalid key,
   // unverified domain, rejected address, etc.) — it always resolves and
   // returns { data, error } instead. Without checking `error` here, a failed
