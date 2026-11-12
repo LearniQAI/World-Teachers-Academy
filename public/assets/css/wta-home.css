@@ -390,3 +390,9 @@
   .category-card3.wta-cat { min-height: 300px; }
   .category-card3.wta-cat .box-title { font-size: 22px; }
 }
+
+/* Global career section, phones: keep the circle badge off the main photo so
+   the woman's face and laptop stay fully visible. */
+@media (max-width: 575px) {
+  .img-box11 .about-tag { left: auto !important; right: 0 !important; transform: scale(0.72) !important; transform-origin: top right; }
+}
