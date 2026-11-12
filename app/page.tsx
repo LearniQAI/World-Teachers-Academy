@@ -147,7 +147,10 @@ export default async function Home() {
                                 <div className="img-box11">
                                     <div className="img1 th--hover-item th_fade_anim">
                                         <div className="thumb th--hover-img" data-displacement="/assets/img/imghover/fluid.jpg" data-intensity="0.2" data-speedin="1" data-speedout="1">
-                                            <img className="img-cover" src="/assets/img/normal/more-aboutus-1.jpg" alt="World Teachers Academy team" />
+                                            {/* Owner-supplied photo (13 Nov 2026). Master: /images/global-career-professional.png (1122×1402).
+                                                Served as a 3:5 WebP crop that matches this frame exactly, so the hover
+                                                ripple (which reads the img src directly) never stretches it. */}
+                                            <img className="img-cover" src="/images/global-career-professional-3x5.webp" width={841} height={1402} loading="lazy" decoding="async" alt="Black African professional woman working on a laptop in a bright modern workspace, preparing for global career opportunities" />
                                         </div>
                                     </div>
                                     <div className="img2 th--hover-item th_fade_anim">
