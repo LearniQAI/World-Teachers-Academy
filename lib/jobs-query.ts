@@ -1,4 +1,4 @@
-import { supabaseAnon } from "@/lib/supabase";
+import { supabaseAnon, supabaseServiceRole } from "@/lib/supabase";
 import { isRelevantTeachingJob } from "@/lib/job-relevance";
 import { sourceAccess } from "@/lib/source-access";
 
@@ -72,9 +72,13 @@ export async function relevantJobIndex(filters: JobFilters): Promise<LightRow[]>
   return out;
 }
 
+// Full rows for one page, read with the service role because they include
+// apply_url / source_url, which the public key cannot read
+// (docs/proposals/2026-11-portal-access.sql). Callers must strip those links
+// for browsers that may not open the job (app/api/jobs/route.ts does).
 export async function jobsByIds(ids: string[]) {
   if (ids.length === 0) return [];
-  const { data, error } = await supabaseAnon.from("jobs").select("*").in("id", ids);
+  const { data, error } = await supabaseServiceRole.from("jobs").select("*").in("id", ids).eq("is_active", true);
   if (error) throw error;
   const order = new Map(ids.map((id, i) => [id, i]));
   return (data ?? []).sort((a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0));

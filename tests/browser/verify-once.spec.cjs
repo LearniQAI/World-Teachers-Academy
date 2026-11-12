@@ -17,9 +17,9 @@ check(/Verify your email once/.test(dt)&&/every vacancy in the Job Portal opens/
 check(!/employers can contact/i.test(dt),'no misleading employer-contact wording');
 await p.screenshot({path:O+'verify-once-form-desktop.png'});
 await dlg.getByLabel('Full name').fill('Jane Test'); await dlg.getByLabel('Email address').fill('jane@example.com');
-await dlg.getByRole('button',{name:'Email me a code'}).click(); await p.waitForTimeout(300);
-check(/Please tick the box/.test(await dlg.innerText()),'consent is required and explained');
-await dlg.locator('#verify-consent').check(); await dlg.getByRole('button',{name:'Email me a code'}).click(); await p.waitForTimeout(400);
+check(!(await dlg.locator('#verify-marketing').isChecked()),'marketing box is optional and unticked by default');
+check(/doesn.t affect your access/.test(await dlg.innerText()),'says declining marketing does not affect access');
+await dlg.getByRole('button',{name:'Email me a code'}).click(); await p.waitForTimeout(400);
 await dlg.getByLabel('Verification code').fill('111111'); await dlg.getByRole('button',{name:/Verify and open/}).click(); await p.waitForTimeout(300);
 check(/Invalid or expired code/.test(await dlg.innerText()),'wrong code shows an error');
 await dlg.getByLabel('Verification code').fill('123456'); await dlg.getByRole('button',{name:/Verify and open/}).click(); await p.waitForTimeout(1200);
@@ -43,7 +43,7 @@ const anyReedOnPage1 = opened || !(await p.evaluate(()=>/Verify your email once/
 check(anyReedOnPage1,'after a reload, jobs still open without verifying again');
 await p.keyboard.press('Escape').catch(()=>{});
 // sign out
-await p.getByRole('button',{name:'Sign out'}).click().catch(()=>{}); await p.waitForTimeout(800);
+await p.getByRole('button',{name:'Sign out',exact:true}).click().catch(()=>{}); await p.waitForTimeout(800);
 check(!/verified on this browser/.test(await p.evaluate(()=>document.body.innerText)),'sign out removes access');
 // mobile screenshots of the form
 const m=await b.newPage({viewport:{width:390,height:844},deviceScaleFactor:3,isMobile:true,hasTouch:true});

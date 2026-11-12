@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jobsByIds, relevantJobIndex } from "@/lib/jobs-query";
-import { ACCESS_COOKIE, readAccessToken } from "@/lib/portal-access";
+import { currentSession } from "@/lib/portal-session";
 import { sourceAccess } from "@/lib/source-access";
 
 const PAGE_SIZE = 10;
@@ -21,10 +21,10 @@ export async function GET(request: NextRequest) {
     const rows = await jobsByIds(index.slice(from, from + PAGE_SIZE).map((r) => r.id));
     // Apply links of sources behind the one-time verification go only to
     // verified browsers (lib/portal-access.ts, lib/source-access.ts).
-    const verified = !!readAccessToken(request.cookies.get(ACCESS_COOKIE)?.value);
+    const verified = !!(await currentSession(request.cookies));
     const jobs = rows.map((j) => {
       const access = sourceAccess(j.source);
-      const locked = access === "verified" && !verified;
+      const locked = !(verified || access === "open");
       return { ...j, apply_url: locked ? null : j.apply_url, source_url: locked ? null : j.source_url ?? null, access, locked };
     });
 

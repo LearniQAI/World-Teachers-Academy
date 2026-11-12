@@ -216,8 +216,8 @@ export default function JobPortal() {
     setReloadKey((k) => k + 1);
   }
 
-  async function signOut() {
-    await fetch("/api/portal/session", { method: "DELETE" }).catch(() => {});
+  async function signOut(everywhere: boolean) {
+    await fetch(`/api/portal/session${everywhere ? "?everywhere=1" : ""}`, { method: "DELETE" }).catch(() => {});
     setVerified(false);
     setReloadKey((k) => k + 1);
   }
@@ -451,8 +451,12 @@ export default function JobPortal() {
       {verified && (
         <p className="jp-access-note" style={{ textAlign: "center", fontSize: "12.5px", color: PAPER_DIM, margin: "0 0 32px" }}>
           Your email is verified on this browser, so every vacancy is open to you.{" "}
-          <button type="button" onClick={signOut} style={{ background: "none", border: 0, padding: 0, color: INDIGO, textDecoration: "underline", cursor: "pointer" }}>
+          <button type="button" onClick={() => signOut(false)} style={{ background: "none", border: 0, padding: 0, color: INDIGO, textDecoration: "underline", cursor: "pointer" }}>
             Sign out
+          </button>{" "}
+          &middot;{" "}
+          <button type="button" onClick={() => signOut(true)} style={{ background: "none", border: 0, padding: 0, color: INDIGO, textDecoration: "underline", cursor: "pointer" }}>
+            Sign out on all devices
           </button>
         </p>
       )}
@@ -896,7 +900,7 @@ function VerifyAccess({ job, onClose, onVerified }: { job: Job; onClose: () => v
   const [step, setStep] = useState<"details" | "code">("details");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [consent, setConsent] = useState(false);
+  const [marketing, setMarketing] = useState(false); // optional, never pre-ticked
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -923,7 +927,7 @@ function VerifyAccess({ job, onClose, onVerified }: { job: Job; onClose: () => v
         method: "POST",
         headers: { "Content-Type": "application/json" },
         // job_id is left out on purpose: this verification is for the whole portal.
-        body: JSON.stringify({ name, email, consent_given: consent }),
+        body: JSON.stringify({ name, email, marketing_opt_in: marketing }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
@@ -942,10 +946,6 @@ function VerifyAccess({ job, onClose, onVerified }: { job: Job; onClose: () => v
     e.preventDefault();
     if (!name.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setError("Enter your name and a valid email address.");
-      return;
-    }
-    if (!consent) {
-      setError("Please tick the box to continue.");
       return;
     }
     setBusy(true);
@@ -1030,14 +1030,18 @@ function VerifyAccess({ job, onClose, onVerified }: { job: Job; onClose: () => v
                 <label htmlFor="verify-email" style={label}>Email address</label>
                 <input id="verify-email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} style={input} />
               </div>
-              <label htmlFor="verify-consent" style={{ display: "flex", gap: "10px", alignItems: "flex-start", fontSize: "12.5px", color: PAPER_DIM, lineHeight: 1.5, marginBottom: "16px", cursor: "pointer" }}>
-                <input id="verify-consent" type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)}
+              <label htmlFor="verify-marketing" style={{ display: "flex", gap: "10px", alignItems: "flex-start", fontSize: "12.5px", color: PAPER_DIM, lineHeight: 1.5, marginBottom: "10px", cursor: "pointer" }}>
+                <input id="verify-marketing" type="checkbox" checked={marketing} onChange={(e) => setMarketing(e.target.checked)}
                   style={{ marginTop: "3px", width: "16px", height: "16px", flex: "none", accentColor: INDIGO, display: "inline-block", visibility: "visible", opacity: 1, position: "static", appearance: "auto" }} />
                 <span>
-                  I agree that World Teachers Academy may keep my name and email to give me Job Portal access, and may
-                  email me about teaching opportunities and WTA courses. I can ask to be removed at any time.
+                  Optional: email me about teaching opportunities and World Teachers Academy courses. You can unsubscribe at
+                  any time. Leaving this unticked doesn&rsquo;t affect your access.
                 </span>
               </label>
+              <p style={{ fontSize: "12px", color: PAPER_DIM, lineHeight: 1.5, margin: "0 0 16px" }}>
+                We use your name and email only to verify you and give you Job Portal access. See our{" "}
+                <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: INDIGO }}>privacy policy</a>.
+              </p>
               {error && <p role="alert" style={{ color: "#B91C1C", fontSize: "13px", margin: "0 0 12px" }}>{error}</p>}
               <button type="submit" className="th-btn w-100" style={primary} disabled={busy}>
                 {busy ? "Sending code…" : "Email me a code"}

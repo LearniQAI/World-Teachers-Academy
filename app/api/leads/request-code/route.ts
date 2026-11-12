@@ -3,6 +3,7 @@ import crypto from "crypto";
 import { supabaseServiceRole } from "@/lib/supabase";
 import { sendOtpEmail } from "@/lib/resend";
 import { getApplyUrl } from "@/lib/leads";
+import { hashOtp } from "@/lib/portal-access";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const EMAIL_RATE_LIMIT = 3;
@@ -14,9 +15,6 @@ function generateCode(): string {
   return crypto.randomInt(0, 1_000_000).toString().padStart(6, "0");
 }
 
-function hashCode(code: string): string {
-  return crypto.createHash("sha256").update(code).digest("hex");
-}
 
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
@@ -25,7 +23,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  const { name, email, job_id, consent_given } = body;
+  // consent_given is the legacy per-job form's bundled consent. The one-time
+  // verification sends marketing_opt_in instead: optional, never required.
+  const { name, email, job_id, consent_given, marketing_opt_in } = body;
+  const portalAccess = !job_id;
 
   if (!name || typeof name !== "string" || !name.trim()) {
     return NextResponse.json({ error: "Name is required" }, { status: 400 });
@@ -33,7 +34,7 @@ export async function POST(request: NextRequest) {
   if (!email || typeof email !== "string" || !EMAIL_REGEX.test(email)) {
     return NextResponse.json({ error: "A valid email is required" }, { status: 400 });
   }
-  if (consent_given !== true) {
+  if (!portalAccess && consent_given !== true) {
     return NextResponse.json(
       { error: "You must consent to be contacted before applying" },
       { status: 400 }
@@ -95,7 +96,7 @@ export async function POST(request: NextRequest) {
   }
 
   const code = generateCode();
-  const codeHash = hashCode(code);
+  const codeHash = hashOtp(code);
 
   const { error: insertError } = await supabaseServiceRole.from("email_otps").insert({
     email: normalizedEmail,
@@ -103,6 +104,7 @@ export async function POST(request: NextRequest) {
     name: name.trim(),
     code_hash: codeHash,
     ip: sourceIp,
+    marketing_opt_in: portalAccess ? marketing_opt_in === true : consent_given === true,
   });
 
   if (insertError) {

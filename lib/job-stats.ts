@@ -32,7 +32,7 @@ async function countDistinctCountries(): Promise<number | null> {
 async function countOpenRoles(): Promise<number | null> {
   const { count, error } = await supabaseAnon
     .from("jobs")
-    .select("*", { count: "exact", head: true })
+    .select("id", { count: "exact", head: true }) // not "*": apply_url is not public
     .eq("is_active", true);
   if (error || !count) return null;
   const rounded = Math.floor(count / 10) * 10;

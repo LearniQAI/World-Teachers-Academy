@@ -1,14 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import crypto from "crypto";
 import { supabaseServiceRole } from "@/lib/supabase";
-import { createLead } from "@/lib/leads";
-import { ACCESS_COOKIE, accessCookieOptions, signAccessToken } from "@/lib/portal-access";
+import { createLead, recordPortalVisitor } from "@/lib/leads";
+import { ACCESS_COOKIE, accessCookieOptions, otpMatches } from "@/lib/portal-access";
+import { createSession } from "@/lib/portal-session";
 
 const GENERIC_ERROR = "Invalid or expired code";
 
-function hashCode(code: string): string {
-  return crypto.createHash("sha256").update(code).digest("hex");
-}
 
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
@@ -50,7 +47,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: GENERIC_ERROR }, { status: 400 });
   }
 
-  if (hashCode(code) !== otp.code_hash) {
+  if (!otpMatches(code, otp.code_hash)) {
     await supabaseServiceRole
       .from("email_otps")
       .update({ attempts: otp.attempts + 1 })
@@ -63,31 +60,37 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { error: consumeError } = await supabaseServiceRole
+  // Single use, even when two requests race: only the request that actually
+  // flips consumed_at from null may continue.
+  const { data: consumed, error: consumeError } = await supabaseServiceRole
     .from("email_otps")
     .update({ consumed_at: new Date().toISOString() })
     .eq("id", otp.id)
-    .is("consumed_at", null);
+    .is("consumed_at", null)
+    .select("id");
 
-  if (consumeError) {
+  if (consumeError || !consumed || consumed.length !== 1) {
     return NextResponse.json({ error: GENERIC_ERROR }, { status: 400 });
   }
 
   const sourceIp = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
 
   try {
-    const result = await createLead({
-      name: otp.name,
-      email: normalizedEmail,
-      jobId: otp.job_id,
-      sourceIp,
-    });
-    // One verification unlocks the whole Job Portal on this browser.
-    const access = signAccessToken(result.id);
-    const res = NextResponse.json({ ...result, access: !!access, access_expires_at: access?.expires.toISOString() ?? null });
-    if (access) res.cookies.set(ACCESS_COOKIE, access.token, accessCookieOptions(access.expires));
-    else console.error("[verify] PORTAL_ACCESS_SECRET missing or too short; portal access not granted");
-    return res;
+    if (!otp.job_id) {
+      // One-time verification for the whole portal: one visitor record per
+      // email (updated on a new device), one session per browser.
+      const leadId = await recordPortalVisitor({
+        name: otp.name, email: normalizedEmail, marketingOptIn: otp.marketing_opt_in === true, sourceIp,
+      });
+      const access = await createSession(leadId);
+      const res = NextResponse.json({ ok: true, access: !!access, access_expires_at: access?.expires.toISOString() ?? null });
+      if (access) res.cookies.set(ACCESS_COOKIE, access.token, accessCookieOptions(access.expires));
+      else console.error("[verify] session not created (PORTAL_ACCESS_SECRET or portal_sessions missing)");
+      return res;
+    }
+    // Legacy per-job flow (kept for compatibility).
+    const result = await createLead({ name: otp.name, email: normalizedEmail, jobId: otp.job_id, sourceIp });
+    return NextResponse.json({ apply_url: result.apply_url });
   } catch {
     return NextResponse.json({ error: "Something went wrong. Please try again." }, { status: 500 });
   }
