@@ -12,9 +12,9 @@ import ThemeScripts from "@/components/layout/ThemeScripts";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "World Teachers Academy - Get Certified. Get Hired.",
+  title: "World Teachers Academy — Free, Career-Focused Teacher Training",
   description:
-    "World Teachers Academy helps educators get internationally recognized teaching certifications and connects them with verified teaching jobs worldwide.",
+    "Free, practical training for teachers who want to build skills and confidence and prepare for teaching opportunities around the world.",
   icons: {
     icon: [
       { url: "/assets/favicons/favicon.svg", type: "image/svg+xml" },
@@ -60,6 +60,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             variable mapping. */}
         <link rel="stylesheet" href="/assets/css/wta-brand.css" />
         <link rel="stylesheet" href="/assets/css/wta-courses.css" />
+        <link rel="stylesheet" href="/assets/css/wta-home.css" />
       </head>
       <body className="th-magic-cursor theme-style4">
         <MagicCursor />
