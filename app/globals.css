@@ -639,9 +639,20 @@
 }
 .country-flag {
   display: inline-flex;
+  align-items: center;
   gap: 3px;
+  flex: none;
   vertical-align: middle;
   margin-right: 4px;
+}
+/* Flags keep their own proportions; the ring is a neutral mid-grey so
+   white-ground flags (Japan, Korea) show on white and dark ones on navy. */
+.country-flag__img {
+  display: block;
+  flex: none;
+  max-width: none;
+  object-fit: contain;
+  box-shadow: 0 0 0 1px rgba(128, 128, 128, 0.3);
 }
 @media (max-width: 1399px) {
   .main-menu ul.sub-menu.country-menu {

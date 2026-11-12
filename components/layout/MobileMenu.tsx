@@ -43,7 +43,7 @@ export default function MobileMenu() {
                                     <Fragment key={g.region}>
                                         <li className="country-menu__label">{g.region}</li>
                                         {g.countries.map((c) => (
-                                            <li key={c.slug}><a href={`/countries/${c.slug}`}><CountryFlag country={c} /> {c.name}</a></li>
+                                            <li key={c.slug}><a href={`/countries/${c.slug}`}><CountryFlag country={c} decorative /> {c.name}</a></li>
                                         ))}
                                     </Fragment>
                                 ))}

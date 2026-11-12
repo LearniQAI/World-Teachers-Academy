@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { getDescriptionSnippet } from "@/lib/html-text";
+import CountryFlag from "@/components/layout/CountryFlag";
 
 export interface Job {
   id: string;
@@ -64,13 +65,6 @@ const INK_NAVY = "#0F172A";
 const PAPER_DIM = "#9AA4C0";
 const BORDER = "#E2E5EE";
 const JOBS_PAGE_SIZE = 10;
-
-function countryFlag(code: string): string {
-  if (!/^[A-Za-z]{2}$/.test(code)) return "";
-  return String.fromCodePoint(
-    ...[...code.toUpperCase()].map((c) => 127397 + c.charCodeAt(0))
-  );
-}
 
 function formatAmount(n: number): string {
   if (n >= 1_000_000) return `${Math.round(n / 100_000) / 10}M`;
@@ -453,7 +447,7 @@ function FilterControls({
           <option value="all">All Countries</option>
           {countryOptions.map(({ code, name }) => (
             <option key={code} value={code}>
-              {countryFlag(code)} {name}
+              {name}
             </option>
           ))}
         </select>
@@ -503,7 +497,8 @@ function JobRow({ job, onApply }: { job: Job; onApply: () => void }) {
         <div style={{ fontSize: "13px", color: PAPER_DIM, display: "flex", flexWrap: "wrap", gap: "10px" }}>
           <span>{job.company_name ?? "Confidential Employer"}</span>
           <span>
-            {countryFlag(job.country)} {job.city ? `${job.city}, ` : ""}
+            <CountryFlag code={job.country} height={12} frame={false} decorative />
+            {job.city ? `${job.city}, ` : ""}
             {COUNTRY_NAMES[job.country] ?? job.country}
           </span>
           {posted && <span>{posted}</span>}

@@ -31,7 +31,7 @@ export default function Header() {
                                                     <span className="country-menu__label">{g.region}</span>
                                                     <ul className="country-menu__list">
                                                         {g.countries.map((c) => (
-                                                            <li key={c.slug}><a href={`/countries/${c.slug}`}><CountryFlag country={c} /> {c.name}</a></li>
+                                                            <li key={c.slug}><a href={`/countries/${c.slug}`}><CountryFlag country={c} decorative /> {c.name}</a></li>
                                                         ))}
                                                     </ul>
                                                 </li>

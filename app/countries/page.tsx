@@ -35,7 +35,7 @@ Countries Area
               <div className="col-lg-4 col-md-6 th_fade_anim" data-delay={DELAYS[i % 3]} key={country.slug}>
                 <a href={`/countries/${country.slug}`} className="country-card" aria-label={`${country.name} teaching guide`}>
                   <div className="country-card__top">
-                    <span className="country-card__flag" aria-hidden="true"><CountryFlag country={country} height={28} /></span>
+                    <span className="country-card__flag" aria-hidden="true"><CountryFlag country={country} height={28} frame={false} maxWidth={60} /></span>
                     <span className="country-card__code">{country.code}</span>
                   </div>
                   <h2 className="country-card__name">{country.name}</h2>
