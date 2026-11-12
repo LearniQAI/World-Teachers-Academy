@@ -40,7 +40,7 @@ export default function PageHero({
           <div className="col-lg-9">
             <div className="breadcumb-content" style={{ "--space": "45px" } as React.CSSProperties}>
               <span className="sub-title text-theme">
-                <img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />
+                <img src="/assets/img/icon/subtitle-icon1-6.svg" alt="" />
                 {eyebrow}
               </span>
               <h1 className="breadcumb-title">{title}</h1>

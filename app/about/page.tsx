@@ -56,7 +56,7 @@ Our Story
             <div className="col-xl-8 col-lg-10">
               <div className="title-area text-center mb-30">
                 <span className="sub-title text-theme th_fade_anim">
-                  <img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />
+                  <img src="/assets/img/icon/subtitle-icon1-6.svg" alt="" />
                   Our Story
                 </span>
                 <h2 className="sec-title th_fade_anim">
@@ -83,7 +83,7 @@ What We Do
         <div className="container space-top">
           <div className="title-area text-center mb-50">
             <span className="sub-title text-theme th_fade_anim">
-              <img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />
+              <img src="/assets/img/icon/subtitle-icon1-6.svg" alt="" />
               What We Do
             </span>
             <h2 className="sec-title th_fade_anim">
@@ -115,7 +115,7 @@ Our Approach
             <div className="col-xl-8 col-lg-10">
               <div className="title-area text-center mb-30">
                 <span className="sub-title text-theme th_fade_anim">
-                  <img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />
+                  <img src="/assets/img/icon/subtitle-icon1-6.svg" alt="" />
                   Our Approach
                 </span>
                 <h2 className="sec-title th_fade_anim">

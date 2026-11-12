@@ -14,7 +14,7 @@ export default function Countries() {
           <div className="row">
             <div className="col-lg-7">
               <div className="breadcumb-content" style={{ "--space": "45px" } as React.CSSProperties}>
-                <span className="sub-title text-theme"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Countries</span>
+                <span className="sub-title text-theme"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="" />Countries</span>
                 <h1 className="breadcumb-title">Country Guides</h1>
                 <ul className="breadcumb-menu">
                   <li><a href="/">Home</a></li>

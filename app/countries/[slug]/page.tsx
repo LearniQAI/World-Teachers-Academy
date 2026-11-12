@@ -235,7 +235,7 @@ export default async function CountryDetails({ params }: { params: Promise<{ slu
           <div className="row">
             <div className="col-lg-9">
               <div className="breadcumb-content" style={{ "--space": "45px" } as React.CSSProperties}>
-                <span className="sub-title text-theme"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Country Guide</span>
+                <span className="sub-title text-theme"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="" />Country Guide</span>
                 <h1 className="breadcumb-title"><CountryFlag country={country} height={32} /> {country.heading ?? `Teaching in ${country.name}`}</h1>
                 <ul className="breadcumb-menu">
                   <li><a href="/">Home</a></li>

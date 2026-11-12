@@ -94,7 +94,7 @@ export default function Support() {
                 <form action="mail.php" method="POST" className="contact-form ajax-contact">
                   <div className="title-area">
                     <span className="sub-title text-theme">
-                      <img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />
+                      <img src="/assets/img/icon/subtitle-icon1-6.svg" alt="" />
                       Send a Message
                     </span>
                     <h2 className="sec-title">

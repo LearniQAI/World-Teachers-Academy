@@ -28,11 +28,11 @@ Course Area
 ==============================*/}
           <section className="overflow-hidden th-anim-trigger space overflow-hidden" id="course-sec">
             <div className="course-bg-shape1-1 shape-mockup th_fade_anim" data-speed="0.9" data-left="6%" data-top="20%">
-              <img src="/assets/img/shape/course_shape1_1.png" alt="img" />
+              <img src="/assets/img/shape/course_shape1_1.png" alt="" />
             </div>
             <div className="course-bg-shape1-2 shape-mockup" data-right="6%" data-bottom="20%">
               <div className="thumb th-anim-spin">
-                <img src="/assets/img/shape/course_shape1_2.png" alt="img" />
+                <img src="/assets/img/shape/course_shape1_2.png" alt="" />
               </div>
             </div>
             <div className="container">
@@ -98,14 +98,14 @@ Cta Area
 ==============================*/}
           <section className="cta-area-2 space-bottom overflow-hidden" id="contact-sec">
             <div className="cta-bg-shape2-1 shape-mockup th_fade_anim" data-speed="0.9" data-right="6%" data-top="20%">
-              <img src="/assets/img/shape/course_shape1_1.png" alt="img" />
+              <img src="/assets/img/shape/course_shape1_1.png" alt="" />
             </div>
             <div className="container">
               <div className="row gy-30 justify-content-center">
                 <div className="col-lg-6">
                   <div className="cta-card2 cta-card2-dark" style={{ background: "#0B0B0F" }}>
                     <div className="title-area mb-0">
-                      <span className="sub-title text-white th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-2.svg" alt="img" />POPULAR COURSES</span>
+                      <span className="sub-title text-white th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-2.svg" alt="" />POPULAR COURSES</span>
                       <h2 className="sec-title text-white th_fade_anim"><span className="th-text-perspective">Get The Best Courses &amp; Upgrade Your Skills</span></h2>
                       <div className="btn-wrap mt-45 th_fade_anim">
                         <a href="/support" className="th-btn style5">JOIN WITH US<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -118,7 +118,7 @@ Cta Area
                 <div className="col-lg-6">
                   <div className="cta-card2" style={{ background: "#F5F7FF" }}>
                     <div className="title-area mb-0">
-                      <span className="sub-title th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-3.svg" alt="img" />POPULAR COURSES</span>
+                      <span className="sub-title th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-3.svg" alt="" />POPULAR COURSES</span>
                       <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Get The Best Courses &amp; Upgrade Your Skills</span></h2>
                       <div className="btn-wrap mt-40 th_fade_anim">
                         <a href="/support" className="th-btn style6">JOIN WITH US<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">

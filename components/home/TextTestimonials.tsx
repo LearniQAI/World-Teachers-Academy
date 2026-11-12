@@ -28,7 +28,7 @@ export default function TextTestimonials({ variant = "fade" }: { variant?: "fade
     return (
         <>
             <div className={isCarousel ? "title-area text-center" : "title-area"}>
-                <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Testimonials</span>
+                <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="" />Testimonials</span>
                 <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">What Trainer Says</span></h2>
             </div>
             <div className={isCarousel ? "slider-area testi-carousel th_fade_anim" : "slider-area testi-slider7 th_fade_anim"}>
