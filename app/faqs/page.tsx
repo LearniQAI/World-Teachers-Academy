@@ -5,19 +5,19 @@ import PageHero from "@/components/layout/PageHero";
 const faqs = [
   {
     q: "How do I get started?",
-    a: "Browse our course catalog, choose a certification that fits your goals, and enroll. Once certified, you can browse verified teaching positions directly through our Job Portal.",
+    a: "Start with our free Professional Online Teaching & Tutoring Certification — it's open now. Our other programmes open on the dates shown on the Courses page. Along the way, use our Country Guides and Resources to prepare for teaching abroad.",
   },
   {
     q: "Do I need previous teaching experience?",
-    a: "No — our certification programs are designed for both new and experienced educators.",
+    a: "No — our programmes are designed for both new and experienced educators.",
   },
   {
     q: "How does the Job Portal work?",
-    a: "We list verified teaching positions from multiple sources. Applying requires your name and email so we can connect you with the opportunity — you're then directed to complete your application on the original posting.",
+    a: "The Job Portal gathers teaching vacancies from public job listings. To apply, you share your name and email, and you're then taken to the original posting to apply directly with the employer. We don't guarantee placement, so check each employer and offer carefully — our Country Guides explain the warning signs.",
   },
   {
-    q: "Are your certifications recognized internationally?",
-    a: "Our certification programs follow internationally recognized standards accepted by schools and language institutes. Recognition can vary by country and employer — check our Country Guides for destination-specific details.",
+    q: "Will my certificate be recognised abroad?",
+    a: "Recognition of teaching qualifications varies by country and by employer. Our Country Guides explain what each destination typically asks for, so check those requirements before you apply.",
   },
   {
     q: "How do I contact support?",

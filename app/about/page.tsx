@@ -1,4 +1,5 @@
 import PageHero from "@/components/layout/PageHero";
+import { START_TRAINING_URL } from "@/lib/site";
 
 const RIGHT_ARROW = (
   <svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -24,12 +25,12 @@ const CHECK_ICON = (
 
 const whatWeDo = [
   {
-    title: "Certification Programs",
-    text: "TEFL, TESOL, and specialized teaching certifications built around real classroom needs, not generic online-course filler.",
+    title: "Practical Teacher Training",
+    text: "Online teaching, TEFL and specialist programmes built around real classroom situations, not generic online-course filler. Every programme is currently free.",
   },
   {
     title: "Job Portal",
-    text: "Verified teaching positions across multiple countries, updated regularly, with direct application links.",
+    text: "Teaching vacancies gathered from public job listings in many countries, with links to apply directly with the employer.",
   },
   {
     title: "Country Guides",
@@ -43,7 +44,7 @@ export default function About() {
       <PageHero
         eyebrow="About Us"
         title="Built by People Who've Actually Taught"
-        subhead="World Teachers Academy exists for one reason: helping educators get certified, stay current, and find teaching work that genuinely fits their skills — without juggling five different websites to build a career."
+        subhead="World Teachers Academy helps aspiring and experienced educators build practical teaching skills, professional confidence and career readiness — and prepare for teaching opportunities around the world."
         crumb="About Us"
       />
 
@@ -65,11 +66,11 @@ Our Story
               </div>
               <p style={{ fontSize: "18px", color: "#374151", lineHeight: 1.7, textAlign: "center" }}>
                 Most teaching-certification platforms stop at the certificate. We didn&apos;t think that was good
-                enough. Getting certified is only half the job — the other half is actually finding real teaching
-                work once you have it. So we built both pieces into one place: real certification programs, taught
-                by people who&apos;ve stood in front of a classroom, and a live directory of verified teaching jobs
-                across multiple countries, so the path from &lsquo;certified&rsquo; to &lsquo;employed&rsquo;
-                doesn&apos;t require starting over on a different site.
+                enough. A certificate on its own doesn&apos;t prepare you for a real classroom, an interview or life
+                in a new country. So we bring the pieces together in one place: practical training taught by people
+                who&apos;ve stood in front of a classroom, honest country guides, and access to teaching
+                opportunities. We don&apos;t promise jobs — we help you become the teacher schools are looking
+                for, and prepare you to take your next step with confidence.
               </p>
             </div>
           </div>
@@ -144,17 +145,18 @@ Cta Area
               <div className="title-area mb-0 text-lg-start text-center">
                 <h2 className="sec-title text-white">Ready to start?</h2>
                 <p className="text-white mb-0 mt-30">
-                  Browse a certification that fits your goals, or see what teaching positions are open right now.
+                  Start our free Professional Online Teaching &amp; Tutoring Certification today, or explore what
+                  teaching looks like in the countries you&apos;re considering.
                 </p>
               </div>
             </div>
             <div className="col-lg-auto">
               <div className="btn-wrap justify-content-center flex-wrap">
-                <a href="/courses" className="th-btn style5">
-                  BROWSE COURSES{RIGHT_ARROW}
+                <a href={START_TRAINING_URL} className="th-btn style5">
+                  START FREE TRAINING{RIGHT_ARROW}
                 </a>
-                <a href="/job-portal" className="th-btn style2">
-                  BROWSE JOBS{RIGHT_ARROW}
+                <a href="/countries" className="th-btn style2">
+                  EXPLORE COUNTRY GUIDES{RIGHT_ARROW}
                 </a>
               </div>
             </div>
