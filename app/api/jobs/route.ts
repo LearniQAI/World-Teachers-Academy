@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAnon } from "@/lib/supabase";
+import { jobsByIds, relevantJobIndex } from "@/lib/jobs-query";
 
 const PAGE_SIZE = 10;
 
+// Lists active, relevant teaching jobs (see lib/job-relevance.ts), newest
+// first, one page at a time. Read-only.
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const country = searchParams.get("country");
@@ -10,41 +12,21 @@ export async function GET(request: NextRequest) {
   const employmentType = searchParams.get("employment_type");
   const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10) || 1);
 
-  let query = supabaseAnon
-    .from("jobs")
-    .select("*", { count: "exact" })
-    .eq("is_active", true)
-    .order("posted_at", { ascending: false });
+  try {
+    const index = await relevantJobIndex({ country, employmentType, keyword });
+    const total = index.length;
+    const from = (page - 1) * PAGE_SIZE;
+    const jobs = await jobsByIds(index.slice(from, from + PAGE_SIZE).map((r) => r.id));
 
-  if (country) {
-    query = query.eq("country", country);
+    return NextResponse.json({
+      jobs,
+      total,
+      page,
+      page_size: PAGE_SIZE,
+      total_pages: Math.max(1, Math.ceil(total / PAGE_SIZE)),
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String((err as { message?: string })?.message ?? err);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
-  if (employmentType) {
-    query = query.eq("employment_type", employmentType);
-  }
-  if (keyword) {
-    query = query.or(
-      `title.ilike.%${keyword}%,company_name.ilike.%${keyword}%,city.ilike.%${keyword}%`
-    );
-  }
-
-  const from = (page - 1) * PAGE_SIZE;
-  const to = from + PAGE_SIZE - 1;
-  query = query.range(from, to);
-
-  const { data, error, count } = await query;
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-
-  const total = count ?? 0;
-
-  return NextResponse.json({
-    jobs: data,
-    total,
-    page,
-    page_size: PAGE_SIZE,
-    total_pages: Math.max(1, Math.ceil(total / PAGE_SIZE)),
-  });
 }

@@ -61,6 +61,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <link rel="stylesheet" href="/assets/css/wta-brand.css" />
         <link rel="stylesheet" href="/assets/css/wta-courses.css" />
         <link rel="stylesheet" href="/assets/css/wta-home.css" />
+        <link rel="stylesheet" href="/assets/css/wta-jobs.css" />
       </head>
       <body className="th-magic-cursor theme-style4">
         <MagicCursor />

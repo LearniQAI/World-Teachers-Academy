@@ -80,8 +80,8 @@ const GUIDE_VIDEO = "Video Script — “First Impressions,” following a South
 function cta(name: string, code: string): Country["jobPortalCTA"] {
   return {
     heading: `Ready to Teach in ${name}?`,
-    text: "Browse current openings and apply for a position through our Job Portal.",
-    buttonLabel: `APPLY FOR A POSITION IN ${name.toUpperCase()}`,
+    text: `See the teaching opportunities currently listed for ${name} on our Job Portal, or explore openings in other countries.`,
+    buttonLabel: "EXPLORE TEACHING OPPORTUNITIES",
     href: `/job-portal?country=${code}`,
   };
 }
@@ -2912,9 +2912,9 @@ const centralEurope: Country = {
   // Covers two countries, so the Job Portal link isn't pre-filtered to one of them.
   jobPortalCTA: {
     heading: "Ready to Teach in Central Europe?",
-    text: "Browse current openings and apply for a position through our Job Portal.",
-    buttonLabel: "APPLY FOR A POSITION IN CENTRAL EUROPE",
-    href: "/job-portal",
+    text: "See the teaching opportunities currently listed for Poland and Hungary on our Job Portal, or explore openings in other countries.",
+    buttonLabel: "EXPLORE TEACHING OPPORTUNITIES",
+    href: "/job-portal?country=PL",
   },
 };
 

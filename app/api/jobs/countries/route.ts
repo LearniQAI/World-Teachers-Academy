@@ -1,21 +1,19 @@
 import { NextResponse } from "next/server";
-import { supabaseAnon } from "@/lib/supabase";
+import { relevantJobIndex } from "@/lib/jobs-query";
 
-// Lightweight endpoint for filter-bar options + the compact stats strip:
-// distinct countries actually present in live data, plus the total live
-// count. Kept separate from GET /api/jobs so populating the country
-// dropdown never depends on (or gets reset by) the current job filters.
+// Lightweight endpoint for the country selector + the stats strip: the
+// countries that currently have relevant teaching jobs, how many each, and
+// the overall total. Kept separate from GET /api/jobs so the selector never
+// depends on (or gets reset by) the current job filters. Read-only.
 export async function GET() {
-  const { data, error, count } = await supabaseAnon
-    .from("jobs")
-    .select("country", { count: "exact" })
-    .eq("is_active", true);
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  try {
+    const index = await relevantJobIndex({});
+    const counts: Record<string, number> = {};
+    for (const r of index) counts[r.country] = (counts[r.country] ?? 0) + 1;
+    const countries = Object.keys(counts).sort();
+    return NextResponse.json({ countries, counts, total: index.length });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String((err as { message?: string })?.message ?? err);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
-
-  const countries = Array.from(new Set((data ?? []).map((row) => row.country))).sort();
-
-  return NextResponse.json({ countries, total: count ?? data?.length ?? 0 });
 }

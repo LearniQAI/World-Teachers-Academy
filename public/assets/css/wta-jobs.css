@@ -1,0 +1,194 @@
+/* World Teachers Academy: Job Portal country selector, empty state and
+   country note. Loaded after the theme and wta-brand.css. */
+
+:root {
+  --wta-indigo: #4f46e5;
+  --wta-ink: #0f172a;
+  --wta-dim: #64748b;
+  --wta-line: #e2e5ee;
+}
+
+/* ---- Country selector ---------------------------------------------------- */
+.cs { position: relative; width: 100%; }
+.cs-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 56px;
+  padding: 0 18px;
+  border: 1px solid var(--wta-line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--wta-ink);
+  font-size: 15px;
+  text-align: left;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.cs-button:hover { border-color: #c7d2fe; }
+.cs-button:focus-visible { outline: 3px solid #f59e0b; outline-offset: 2px; }
+.cs-button.is-filtered { border-color: var(--wta-indigo); font-weight: 600; }
+.cs-button__name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cs-button__chevron { font-size: 12px; color: var(--wta-dim); transition: transform 0.2s; }
+.cs.is-open .cs-button__chevron { transform: rotate(180deg); }
+
+.cs-panel {
+  position: absolute;
+  z-index: 60;
+  top: calc(100% + 8px);
+  left: 0;
+  width: max(100%, 320px);
+  background: #fff;
+  border: 1px solid var(--wta-line);
+  border-radius: 16px;
+  box-shadow: 0 22px 48px -18px rgba(15, 23, 42, 0.35);
+  overflow: hidden;
+  animation: cs-in 0.16s ease-out;
+}
+.cs--inline .cs-panel {
+  position: static;
+  width: 100%;
+  margin-top: 8px;
+  box-shadow: none;
+}
+@keyframes cs-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.cs-search {
+  position: relative;
+  padding: 10px;
+  border-bottom: 1px solid var(--wta-line);
+}
+.cs-search i {
+  position: absolute;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--wta-dim);
+  font-size: 13px;
+}
+.cs-search input {
+  width: 100%;
+  height: 42px;
+  padding: 0 14px 0 38px;
+  border: 1px solid var(--wta-line);
+  border-radius: 10px;
+  font-size: 14px;
+  background: #f8fafc;
+}
+.cs-search input:focus { outline: 2px solid var(--wta-indigo); outline-offset: 0; background: #fff; }
+
+.cs-list {
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  max-height: 340px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.cs--inline .cs-list { max-height: 46vh; }
+.cs-list ul { list-style: none; margin: 0; padding: 0; }
+.cs-group__label {
+  display: block;
+  padding: 12px 10px 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--wta-dim);
+}
+.cs-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px; /* comfortable touch target */
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: var(--wta-ink);
+  font-size: 15px;
+}
+.cs-option.is-active { background: #eef0ff; }
+.cs-option.is-selected { font-weight: 600; }
+.cs-option.is-selected .cs-option__name::after {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 10px;
+  margin-left: 10px;
+  border: solid var(--wta-indigo);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) translateY(-2px);
+}
+.cs-option.is-empty { color: var(--wta-dim); }
+.cs-option__flag {
+  display: inline-flex;
+  justify-content: center;
+  width: 30px;
+  flex: none;
+  color: var(--wta-indigo);
+}
+.cs-option__flag .country-flag { margin-right: 0; }
+.cs-option__name { flex: 1; min-width: 0; }
+.cs-option__count {
+  flex: none;
+  min-width: 34px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: var(--wta-ink);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.cs-option.is-empty .cs-option__count { background: transparent; color: var(--wta-dim); font-weight: 500; }
+.cs-none { padding: 14px 10px; color: var(--wta-dim); font-size: 14px; }
+
+/* ---- No-openings state ----------------------------------------------------- */
+.jp-empty {
+  max-width: 640px;
+  margin: 24px auto 0;
+  padding: 36px 28px;
+  border: 1px solid var(--wta-line);
+  border-radius: 20px;
+  background: linear-gradient(180deg, #f5f7ff 0%, #fff 100%);
+  text-align: center;
+  animation: jp-rise 0.35s ease-out;
+}
+.jp-empty__flag { display: inline-flex; margin-bottom: 14px; }
+.jp-empty__flag .country-flag { margin-right: 0; }
+.jp-empty h2 { font-size: 24px; margin: 0 0 10px; color: var(--wta-ink); }
+.jp-empty p { margin: 0 auto 22px; max-width: 480px; color: #475569; font-size: 15px; line-height: 1.6; }
+.jp-empty__actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+.jp-empty__actions .th-btn { white-space: nowrap; }
+@keyframes jp-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---- Country note (replaces the old placeholder panel) -------------------- */
+.jp-note {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px 18px;
+  border: 1px solid var(--wta-line);
+  border-radius: 12px;
+  background: #fafbff;
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.55;
+}
+.jp-note .country-flag { margin: 3px 0 0; }
+.jp-note strong { color: var(--wta-ink); }
+.jp-note a { color: var(--wta-indigo); font-weight: 600; white-space: nowrap; }
+
+/* Salary */
+.jp-salary { font-size: 13px; font-weight: 600; color: var(--wta-ink); }
+.jp-salary.is-unspecified { font-weight: 500; color: var(--wta-dim); }
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-panel, .jp-empty { animation: none; }
+  .cs-button, .cs-button__chevron { transition: none; }
+}

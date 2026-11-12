@@ -3,6 +3,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { getDescriptionSnippet } from "@/lib/html-text";
 import CountryFlag from "@/components/layout/CountryFlag";
+import CountrySelector, { type CountryOption } from "@/components/jobs/CountrySelector";
+import { FLAGS } from "@/lib/flags";
+import { COUNTRY_GUIDES } from "@/lib/country-guides-index";
+import { formatSalary } from "@/lib/job-salary";
 
 export interface Job {
   id: string;
@@ -32,6 +36,21 @@ const COUNTRY_NAMES: Record<string, string> = {
   NL: "Netherlands",
 };
 
+// Full visitor-facing country name for an ISO code.
+function countryName(code: string): string {
+  return FLAGS[code]?.name ?? COUNTRY_NAMES[code] ?? code;
+}
+
+// "Melbourne, Australia" — without repeating the country when the feed's
+// location already ends with it ("Western Australia, Australia").
+function placeLabel(city: string | null, code: string): string {
+  const name = countryName(code);
+  if (!city) return name;
+  const c = city.trim();
+  if (c.toLowerCase() === name.toLowerCase() || c.toLowerCase().endsWith(`, ${name.toLowerCase()}`)) return c;
+  return `${c}, ${name}`;
+}
+
 const EMPLOYMENT_TYPE_LABELS: Record<Job["employment_type"], string> = {
   full_time: "Full-time",
   part_time: "Part-time",
@@ -47,16 +66,6 @@ const EMPLOYMENT_TYPE_FILTERS: Array<Job["employment_type"] | "all"> = [
   "unspecified",
 ];
 
-const CURRENCY_SYMBOLS: Record<string, string> = {
-  ZAR: "R",
-  GBP: "£",
-  USD: "$",
-  CAD: "$",
-  AUD: "$",
-  SGD: "$",
-  INR: "₹",
-  EUR: "€",
-};
 
 const INDIGO = "#4F46E5";
 const ORANGE = "#F97316";
@@ -65,29 +74,6 @@ const INK_NAVY = "#0F172A";
 const PAPER_DIM = "#9AA4C0";
 const BORDER = "#E2E5EE";
 const JOBS_PAGE_SIZE = 10;
-
-function formatAmount(n: number): string {
-  if (n >= 1_000_000) return `${Math.round(n / 100_000) / 10}M`;
-  if (n >= 1000) return `${Math.round(n / 1000)}K`;
-  return `${n}`;
-}
-
-// Real ingested data: salary_min is frequently 0 while salary_max carries the
-// real figure (Adzuna's predicted-low-end placeholder), and min often equals
-// max (single quoted figure rather than a true range) — both handled below.
-function formatSalary(job: Job): string | null {
-  const { salary_min, salary_max, currency } = job;
-  if (salary_min == null && salary_max == null) return null;
-  const symbol = currency ? (CURRENCY_SYMBOLS[currency] ?? `${currency} `) : "";
-
-  if (salary_min != null && salary_max != null) {
-    if (salary_min === salary_max) return `${symbol}${formatAmount(salary_min)}`;
-    if (salary_min === 0) return `Up to ${symbol}${formatAmount(salary_max)}`;
-    return `${symbol}${formatAmount(salary_min)}–${symbol}${formatAmount(salary_max)}`;
-  }
-  const only = (salary_min ?? salary_max)!;
-  return `${symbol}${formatAmount(only)}`;
-}
 
 function formatRelativeDate(iso: string | null): string | null {
   if (!iso) return null;
@@ -116,6 +102,8 @@ export default function JobPortal() {
   const [totalResults, setTotalResults] = useState(0);
 
   const [availableCountries, setAvailableCountries] = useState<string[]>([]);
+  const [countryCounts, setCountryCounts] = useState<Record<string, number>>({});
+  const [countriesLoaded, setCountriesLoaded] = useState(false);
   const [totalLive, setTotalLive] = useState<number | null>(null);
 
   const [headerHeight, setHeaderHeight] = useState(96);
@@ -154,9 +142,11 @@ export default function JobPortal() {
       .then((res) => res.json())
       .then((data) => {
         setAvailableCountries(data.countries ?? []);
+        setCountryCounts(data.counts ?? {});
         setTotalLive(typeof data.total === "number" ? data.total : null);
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setCountriesLoaded(true));
   }, []);
 
   useEffect(() => {
@@ -205,23 +195,47 @@ export default function JobPortal() {
   function handleCountryChange(value: string) {
     setCountry(value);
     setPage(1);
+    // Keep the choice in the address bar, so it can be shared or bookmarked
+    // and the browser's back button returns to it.
+    const url = new URL(window.location.href);
+    if (value === "all") url.searchParams.delete("country");
+    else url.searchParams.set("country", value);
+    window.history.replaceState(null, "", url.toString());
   }
   function handleEmploymentTypeChange(value: Job["employment_type"] | "all") {
     setEmploymentType(value);
     setPage(1);
   }
 
-  const countryOptions = useMemo(
-    () => availableCountries.map((code) => ({ code, name: COUNTRY_NAMES[code] ?? code })),
-    [availableCountries]
+  const countryOptions = useMemo<CountryOption[]>(
+    () =>
+      availableCountries
+        .map((code) => ({ code, name: countryName(code), count: countryCounts[code] ?? 0 }))
+        .sort((a, b) => a.name.localeCompare(b.name)),
+    [availableCountries, countryCounts]
   );
+  // Countries we have a guide for but no current openings: listed separately
+  // in the selector so they stay discoverable but clearly marked. A country
+  // arriving by link that is in neither list is added here too, so the
+  // selector shows it rather than "All countries".
+  const noJobCountries = useMemo<CountryOption[]>(() => {
+    const codes = new Set(Object.keys(COUNTRY_GUIDES));
+    if (country !== "all") codes.add(country);
+    return [...codes]
+      .filter((c) => !countryCounts[c] && (FLAGS[c] || c === country))
+      .map((code) => ({ code, name: countryName(code), count: 0 }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [countryCounts, country]);
 
   const activeFilterCount = [country !== "all", employmentType !== "all", keyword.trim() !== ""].filter(
     Boolean
   ).length;
 
-  const filterControls = (
+  const filterControls = (variant: "popover" | "inline") => (
     <FilterControls
+      variant={variant}
+      noJobCountries={noJobCountries}
+      totalLive={totalLive}
       keyword={keyword}
       setKeyword={handleKeywordChange}
       country={country}
@@ -257,7 +271,7 @@ export default function JobPortal() {
             className="d-none d-lg-flex"
             style={{ gap: "12px", alignItems: "center", flexWrap: "wrap" }}
           >
-            {filterControls}
+            {filterControls("popover")}
           </div>
 
           {/* Mobile trigger */}
@@ -294,7 +308,7 @@ export default function JobPortal() {
           >
             <span>
               {totalLive !== null
-                ? `${totalLive} live position${totalLive === 1 ? "" : "s"} across ${countryOptions.length} countr${
+                ? `${totalLive} teaching position${totalLive === 1 ? "" : "s"} across ${countryOptions.length} countr${
                     countryOptions.length === 1 ? "y" : "ies"
                   }`
                 : "Loading live positions..."}
@@ -344,7 +358,7 @@ export default function JobPortal() {
               </button>
             </div>
             <div className="d-flex flex-column" style={{ gap: "14px" }}>
-              {filterControls}
+              {filterControls("inline")}
             </div>
             <button
               type="button"
@@ -352,13 +366,13 @@ export default function JobPortal() {
               style={{ background: INDIGO, borderColor: INDIGO }}
               onClick={() => setMobileFiltersOpen(false)}
             >
-              Show {loading ? "..." : jobs.length} Results
+              Show {loading ? "..." : totalResults} Result{totalResults === 1 ? "" : "s"}
             </button>
           </div>
         </>
       )}
 
-      {country !== "all" && <CountryLegalPanel country={COUNTRY_NAMES[country] ?? country} />}
+      {country !== "all" && <CountryNote code={country} />}
 
       {/*==============================
     Job Listings
@@ -366,9 +380,13 @@ export default function JobPortal() {
       <section id="job-portal-listings" style={{ paddingTop: "24px", paddingBottom: "60px" }}>
         <div className="container">
           {!loading && jobs.length === 0 ? (
-            <div className="text-center" style={{ padding: "60px 0", color: PAPER_DIM }}>
-              <p className="mb-0">No listings match your search — try adjusting the filters.</p>
-            </div>
+            country !== "all" && countriesLoaded && !countryCounts[country] ? (
+              <NoOpenings code={country} onExploreAll={() => handleCountryChange("all")} />
+            ) : (
+              <div className="text-center" style={{ padding: "60px 0", color: PAPER_DIM }}>
+                <p className="mb-0">No listings match your search — try adjusting the filters.</p>
+              </div>
+            )
           ) : (
             <>
               <div className="d-flex flex-column" style={{ gap: "10px" }}>
@@ -388,6 +406,9 @@ export default function JobPortal() {
 }
 
 function FilterControls({
+  variant,
+  noJobCountries,
+  totalLive,
   keyword,
   setKeyword,
   country,
@@ -402,7 +423,10 @@ function FilterControls({
   setCountry: (v: string) => void;
   employmentType: Job["employment_type"] | "all";
   setEmploymentType: (v: Job["employment_type"] | "all") => void;
-  countryOptions: Array<{ code: string; name: string }>;
+  countryOptions: CountryOption[];
+  variant: "popover" | "inline";
+  noJobCountries: CountryOption[];
+  totalLive: number | null;
 }) {
   const selectStyle = (active: boolean): React.CSSProperties => ({
     borderColor: active ? INDIGO : BORDER,
@@ -436,21 +460,15 @@ function FilterControls({
           />
         </div>
       </div>
-      <div style={{ flex: "0 1 200px", minWidth: "170px" }}>
-        <select
-          className="form-select"
+      <div style={{ flex: "0 1 250px", minWidth: "220px" }}>
+        <CountrySelector
           value={country}
-          onChange={(e) => setCountry(e.target.value)}
-          aria-label="Filter by country"
-          style={selectStyle(country !== "all")}
-        >
-          <option value="all">All Countries</option>
-          {countryOptions.map(({ code, name }) => (
-            <option key={code} value={code}>
-              {name}
-            </option>
-          ))}
-        </select>
+          onChange={setCountry}
+          withJobs={countryOptions}
+          withoutJobs={noJobCountries}
+          totalJobs={totalLive}
+          variant={variant}
+        />
       </div>
       <div style={{ flex: "0 1 170px", minWidth: "150px" }}>
         <select
@@ -498,8 +516,7 @@ function JobRow({ job, onApply }: { job: Job; onApply: () => void }) {
           <span>{job.company_name ?? "Confidential Employer"}</span>
           <span>
             <CountryFlag code={job.country} height={12} frame={false} decorative />
-            {job.city ? `${job.city}, ` : ""}
-            {COUNTRY_NAMES[job.country] ?? job.country}
+            {placeLabel(job.city, job.country)}
           </span>
           {posted && <span>{posted}</span>}
         </div>
@@ -525,11 +542,9 @@ function JobRow({ job, onApply }: { job: Job; onApply: () => void }) {
           {EMPLOYMENT_TYPE_LABELS[job.employment_type]}
         </span>
 
-        {salary && (
-          <span style={{ fontSize: "13px", fontWeight: 600, color: INK_NAVY, whiteSpace: "nowrap" }}>
-            {salary}
-          </span>
-        )}
+        <span className={`jp-salary${salary.specified ? "" : " is-unspecified"}`} style={{ whiteSpace: "nowrap" }}>
+          {salary.text}
+        </span>
 
         <button
           type="button"
@@ -640,41 +655,50 @@ function Pagination({
   );
 }
 
-// TODO: LEGAL CONTENT — every field in this panel must be sourced from an
-// official government immigration site or a qualified source before this
-// ships to production. The placeholder text below is intentionally
-// obviously-fake (not plausible-sounding invented visa/legal content) so it
-// cannot be mistaken for real guidance if it accidentally ships as-is.
-const LEGAL_PLACEHOLDER = "[Legal & compensation info pending verification for this country]";
-
-function CountryLegalPanel({ country }: { country: string }) {
+// Shown when a country is selected. General guidance only: no visa,
+// permit or pay details are stated unless they have been verified.
+function CountryNote({ code }: { code: string }) {
+  const name = countryName(code);
+  const guide = COUNTRY_GUIDES[code];
   return (
     <div className="container" style={{ marginTop: "16px" }}>
-      <div
-        style={{
-          border: `1px solid ${BORDER}`,
-          borderRadius: "10px",
-          padding: "14px 18px",
-          background: "#FAFBFF",
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "10px 28px",
-          fontSize: "13px",
-        }}
-      >
-        <strong style={{ color: INK_NAVY, flex: "1 1 100%" }}>{country} — Visa &amp; Legal Overview</strong>
-        <span style={{ color: PAPER_DIM }}>
-          <strong style={{ color: INK_NAVY }}>Legal gateway: </strong>
-          {LEGAL_PLACEHOLDER}
+      <div className="jp-note" role="note">
+        <CountryFlag code={code} height={16} frame={false} decorative />
+        <span>
+          <strong>Teaching in {name}:</strong> visa, work-permit and employment requirements vary by destination and
+          employer. Confirm them with the employer and the official immigration authority before you accept an offer.{" "}
+          {guide && <a href={`/countries/${guide.slug}`}>Read our {guide.guide} guide</a>}
         </span>
-        <span style={{ color: PAPER_DIM }}>
-          <strong style={{ color: INK_NAVY }}>Compensation range: </strong>
-          {LEGAL_PLACEHOLDER}
-        </span>
-        <span style={{ color: PAPER_DIM }}>
-          <strong style={{ color: INK_NAVY }}>Work permit: </strong>
-          {LEGAL_PLACEHOLDER}
-        </span>
+      </div>
+    </div>
+  );
+}
+
+// Shown when the chosen country has no current openings (e.g. arriving from a
+// country guide). Never shows invented vacancies.
+function NoOpenings({ code, onExploreAll }: { code: string; onExploreAll: () => void }) {
+  const name = countryName(code);
+  const guide = COUNTRY_GUIDES[code];
+  return (
+    <div className="jp-empty" role="status">
+      <span className="jp-empty__flag">
+        <CountryFlag code={code} height={36} frame={false} eager />
+      </span>
+      <h2>No teaching openings in {name} right now</h2>
+      <p>
+        There are currently no matching teaching opportunities in {name} on our Job Portal. New listings are added
+        regularly. In the meantime, you can explore teaching jobs in other countries
+        {guide ? ` or keep preparing with our ${guide.guide} guide` : ""}.
+      </p>
+      <div className="jp-empty__actions">
+        <button type="button" className="th-btn" style={{ background: INDIGO, borderColor: INDIGO }} onClick={onExploreAll}>
+          Explore teaching jobs in other countries
+        </button>
+        {guide && (
+          <a href={`/countries/${guide.slug}`} className="th-btn style-border2">
+            Back to the {guide.guide} guide
+          </a>
+        )}
       </div>
     </div>
   );
@@ -950,8 +974,7 @@ function ApplyModal({ job, onClose }: { job: Job; onClose: () => void }) {
           {step === "form" && (
             <form onSubmit={handleFormSubmit}>
               <p style={{ fontSize: "13.5px", color: PAPER_DIM, marginBottom: "20px" }}>
-                {job.company_name ?? "Confidential Employer"} &mdash; {job.city ? `${job.city}, ` : ""}
-                {COUNTRY_NAMES[job.country] ?? job.country}
+                {job.company_name ?? "Confidential Employer"} &mdash; {placeLabel(job.city, job.country)}
               </p>
 
               <div
