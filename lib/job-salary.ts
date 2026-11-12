@@ -26,6 +26,8 @@ export type SalaryInput = {
   currency: string | null;
   salary_period?: "year" | "month" | "week" | "day" | "hour" | null;
   salary_is_predicted?: boolean | null;
+  /** Provider's own wording (Teaching Vacancies); shown verbatim, never parsed. */
+  salary_text?: string | null;
 };
 
 const PERIOD_TEXT = { year: " a year", month: " a month", week: " a week", day: " a day", hour: " an hour" } as const;
@@ -52,12 +54,17 @@ function amount(n: number): string {
   return n.toLocaleString("en-GB", { maximumFractionDigits: 2 });
 }
 
-export function formatSalary({ salary_min, salary_max, currency, salary_period, salary_is_predicted }: SalaryInput): {
+export function formatSalary({ salary_min, salary_max, currency, salary_period, salary_is_predicted, salary_text }: SalaryInput): {
   text: string;
   specified: boolean;
 } {
   const min = salary_min != null && salary_min > 0 ? salary_min : null;
   const max = salary_max != null && salary_max > 0 ? salary_max : null;
+  if (min == null && max == null && salary_text && !salary_is_predicted) {
+    const t = salary_text.trim();
+    // A bare "0" (e.g. "0 unpaid volunteer") is the advertiser's wording; keep it verbatim.
+    return { text: t.length > 70 ? t.slice(0, 67).trimEnd() + "…" : t, specified: true };
+  }
   if ((min == null && max == null) || salary_is_predicted) return { text: SALARY_NOT_SPECIFIED, specified: false };
 
   const code = currency ? `${currency} ` : "";

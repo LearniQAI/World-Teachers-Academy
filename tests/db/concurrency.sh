@@ -5,7 +5,8 @@ PSQL="$1"
 q() { $PSQL -At -c "$1"; }
 q "create table if not exists claims (worker text, id uuid);
    select run_import('teaching_vacancies','GB', tjs('tvc', 1, 200));
-   update jobs set next_check_at = now() - interval '1 minute', check_lock_until = null where source='teaching_vacancies';" >/dev/null
+   update jobs set next_check_at = now() - interval '1 minute', check_lock_until = null where source='teaching_vacancies';
+   update jobs set next_check_at = now() + interval '1 day' where source='teaching_vacancies' and external_id not like 'tvc%';" >/dev/null
 
 echo '== Two verification workers at the same time'
 for w in A B C; do

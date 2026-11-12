@@ -34,6 +34,7 @@ alter table jobs
   add column if not exists is_restricted boolean not null default false, -- true when not open to everyone
   add column if not exists salary_period text check (salary_period in ('year','month','week','day','hour')),
   add column if not exists salary_is_predicted boolean not null default false, -- Adzuna estimate, never shown as fact
+  add column if not exists salary_text text,                  -- provider's own salary wording, shown verbatim (Teaching Vacancies)
   add column if not exists source_name text,                  -- visitor-facing label
   add column if not exists source_url text,
   add column if not exists first_seen_at timestamptz default now(),
@@ -62,12 +63,14 @@ alter table jobs add constraint jobs_status_check check (status in (
   'not_relevant'       -- hidden; not an education role
 ));
 
--- Back-fill: nothing changes for visitors on day one.
+-- Back-fill: nothing changes for visitors on day one. Also reconciles rows the
+-- v1 import changed while this was switched off (after a rollback): is_active wins.
 update jobs set status = case when is_active then 'active' else 'removed_at_source' end,
                 status_reason = case when is_active then null else 'legacy_inactive' end,
                 status_changed_at = coalesce(status_changed_at, updated_at),
                 last_seen_in_feed_at = coalesce(last_seen_in_feed_at, case when is_active then updated_at end)
- where status_changed_at is null;
+ where status_changed_at is null
+    or (status in ('active','uncertain')) is distinct from is_active;
 
 create index if not exists jobs_status_idx      on jobs (status);
 create index if not exists jobs_scope_idx       on jobs (source, country, status);
@@ -182,7 +185,7 @@ end $$;
 
 -- Upsert one page of normalised jobs (a JSON array) for a run.
 -- Each element: {external_id,title,description,company_name,country,city,employment_type,
---   salary_min,salary_max,currency,salary_period,salary_is_predicted,apply_url,posted_at,
+--   salary_min,salary_max,currency,salary_period,salary_is_predicted,salary_text,apply_url,posted_at,
 --   closes_at,eligibility,is_restricted,source_name,source_url,fingerprint,is_relevant}
 create or replace function upsert_feed_jobs(p_run_id bigint, p_jobs jsonb) returns jsonb
 language plpgsql as $$
@@ -206,13 +209,13 @@ begin
     end if;
 
     insert into jobs as t (source, external_id, title, description, company_name, country, city,
-                     employment_type, salary_min, salary_max, currency, salary_period, salary_is_predicted,
+                     employment_type, salary_min, salary_max, currency, salary_period, salary_is_predicted, salary_text,
                      apply_url, posted_at, closes_at, eligibility, is_restricted, source_name, source_url,
                      fingerprint, status, status_reason, last_seen_run_id, last_seen_in_feed_at,
                      consecutive_missing, next_check_at)
     values (r.source, j->>'external_id', j->>'title', j->>'description', j->>'company_name', j->>'country',
             j->>'city', j->>'employment_type', (j->>'salary_min')::numeric, (j->>'salary_max')::numeric,
-            j->>'currency', j->>'salary_period', coalesce((j->>'salary_is_predicted')::boolean, false),
+            j->>'currency', j->>'salary_period', coalesce((j->>'salary_is_predicted')::boolean, false), left(j->>'salary_text', 200),
             j->>'apply_url', (j->>'posted_at')::timestamptz, (j->>'closes_at')::timestamptz,
             j->>'eligibility', coalesce((j->>'is_restricted')::boolean, false), j->>'source_name',
             j->>'source_url', j->>'fingerprint',
@@ -223,7 +226,7 @@ begin
       title = excluded.title, description = excluded.description, company_name = excluded.company_name,
       country = excluded.country, city = excluded.city, employment_type = excluded.employment_type,
       salary_min = excluded.salary_min, salary_max = excluded.salary_max, currency = excluded.currency,
-      salary_period = excluded.salary_period, salary_is_predicted = excluded.salary_is_predicted,
+      salary_period = excluded.salary_period, salary_is_predicted = excluded.salary_is_predicted, salary_text = excluded.salary_text,
       apply_url = excluded.apply_url, posted_at = excluded.posted_at, closes_at = excluded.closes_at,
       eligibility = excluded.eligibility, is_restricted = excluded.is_restricted,
       source_name = excluded.source_name, source_url = excluded.source_url, fingerprint = excluded.fingerprint,
@@ -257,8 +260,13 @@ end $$;
 -- guard blocks it. Returns a summary including any alerts raised.
 -- p_accept_drop: set true ONLY by a person who has checked that a big drop is
 -- real (e.g. the provider changed its results); never by the scheduler.
+-- p_exhaustive: true only when the run fetched the provider's WHOLE result set
+-- for this scope. A capped run (e.g. Adzuna's first 50 results) proves nothing
+-- about a job that is absent — it may simply be on page 2 — so absence is not
+-- counted; such jobs are handled by expire_jobs() (not seen for 21 days).
 create or replace function finish_source_run(p_run_id bigint, p_complete boolean, p_error text default null,
-                                             p_accept_drop boolean default false)
+                                             p_accept_drop boolean default false,
+                                             p_exhaustive boolean default true)
 returns jsonb language plpgsql as $$
 declare
   r job_source_runs%rowtype;
@@ -280,11 +288,16 @@ begin
    order by started_at desc limit 1;
 
   if not p_complete then v_guard := 'incomplete_run';
+  elsif not p_exhaustive then v_guard := 'not_exhaustive';
   elsif r.fetched = 0 then v_guard := 'empty_run';
   elsif v_prev is not null and r.fetched < v_prev * 0.5 and not p_accept_drop then
     v_guard := 'count_dropped_' || round(100 - 100.0 * r.fetched / v_prev) || 'pct';
   end if;
 
+  if v_prev is null then  -- for alerts only: compare with the last complete run
+    select fetched into v_prev from job_source_runs
+     where source = r.source and scope = r.scope and complete and id <> r.id order by started_at desc limit 1;
+  end if;
   if v_prev is not null and v_prev > 0 then v_drop := 100 - 100.0 * r.fetched / v_prev; end if;
 
   if v_guard is null then
@@ -325,7 +338,7 @@ end $$;
 
 -- 5. Expiry (hourly) ----------------------------------------------------------------------------
 create or replace function expire_jobs() returns jsonb language plpgsql as $$
-declare v_closed int; v_stale int; v_active int; v_hidden_today int;
+declare v_closed int; v_stale int; v_unseen int; v_active int; v_hidden_today int;
 begin
   with x as (
     update jobs set status = 'expired', status_reason = 'closing_date_passed'
@@ -339,6 +352,14 @@ begin
        and (last_seen_in_feed_at is null or last_seen_in_feed_at < now() - interval '7 days')
     returning id) select count(*) into v_stale from x;
 
+  -- Any job without a closing date that its feed has not listed for 21 days
+  -- (covers capped feeds where absence from one run proves nothing).
+  with x as (
+    update jobs set status = 'expired', status_reason = 'not_seen_in_feed_21_days'
+     where status in ('active','uncertain') and closes_at is null
+       and last_seen_in_feed_at < now() - interval '21 days'
+    returning id) select count(*) into v_unseen from x;
+
   select count(*) into v_active from jobs where status in ('active','uncertain');
   select count(*) into v_hidden_today from job_status_events
    where created_at > now() - interval '1 day'
@@ -349,7 +370,7 @@ begin
         jsonb_build_object('hidden_last_24h', v_hidden_today, 'active_now', v_active));
     end if;
   end if;
-  return jsonb_build_object('closing_date_passed', v_closed, 'stale', v_stale);
+  return jsonb_build_object('closing_date_passed', v_closed, 'stale', v_stale, 'not_seen_21_days', v_unseen);
 end $$;
 
 -- 6. Verification -------------------------------------------------------------------------------
@@ -537,7 +558,7 @@ alter table job_reports       enable row level security;
 -- Supabase grants EXECUTE on new functions to anon and authenticated by
 -- default, so revoking from PUBLIC alone is not enough.
 revoke execute on function begin_source_run(text, text), upsert_feed_jobs(bigint, jsonb),
-  finish_source_run(bigint, boolean, text, boolean), expire_jobs(), claim_jobs_for_check(int, text[]),
+  finish_source_run(bigint, boolean, text, boolean, boolean), expire_jobs(), claim_jobs_for_check(int, text[]),
   record_check(uuid, text, text, int, jsonb), mark_duplicates(), report_job(uuid, text, text)
   from public, anon, authenticated;
 
@@ -559,7 +580,7 @@ commit;
 --   create policy "Public can read active jobs" on jobs for select using (is_active = true);
 --   drop trigger if exists jobs_log_status_change on jobs; drop trigger if exists jobs_status_bookkeeping on jobs;
 --   drop function if exists jobs_log_status_change(), jobs_status_bookkeeping(), begin_source_run(text,text),
---     upsert_feed_jobs(bigint,jsonb), finish_source_run(bigint,boolean,text,boolean), expire_jobs(),
+--     upsert_feed_jobs(bigint,jsonb), finish_source_run(bigint,boolean,text,boolean,boolean), expire_jobs(),
 --     claim_jobs_for_check(int,text[]), record_check(uuid,text,text,int,jsonb), mark_duplicates(),
 --     job_source_rank(text), report_job(uuid,text,text);
 --   drop table if exists job_reports, job_alerts, job_status_events, job_checks, job_source_runs;

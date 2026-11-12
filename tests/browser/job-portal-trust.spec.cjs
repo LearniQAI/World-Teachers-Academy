@@ -42,10 +42,11 @@ await p.keyboard.press('Escape'); await p.goto('http://localhost:8767/jp.html?co
 
 // USAJOBS: eligibility badge and "Who can apply"
 txt=await p.evaluate(()=>document.body.innerText);
-check(/Eligibility restrictions/.test(txt),'restricted badge in list');
-await p.locator('div:has(> div > .jt-line:has-text("Eligibility restrictions")) >> role=button[name="View Job"]').first().click(); await p.waitForTimeout(400);
+check(/Eligibility (restrictions|conditions apply)/.test(txt),'restricted badge in list');
+await p.locator('div:has(> div > .jt-line:has-text("Eligibility")) >> role=button[name="View Job"]').first().click(); await p.waitForTimeout(400);
 txt=await p.evaluate(()=>document.body.innerText);
 check(/Who can apply/.test(txt)&&/Current federal employees, veterans and military spouses/.test(txt),'eligibility shown verbatim');
+check(/Most federal jobs require US citizenship/.test(txt),'USAJOBS citizenship notice shown');
 await p.screenshot({path:O+'trust-dialog-usajobs-desktop.png'});
 await p.close();
 

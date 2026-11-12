@@ -197,7 +197,7 @@ reset role;
 select ok(:anon_reports = 0 and :anon_events = 0, 'public cannot read reports or audit history');
 do $$ declare f text; begin
   foreach f in array array['begin_source_run(text,text)','upsert_feed_jobs(bigint,jsonb)',
-    'finish_source_run(bigint,boolean,text,boolean)','expire_jobs()','claim_jobs_for_check(integer,text[])',
+    'finish_source_run(bigint,boolean,text,boolean,boolean)','expire_jobs()','claim_jobs_for_check(integer,text[])',
     'record_check(uuid,text,text,integer,jsonb)','mark_duplicates()','report_job(uuid,text,text)'] loop
     perform ok(not has_function_privilege('anon', f, 'execute'), 'anon cannot run ' || f);
     perform ok(not has_function_privilege('authenticated', f, 'execute'), 'signed-in users cannot run ' || f);
@@ -222,6 +222,30 @@ update jobs set status = 'expired', status_reason = 'test' where source='adzuna'
   (select external_id from jobs where source='adzuna' and country='US' order by external_id limit 300);
 select expire_jobs();
 select ok((select count(*) from job_alerts where kind='mass_hide') = 1, 'hiding many jobs in a day raises one alert');
+
+\echo '== Capped feeds (first page only): absence proves nothing'
+select ok((run_import('adzuna','ZA', tjs('za', 1, 50, 'ZA'), true, false, false)->>'guard') = 'not_exhaustive', 'capped run: removals not applied');
+select run_import('adzuna','ZA', tjs('za', 51, 100, 'ZA'), true, false, false);
+select run_import('adzuna','ZA', tjs('za', 101, 150, 'ZA'), true, false, false);
+select ok((select count(*) from jobs where source='adzuna' and country='ZA' and status='active') = 150,
+          'jobs that dropped off page 1 for two runs are still shown');
+select ok((select max(consecutive_missing) from jobs where country='ZA') = 0, 'capped runs do not count misses');
+update jobs set last_seen_in_feed_at = now() - interval '22 days' where external_id in ('za1','za2','za3');
+update jobs set last_seen_in_feed_at = now() - interval '20 days' where external_id = 'za4';
+select ok((expire_jobs()->>'not_seen_21_days')::int = 3, 'not listed for 21+ days: hidden');
+select ok(st('adzuna','za4') = 'active', 'not listed for 20 days: still shown');
+select run_import('adzuna','ZA', jsonb_build_array(tj('za1','ZA')), true, false, false);
+select ok(st('adzuna','za1') = 'active', 'listed again: shown again');
+
+\echo '== A wrong relevance rule is undone by the next import'
+select run_import('reed','GB', jsonb_build_array(tj('rel-1','GB','{"title":"Nursery Nurse","is_relevant":false}'),
+  tj('r-none','GB', jsonb_build_object('apply_url','https://example.test/new-link')),
+  tj('r-future','GB', jsonb_build_object('closes_at', (now() + interval '10 days')::text)), tj('reed-dup','GB','{"fingerprint":"maths|oak school|leeds|GB","salary_min":30000}')));
+select ok(st('reed','rel-1') = 'not_relevant', 'old rule: hidden as not relevant (kept, not deleted)');
+select run_import('reed','GB', jsonb_build_array(tj('rel-1','GB','{"title":"Nursery Nurse","is_relevant":true}'),
+  tj('r-none','GB', jsonb_build_object('apply_url','https://example.test/new-link')),
+  tj('r-future','GB', jsonb_build_object('closes_at', (now() + interval '10 days')::text)), tj('reed-dup','GB','{"fingerprint":"maths|oak school|leeds|GB","salary_min":30000}')));
+select ok(st('reed','rel-1') = 'active', 'fixed rule: shown again on the next import');
 
 \echo '== Nothing is ever deleted'
 select ok((select count(*) from jobs where external_id like 'gb%' and source='adzuna') = 100, 'removed GB jobs still stored');

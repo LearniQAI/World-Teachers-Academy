@@ -28,6 +28,8 @@ export type NormalisedJob = {
   salary_max: number | null;
   currency: string | null;
   salary_period: SalaryPeriod | null;
+  /** The provider's own salary wording, shown verbatim when it can't be read as numbers safely. */
+  salary_text: string | null;
   salary_is_predicted: boolean;
   apply_url: string;
   posted_at: string | null;
@@ -97,8 +99,14 @@ export function countryCode(value: string | null | undefined): string | null {
   return COUNTRY_BY_NAME[v.toLowerCase()] ?? null;
 }
 
-function finish(j: Omit<NormalisedJob, "fingerprint" | "is_relevant">): NormalisedJob {
-  return { ...j, fingerprint: fingerprint(j.title, j.company_name, j.city, j.country), is_relevant: isRelevantTeachingJob(j.title) };
+function finish(j: Omit<NormalisedJob, "fingerprint" | "is_relevant" | "salary_text"> & { salary_text?: string | null },
+                relevant?: boolean): NormalisedJob {
+  return {
+    ...j,
+    salary_text: j.salary_text ?? null,
+    fingerprint: fingerprint(j.title, j.company_name, j.city, j.country),
+    is_relevant: relevant ?? isRelevantTeachingJob(j.title),
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -183,8 +191,30 @@ export function normaliseReed(job: ReedJob, stripHtml: (s: string) => string = (
 
 // ---------------------------------------------------------------------------
 // Teaching Vacancies (DfE) — https://teaching-vacancies.service.gov.uk/api/v1/jobs.json
-// schema.org JobPosting. Open Government Licence v3.0.
+// schema.org JobPosting. Open Government Licence v3.0. Checked against a live
+// response on 12 Nov 2026 (tests/fixtures/teaching-vacancies-page1.json):
+//   - there is no job id field; the listing URL is the stable id;
+//   - baseSalary.value.value is FREE TEXT ("£25,614.00 - £26,016.00 Annually
+//     (FTE)\n\rActual pro rata salary £17,863", "M1 - M6", "MPS-UPS"), often with
+//     both full-time and pro-rata figures. It is stored verbatim (first line) in
+//     salary_text and never parsed into numbers, so nothing is misread;
+//   - occupationalCategory says what kind of school job it is; admin, finance,
+//     catering, cleaning, site and business roles are not education roles.
 // ---------------------------------------------------------------------------
+const TV_EDUCATION = new Set(["teacher", "teaching_assistant", "head_of_department_or_curriculum", "education_support",
+  "student_support_learning_and_progress", "sendco"]);
+const TV_NOT_EDUCATION = new Set(["administration_hr_data_and_finance", "catering_cleaning_and_site_management",
+  "business_support_administration_and_corporate_services"]);
+export function teachingVacancyRelevant(title: string, category: string | null | undefined): boolean {
+  if (category && TV_EDUCATION.has(category)) return !!title?.trim();
+  if (category && TV_NOT_EDUCATION.has(category)) return false;
+  return isRelevantTeachingJob(title); // leadership, pastoral, other support: decided by the title
+}
+function salaryTextLine(v: unknown): string | null {
+  if (typeof v !== "string") return null;
+  const first = v.split(/[\r\n]+/)[0].replace(/\s+/g, " ").trim();
+  return first ? first.slice(0, 120) : null;
+}
 type TvPlace = { address?: { addressLocality?: string; addressRegion?: string; addressCountry?: string } };
 export type TeachingVacancy = {
   id?: string; identifier?: { value?: string } | string; title: string; description?: string; url: string;
@@ -192,6 +222,7 @@ export type TeachingVacancy = {
   hiringOrganization?: { name?: string };
   jobLocation?: TvPlace | TvPlace[];
   baseSalary?: { currency?: string; value?: { minValue?: number | string; maxValue?: number | string; value?: number | string; unitText?: string } };
+  occupationalCategory?: string | null;
 };
 const SCHEMA_PERIOD: Record<string, SalaryPeriod> = { YEAR: "year", MONTH: "month", WEEK: "week", DAY: "day", HOUR: "hour" };
 function schemaEmployment(t: string | string[] | undefined): NormalisedJob["employment_type"] {
@@ -205,6 +236,8 @@ export function normaliseTeachingVacancy(job: TeachingVacancy, stripHtml: (s: st
   const place = Array.isArray(job.jobLocation) ? job.jobLocation[0] : job.jobLocation;
   const id = typeof job.identifier === "string" ? job.identifier : job.identifier?.value ?? job.id ?? job.url;
   const v = job.baseSalary?.value;
+  // Structured numbers only when the provider sends them as numbers (min/max fields).
+  const structured = v?.minValue != null || v?.maxValue != null;
   return finish({
     external_id: String(id),
     title: job.title?.trim() ?? "",
@@ -213,10 +246,11 @@ export function normaliseTeachingVacancy(job: TeachingVacancy, stripHtml: (s: st
     country: countryCode(place?.address?.addressCountry ?? "GB"),
     city: place?.address?.addressLocality ?? place?.address?.addressRegion ?? null,
     employment_type: schemaEmployment(job.employmentType),
-    salary_min: num(v?.minValue ?? v?.value),
-    salary_max: num(v?.maxValue ?? v?.value),
+    salary_min: structured ? num(v?.minValue) : null,
+    salary_max: structured ? num(v?.maxValue) : null,
     currency: job.baseSalary?.currency ?? (v ? "GBP" : null),
     salary_period: SCHEMA_PERIOD[(v?.unitText ?? "").toUpperCase()] ?? null,
+    salary_text: structured ? null : salaryTextLine(v?.value),
     salary_is_predicted: false,
     apply_url: job.url,
     posted_at: iso(job.datePosted),
@@ -225,7 +259,7 @@ export function normaliseTeachingVacancy(job: TeachingVacancy, stripHtml: (s: st
     is_restricted: false,
     source_name: "Teaching Vacancies (Department for Education)",
     source_url: job.url,
-  });
+  }, teachingVacancyRelevant(job.title, job.occupationalCategory));
 }
 
 // ---------------------------------------------------------------------------

@@ -1,0 +1,727 @@
+{
+ "_note": "Recorded from https://teaching-vacancies.service.gov.uk/api/v1/jobs.json?page=1 on 2026-11-12 (Open Government Licence v3.0). Descriptions trimmed; streetAddress/postcode/hiringOrganization extras removed; last two items keep live titles/salary strings with placeholder schools.",
+ "info": {
+  "license": {
+   "name": "Open Government License",
+   "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+  },
+  "termsOfService": "https://teaching-vacancies.service.gov.uk/pages/terms-and-conditions#terms-and-conditions-for-api-users"
+ },
+ "data": [
+  {
+   "@context": "http://schema.org",
+   "@type": "JobPosting",
+   "title": "Exam Invigilator",
+   "datePosted": "2026-11-12",
+   "description": "<p>(description trimmed in this fixture)</p>",
+   "occupationalCategory": "other_support",
+   "employmentType": [
+    "PART_TIME"
+   ],
+   "industry": "Education",
+   "jobLocation": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "London",
+     "addressRegion": "London",
+     "addressCountry": "GB"
+    }
+   },
+   "url": "https://teaching-vacancies.service.gov.uk/jobs/exam-invigilator-finchley-catholic-high-school",
+   "hiringOrganization": {
+    "@type": "Organization",
+    "name": "Finchley Catholic High School"
+   },
+   "validThrough": "2026-11-30T12:00:00+00:00",
+   "baseSalary": {
+    "@type": "MonetaryAmount",
+    "currency": "GBP",
+    "value": {
+     "@type": "QuantitativeValue",
+     "value": "£14.80 per hour",
+     "unitText": "HOUR"
+    }
+   }
+  },
+  {
+   "@context": "http://schema.org",
+   "@type": "JobPosting",
+   "title": "Core Curr Leader with Whole School Areas of Resp",
+   "datePosted": "2026-11-12",
+   "description": "<p>(description trimmed in this fixture)</p>",
+   "occupationalCategory": "head_of_department_or_curriculum",
+   "employmentType": [
+    "FULL_TIME"
+   ],
+   "industry": "Education",
+   "jobLocation": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Blackpool",
+     "addressRegion": "North West",
+     "addressCountry": "GB"
+    }
+   },
+   "url": "https://teaching-vacancies.service.gov.uk/jobs/core-curr-leader-with-whole-school-areas-of-resp",
+   "hiringOrganization": {
+    "@type": "Organization",
+    "name": "Educational Diversity"
+   },
+   "validThrough": "2026-11-27T12:00:00+00:00",
+   "baseSalary": {
+    "@type": "MonetaryAmount",
+    "currency": "GBP",
+    "value": {
+     "@type": "QuantitativeValue",
+     "value": "59,137.00 - 65,278.00",
+     "unitText": "YEAR"
+    }
+   }
+  },
+  {
+   "@context": "http://schema.org",
+   "@type": "JobPosting",
+   "title": "Administrative Assistant",
+   "datePosted": "2026-11-12",
+   "description": "<p>(description trimmed in this fixture)</p>",
+   "occupationalCategory": "administration_hr_data_and_finance",
+   "employmentType": [
+    "PART_TIME"
+   ],
+   "industry": "Education",
+   "jobLocation": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Plymouth",
+     "addressRegion": "South West",
+     "addressCountry": "GB"
+    }
+   },
+   "url": "https://teaching-vacancies.service.gov.uk/jobs/administrative-assistant-mary-dean-s-cofe-primary-school-and-nursery",
+   "hiringOrganization": {
+    "@type": "Organization",
+    "name": "Mary Dean's CofE Primary School and Nursery"
+   },
+   "validThrough": "2026-11-27T09:00:00+00:00",
+   "baseSalary": {
+    "@type": "MonetaryAmount",
+    "currency": "GBP",
+    "value": {
+     "@type": "QuantitativeValue",
+     "value": "£6777 to £6884 ACTUAL",
+     "unitText": "YEAR"
+    }
+   }
+  },
+  {
+   "@context": "http://schema.org",
+   "@type": "JobPosting",
+   "title": "House Support Assistant",
+   "datePosted": "2026-11-12",
+   "description": "<p>(description trimmed in this fixture)</p>",
+   "occupationalCategory": "pastoral_health_and_welfare",
+   "employmentType": [
+    "FULL_TIME",
+    "PART_TIME"
+   ],
+   "industry": "Education",
+   "jobLocation": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Chatham",
+     "addressRegion": "South East",
+     "addressCountry": "GB"
+    }
+   },
+   "url": "https://teaching-vacancies.service.gov.uk/jobs/house-support-assistant-the-victory-academy-chatham-kent",
+   "hiringOrganization": {
+    "@type": "Organization",
+    "name": "The Victory Academy"
+   },
+   "validThrough": "2026-11-29T23:59:00+00:00"
+  },
+  {
+   "@context": "http://schema.org",
+   "@type": "JobPosting",
+   "title": "SEND Improvement Lead",
+   "datePosted": "2026-11-12",
+   "description": "<p>(description trimmed in this fixture)</p>",
+   "occupationalCategory": "other_leadership",
+   "employmentType": [
+    "FULL_TIME"
+   ],
+   "industry": "Education",
+   "jobLocation": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Blackburn",
+     "addressRegion": null,
+     "addressCountry": "GB"
+    }
+   },
+   "url": "https://teaching-vacancies.service.gov.uk/jobs/send-improvement-lead-star-academies",
+   "hiringOrganization": {
+    "@type": "Organization",
+    "name": "Star Academies"
+   },
+   "validThrough": "2026-11-30T23:59:00+00:00",
+   "baseSalary": {
+    "@type": "MonetaryAmount",
+    "currency": "GBP",
+    "value": {
+     "@type": "QuantitativeValue",
+     "value": "£77,676 to £94,349 per annum",
+     "unitText": "YEAR"
+    }
+   }
+  },
+  {
+   "@context": "http://schema.org",
+   "@type": "JobPosting",
+   "title": "Cover Supervisor",
+   "datePosted": "2026-11-12",
+   "description": "<p>(description trimmed in this fixture)</p>",
+   "occupationalCategory": "teaching_assistant",
+   "employmentType": [
+    "FULL_TIME"
+   ],
+   "industry": "Education",
+   "jobLocation": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Reading",
+     "addressRegion": "South East",
+     "addressCountry": "GB"
+    }
+   },
+   "url": "https://teaching-vacancies.service.gov.uk/jobs/cover-supervisor-reading-girls-school",
+   "hiringOrganization": {
+    "@type": "Organization",
+    "name": "Reading Girls' School"
+   },
+   "validThrough": "2026-11-30T12:00:00+00:00",
+   "baseSalary": {
+    "@type": "MonetaryAmount",
+    "currency": "GBP",
+    "value": {
+     "@type": "QuantitativeValue",
+     "value": "£20,225.00 - £22,249.00 Annually (Actual)\n\rRG3 (5-11) Monday to Friday - 8.15am to 3.30pm",
+     "unitText": "YEAR"
+    }
+   }
+  },
+  {
+   "@context": "http://schema.org",
+   "@type": "JobPosting",
+   "title": "Behaviour Lead and Flexipod Officer",
+   "datePosted": "2026-11-12",
+   "description": "<p>(description trimmed in this fixture)</p>",
+   "occupationalCategory": "teacher",
+   "employmentType": [
+    "FULL_TIME"
+   ],
+   "industry": "Education",
+   "jobLocation": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Didcot",
+     "addressRegion": "South East",
+     "addressCountry": "GB"
+    }
+   },
+   "url": "https://teaching-vacancies.service.gov.uk/jobs/behaviour-lead-and-flexipod-officer",
+   "hiringOrganization": {
+    "@type": "Organization",
+    "name": "Didcot Girls' School"
+   },
+   "validThrough": "2026-11-26T08:00:00+00:00",
+   "baseSalary": {
+    "@type": "MonetaryAmount",
+    "currency": "GBP",
+    "value": {
+     "@type": "QuantitativeValue",
+     "value": "£29,059.49 - £31,585.18 Annually (Actual)\n\rCombination of Grade 8 and 9  as detailed below",
+     "unitText": "YEAR"
+    }
+   }
+  },
+  {
+   "@context": "http://schema.org",
+   "@type": "JobPosting",
+   "title": "1:1 Support Assistant",
+   "datePosted": "2026-11-12",
+   "description": "<p>(description trimmed in this fixture)</p>",
+   "occupationalCategory": "teaching_assistant",
+   "employmentType": [
+    "PART_TIME"
+   ],
+   "industry": "Education",
+   "jobLocation": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Worcester",
+     "addressRegion": "West Midlands",
+     "addressCountry": "GB"
+    }
+   },
+   "url": "https://teaching-vacancies.service.gov.uk/jobs/1-1-support-assistant-76e8b8b4-95e6-4c0c-9890-1f36b5f6e534",
+   "hiringOrganization": {
+    "@type": "Organization",
+    "name": "Carnforth School"
+   },
+   "validThrough": "2026-11-27T23:59:00+00:00",
+   "baseSalary": {
+    "@type": "MonetaryAmount",
+    "currency": "GBP",
+    "value": {
+     "@type": "QuantitativeValue",
+     "value": "£25,614.00 - £26,016.00 Annually (FTE)\n\rActual pro rata salary £17,863 per annum",
+     "unitText": "YEAR"
+    }
+   }
+  },
+  {
+   "@context": "http://schema.org",
+   "@type": "JobPosting",
+   "title": "Teacher - Coritani Tribe at Kirton Lindsey Primary Academy",
+   "datePosted": "2026-11-12",
+   "description": "<p>(description trimmed in this fixture)</p>",
+   "occupationalCategory": "teacher",
+   "employmentType": [
+    "FULL_TIME"
+   ],
+   "industry": "Education",
+   "jobLocation": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Scunthorpe",
+     "addressRegion": "Yorkshire and the Humber",
+     "addressCountry": "GB"
+    }
+   },
+   "url": "https://teaching-vacancies.service.gov.uk/jobs/teacher-coritani-tribe-at-kirton-lindsey-primary-academy",
+   "hiringOrganization": {
+    "@type": "Organization",
+    "name": "Coritani Academy"
+   },
+   "validThrough": "2026-11-16T09:00:00+00:00",
+   "baseSalary": {
+    "@type": "MonetaryAmount",
+    "currency": "GBP",
+    "value": {
+     "@type": "QuantitativeValue",
+     "value": "£32,544.00 Annually (Actual)",
+     "unitText": "YEAR"
+    }
+   }
+  },
+  {
+   "@context": "http://schema.org",
+   "@type": "JobPosting",
+   "title": "Estates and Sustainability Manager",
+   "datePosted": "2026-11-12",
+   "description": "<p>(description trimmed in this fixture)</p>",
+   "occupationalCategory": "catering_cleaning_and_site_management",
+   "employmentType": [
+    "FULL_TIME"
+   ],
+   "industry": "Education",
+   "jobLocation": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Worcester",
+     "addressRegion": null,
+     "addressCountry": "GB"
+    }
+   },
+   "url": "https://teaching-vacancies.service.gov.uk/jobs/estates-and-sustainability-manager",
+   "hiringOrganization": {
+    "@type": "Organization",
+    "name": "The Black Pear Trust"
+   },
+   "validThrough": "2026-11-26T12:00:00+00:00",
+   "baseSalary": {
+    "@type": "MonetaryAmount",
+    "currency": "GBP",
+    "value": {
+     "@type": "QuantitativeValue",
+     "value": "£53,051.00 - £56,293.00 Annually (FTE)\n\rNJC PO4 SCP 40-43",
+     "unitText": "YEAR"
+    }
+   }
+  },
+  {
+   "@context": "http://schema.org",
+   "@type": "JobPosting",
+   "title": "Mental Health and Wellbeing Co-ordinator",
+   "datePosted": "2026-11-12",
+   "description": "<p>(description trimmed in this fixture)</p>",
+   "occupationalCategory": "pastoral_health_and_welfare",
+   "employmentType": [
+    "FULL_TIME"
+   ],
+   "industry": "Education",
+   "jobLocation": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "London",
+     "addressRegion": "London",
+     "addressCountry": "GB"
+    }
+   },
+   "url": "https://teaching-vacancies.service.gov.uk/jobs/mental-health-and-wellbeing-co-ordinator-morley-college-london",
+   "hiringOrganization": {
+    "@type": "Organization",
+    "name": "Morley College London"
+   },
+   "validThrough": "2026-11-27T09:00:00+00:00",
+   "baseSalary": {
+    "@type": "MonetaryAmount",
+    "currency": "GBP",
+    "value": {
+     "@type": "QuantitativeValue",
+     "value": "£33,199",
+     "unitText": "YEAR"
+    }
+   }
+  },
+  {
+   "@context": "http://schema.org",
+   "@type": "JobPosting",
+   "title": "Higher Level Support Assistant",
+   "datePosted": "2026-11-12",
+   "description": "<p>(description trimmed in this fixture)</p>",
+   "occupationalCategory": "education_support",
+   "employmentType": [
+    "FULL_TIME"
+   ],
+   "industry": "Education",
+   "jobLocation": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Blyth",
+     "addressRegion": "North East",
+     "addressCountry": "GB"
+    }
+   },
+   "url": "https://teaching-vacancies.service.gov.uk/jobs/higher-level-support-assistant-gilbert-ward-academy",
+   "hiringOrganization": {
+    "@type": "Organization",
+    "name": "Gilbert Ward Academy"
+   },
+   "validThrough": "2026-11-23T12:00:00+00:00"
+  },
+  {
+   "@context": "http://schema.org",
+   "@type": "JobPosting",
+   "title": "School Business Manager",
+   "datePosted": "2026-11-12",
+   "description": "<p>(description trimmed in this fixture)</p>",
+   "occupationalCategory": "other_leadership",
+   "employmentType": [
+    "FULL_TIME",
+    "PART_TIME"
+   ],
+   "industry": "Education",
+   "jobLocation": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "London",
+     "addressRegion": "London",
+     "addressCountry": "GB"
+    }
+   },
+   "url": "https://teaching-vacancies.service.gov.uk/jobs/school-business-manager-holy-trinity-and-saint-silas-cofe-primary-school-nw1",
+   "hiringOrganization": {
+    "@type": "Organization",
+    "name": "Holy Trinity and Saint Silas CofE Primary School, NW1"
+   },
+   "validThrough": "2026-12-07T09:00:00+00:00",
+   "baseSalary": {
+    "@type": "MonetaryAmount",
+    "currency": "GBP",
+    "value": {
+     "@type": "QuantitativeValue",
+     "value": "between £52,921 and £56,154",
+     "unitText": "YEAR"
+    }
+   }
+  },
+  {
+   "@context": "http://schema.org",
+   "@type": "JobPosting",
+   "title": "Inclusion Practitioner",
+   "datePosted": "2026-11-12",
+   "description": "<p>(description trimmed in this fixture)</p>",
+   "occupationalCategory": "student_support_learning_and_progress",
+   "employmentType": [
+    "FULL_TIME",
+    "PART_TIME"
+   ],
+   "industry": "Education",
+   "jobLocation": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Wakefield",
+     "addressRegion": "Yorkshire and the Humber",
+     "addressCountry": "GB"
+    }
+   },
+   "url": "https://teaching-vacancies.service.gov.uk/jobs/inclusion-practitioner-heart-of-yorkshire-education-group",
+   "hiringOrganization": {
+    "@type": "Organization",
+    "name": "Heart of Yorkshire Education Group"
+   },
+   "validThrough": "2026-11-25T23:59:00+00:00",
+   "baseSalary": {
+    "@type": "MonetaryAmount",
+    "currency": "GBP",
+    "value": {
+     "@type": "QuantitativeValue",
+     "value": "£28,316 to £29,754 pro rata",
+     "unitText": "YEAR"
+    }
+   }
+  },
+  {
+   "@context": "http://schema.org",
+   "@type": "JobPosting",
+   "title": "SEN Intervention Assistant (across 3 schools)",
+   "datePosted": "2026-11-12",
+   "description": "<p>(description trimmed in this fixture)</p>",
+   "occupationalCategory": "education_support",
+   "employmentType": [
+    "PART_TIME"
+   ],
+   "industry": "Education",
+   "jobLocation": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "London",
+     "addressRegion": "London",
+     "addressCountry": "GB"
+    }
+   },
+   "url": "https://teaching-vacancies.service.gov.uk/jobs/sen-intervention-assistant-across-3-schools",
+   "hiringOrganization": {
+    "@type": "Organization",
+    "name": "Ark White City Primary Academy"
+   },
+   "validThrough": "2027-11-12T18:00:04+00:00",
+   "baseSalary": {
+    "@type": "MonetaryAmount",
+    "currency": "GBP",
+    "value": {
+     "@type": "QuantitativeValue",
+     "value": "£29,801 - £31,083 per year",
+     "unitText": "YEAR"
+    }
+   }
+  },
+  {
+   "@context": "http://schema.org",
+   "@type": "JobPosting",
+   "title": "Catering Assistant",
+   "datePosted": "2026-11-12",
+   "description": "<p>(description trimmed in this fixture)</p>",
+   "occupationalCategory": "catering_cleaning_and_site_management",
+   "employmentType": [
+    "FULL_TIME"
+   ],
+   "industry": "Education",
+   "jobLocation": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Weybridge",
+     "addressRegion": "South East",
+     "addressCountry": "GB"
+    }
+   },
+   "url": "https://teaching-vacancies.service.gov.uk/jobs/catering-assistant-brooklands-college",
+   "hiringOrganization": {
+    "@type": "Organization",
+    "name": "Brooklands College"
+   },
+   "validThrough": "2026-11-30T23:59:00+00:00",
+   "baseSalary": {
+    "@type": "MonetaryAmount",
+    "currency": "GBP",
+    "value": {
+     "@type": "QuantitativeValue",
+     "value": "27,386.01",
+     "unitText": "YEAR"
+    }
+   }
+  },
+  {
+   "@context": "http://schema.org",
+   "@type": "JobPosting",
+   "title": "Welfare & Safeguarding Lead (Gravesend)",
+   "datePosted": "2026-11-12",
+   "description": "<p>(description trimmed in this fixture)</p>",
+   "occupationalCategory": "leadership_and_management",
+   "employmentType": [
+    "FULL_TIME",
+    "PART_TIME"
+   ],
+   "industry": "Education",
+   "jobLocation": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Dartford",
+     "addressRegion": "South East",
+     "addressCountry": "GB"
+    }
+   },
+   "url": "https://teaching-vacancies.service.gov.uk/jobs/welfare-safeguarding-lead-gravesend",
+   "hiringOrganization": {
+    "@type": "Organization",
+    "name": "North Kent College"
+   },
+   "validThrough": "2026-11-29T23:59:00+00:00",
+   "baseSalary": {
+    "@type": "MonetaryAmount",
+    "currency": "GBP",
+    "value": {
+     "@type": "QuantitativeValue",
+     "value": "Total package of £39,367.37 per annum (£33,176.46 salary + £6,190.91 holiday pay).",
+     "unitText": "YEAR"
+    }
+   }
+  },
+  {
+   "@context": "http://schema.org",
+   "@type": "JobPosting",
+   "title": "Head of Business Development (VRN000003)",
+   "datePosted": "2026-11-12",
+   "description": "<p>(description trimmed in this fixture)</p>",
+   "occupationalCategory": "business_support_administration_and_corporate_services",
+   "employmentType": [
+    "FULL_TIME"
+   ],
+   "industry": "Education",
+   "jobLocation": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Rotherham",
+     "addressRegion": "Yorkshire and the Humber",
+     "addressCountry": "GB"
+    }
+   },
+   "url": "https://teaching-vacancies.service.gov.uk/jobs/head-of-business-development-vrn000003",
+   "hiringOrganization": {
+    "@type": "Organization",
+    "name": "RNN Group"
+   },
+   "validThrough": "2026-11-30T23:59:00+00:00",
+   "baseSalary": {
+    "@type": "MonetaryAmount",
+    "currency": "GBP",
+    "value": {
+     "@type": "QuantitativeValue",
+     "value": "£47,712 a year + benefits",
+     "unitText": "YEAR"
+    }
+   }
+  },
+  {
+   "@context": "http://schema.org",
+   "@type": "JobPosting",
+   "title": "Assistant Head of Year",
+   "datePosted": "2026-11-12",
+   "description": "<p>(description trimmed in this fixture)</p>",
+   "occupationalCategory": "pastoral_health_and_welfare",
+   "employmentType": [
+    "FULL_TIME"
+   ],
+   "industry": "Education",
+   "jobLocation": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "London",
+     "addressRegion": "London",
+     "addressCountry": "GB"
+    }
+   },
+   "url": "https://teaching-vacancies.service.gov.uk/jobs/assistant-head-of-year-fixture",
+   "hiringOrganization": {
+    "@type": "Organization",
+    "name": "Fixture School (title seen in live feed)"
+   },
+   "validThrough": "2026-11-30T12:00:00+00:00",
+   "baseSalary": {
+    "@type": "MonetaryAmount",
+    "currency": "GBP",
+    "value": {
+     "@type": "QuantitativeValue",
+     "value": "M1 - M6",
+     "unitText": "YEAR"
+    }
+   }
+  },
+  {
+   "@context": "http://schema.org",
+   "@type": "JobPosting",
+   "title": "Science Technician",
+   "datePosted": "2026-11-12",
+   "description": "<p>(description trimmed in this fixture)</p>",
+   "occupationalCategory": "other_support",
+   "employmentType": [
+    "FULL_TIME"
+   ],
+   "industry": "Education",
+   "jobLocation": {
+    "@type": "Place",
+    "address": {
+     "@type": "PostalAddress",
+     "addressLocality": "Leeds",
+     "addressRegion": null,
+     "addressCountry": "GB"
+    }
+   },
+   "url": "https://teaching-vacancies.service.gov.uk/jobs/science-technician-fixture",
+   "hiringOrganization": {
+    "@type": "Organization",
+    "name": "Fixture School (title seen in live feed)"
+   },
+   "validThrough": "2026-11-30T12:00:00+00:00",
+   "baseSalary": {
+    "@type": "MonetaryAmount",
+    "currency": "GBP",
+    "value": {
+     "@type": "QuantitativeValue",
+     "value": "MPS-UPS",
+     "unitText": "YEAR"
+    }
+   }
+  }
+ ],
+ "links": {
+  "self": "https://teaching-vacancies.service.gov.uk/api/v1/jobs.json?page=1",
+  "next": "https://teaching-vacancies.service.gov.uk/api/v1/jobs.json?page=2",
+  "last": "https://teaching-vacancies.service.gov.uk/api/v1/jobs.json?page=66"
+ },
+ "meta": {
+  "totalPages": 66,
+  "count": 6525
+ }
+}

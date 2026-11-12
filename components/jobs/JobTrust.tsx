@@ -24,7 +24,11 @@ export function AdzunaAttribution({ country }: { country: string }) {
   );
 }
 
-type TrustJob = TrustFields & { id: string; country: string; company_name: string | null };
+type TrustJob = TrustFields & { id: string; country: string; company_name: string | null; source_url?: string | null };
+
+// US federal (USAJOBS) jobs almost always carry citizenship or other
+// eligibility conditions, even when "open to the public".
+const hasConditions = (j: TrustJob) => !!j.is_restricted || j.source === "usajobs";
 
 /** Compact line under the job title in the list. */
 export function JobTrustLine({ job }: { job: TrustJob }) {
@@ -33,9 +37,10 @@ export function JobTrustLine({ job }: { job: TrustJob }) {
     <div className="jt-line">
       {job.source === "adzuna" ? <AdzunaAttribution country={job.country} /> : <span>via {sourceLabel(job)}</span>}
       {closes && <span>Closes {closes}</span>}
-      {job.is_restricted && (
+      {hasConditions(job) && (
         <span className="jt-badge jt-badge--restricted">
-          <i className="far fa-user-lock" aria-hidden="true"></i> Eligibility restrictions
+          <i className="far fa-user-lock" aria-hidden="true"></i>{" "}
+          {job.is_restricted ? "Eligibility restrictions" : "Eligibility conditions apply"}
         </span>
       )}
     </div>
@@ -54,7 +59,17 @@ export function JobTrustDetails({ job, place }: { job: TrustJob; place: string }
         <div><dt>Location</dt><dd>{place}</dd></div>
         <div>
           <dt>Source</dt>
-          <dd>{job.source === "adzuna" ? <AdzunaAttribution country={job.country} /> : sourceLabel(job)}</dd>
+          <dd>
+            {job.source === "adzuna" ? (
+              <AdzunaAttribution country={job.country} />
+            ) : job.source_url ? (
+              <a href={job.source_url} target="_blank" rel="noopener noreferrer">
+                {sourceLabel(job)} <span className="visually-hidden">(official listing, opens in a new tab)</span>
+              </a>
+            ) : (
+              sourceLabel(job)
+            )}
+          </dd>
         </div>
         <div><dt>Posted</dt><dd>{shortDate(job.posted_at) ?? "Not stated"}</dd></div>
         <div><dt>Closing date</dt><dd>{closes ?? "Not provided by the source"}</dd></div>
@@ -70,11 +85,17 @@ export function JobTrustDetails({ job, place }: { job: TrustJob; place: string }
       <p className={`jt-status jt-status--${v.tone}`}>
         <strong>{v.label}.</strong> {v.explain}
       </p>
-      {(job.is_restricted || job.eligibility) && (
+      {(hasConditions(job) || job.eligibility) && (
         <div className="jt-eligibility" role="note">
           <strong>Who can apply</strong>
-          <p>{job.eligibility ?? "The source says this job is not open to everyone."}</p>
-          <p className="jt-small">Taken from {sourceLabel(job)}. Check the full requirements on the job page before applying.</p>
+          <p>{job.eligibility ?? (job.is_restricted ? "The source says this job is not open to everyone." : "Not stated in the listing.")}</p>
+          {job.source === "usajobs" && (
+            <p>
+              This is a US federal government job. Most federal jobs require US citizenship, and some are open only to
+              current federal employees, veterans or military families.
+            </p>
+          )}
+          <p className="jt-small">Taken from {sourceLabel(job)}. Check the full requirements in the official listing before applying.</p>
         </div>
       )}
       {job.source === "teaching_vacancies" && (

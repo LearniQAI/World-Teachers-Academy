@@ -13,5 +13,7 @@ $P -d $DB -f legacy.sql
 $P -d $DB -f ../../docs/proposals/2026-11-job-verification.sql
 $P -d $DB -o /dev/null -f helpers.sql
 $P -d $DB -o /dev/null -f verification.test.sql
+$P -d $DB -o /dev/null -f teaching-vacancies.test.sql
+$P -d $DB -o /dev/null -f rollback.test.sql
 bash concurrency.sh "$P -d $DB"
 $P -d $DB -At -c "select count(*) filter (where passed) || ' passed, ' || count(*) filter (where not passed) || ' failed' from test_results"
