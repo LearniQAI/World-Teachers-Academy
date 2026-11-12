@@ -30,7 +30,7 @@ export default async function Home() {
                                     </div>
                                     <div className="about-tag">
                                         <div className="about-experience-tag">
-                                            <span className="circle-title-anime">TRAIN. CERTIFY. TEACH ANYWHERE IN THE WORLD.BUILT BY TEACHERS, FOR TEACHERS, WORLDWIDE</span>
+                                            <span className="circle-title-anime">BUILD YOUR SKILLS • ELEVATE YOUR CAREER • INSPIRE GENERATIONS •</span>
                                         </div>
                                     </div>
                                     <div className="hero-info-chart jump-reverse ">
