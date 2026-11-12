@@ -406,7 +406,7 @@ export default function JobPortal() {
         </div>
       </section>
 
-      {applyJob && <ApplyModal job={applyJob} onClose={() => setApplyJob(null)} />}
+      {applyJob && <JobDialog job={applyJob} onClose={() => setApplyJob(null)} />}
     </>
   );
 }
@@ -496,7 +496,11 @@ function FilterControls({
 }
 
 function JobRow({ job, onApply }: { job: Job; onApply: () => void }) {
-  const salary = formatSalary(job);
+  // Adzuna figures may be Adzuna's own estimates. Until the import records
+  // which ones are (salary_is_predicted = false), none are shown as salaries.
+  const salary = formatSalary(
+    job.source === "adzuna" && job.salary_is_predicted !== false ? { ...job, salary_is_predicted: true } : job,
+  );
   const posted = formatRelativeDate(job.posted_at);
   const snippet = getDescriptionSnippet(job.description);
 
@@ -713,148 +717,23 @@ function NoOpenings({ code, onExploreAll }: { code: string; onExploreAll: () => 
 
 const RESEND_COOLDOWN_SECONDS = 30;
 
-function ApplyModal({ job, onClose }: { job: Job; onClose: () => void }) {
-  const [step, setStep] = useState<"form" | "code" | "done">("form");
+// Job details dialog. External vacancies open on the original job site
+// directly: no name, email or verification code is asked for, and WTA does
+// not receive or forward applications.
+const APPLY_SITE_NAMES: Record<string, string> = {
+  adzuna: "Adzuna", reed: "Reed", teaching_vacancies: "Teaching Vacancies", usajobs: "USAJOBS",
+};
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [consent, setConsent] = useState(false);
-  const [consentError, setConsentError] = useState(false);
-  const [sendingCode, setSendingCode] = useState(false);
-  const [requestError, setRequestError] = useState<string | null>(null);
-
-  const [code, setCode] = useState("");
-  const [verifying, setVerifying] = useState(false);
-  const [verifyError, setVerifyError] = useState<string | null>(null);
-  const [resendCooldown, setResendCooldown] = useState(0);
+function JobDialog({ job, onClose }: { job: Job; onClose: () => void }) {
+  const site = job.source ? APPLY_SITE_NAMES[job.source] ?? job.source_name ?? "the job site" : "the job site";
 
   useEffect(() => {
-    if (resendCooldown <= 0) return;
-    const timer = setInterval(() => setResendCooldown((s) => Math.max(s - 1, 0)), 1000);
-    return () => clearInterval(timer);
-  }, [resendCooldown]);
-
-  const [finalApplyUrl, setFinalApplyUrl] = useState(job.apply_url);
-
-  function goToApplyUrl(applyUrl: string | null) {
-    const url = applyUrl ?? job.apply_url;
-    setFinalApplyUrl(url);
-    setStep("done");
-    window.open(url, "_blank", "noopener,noreferrer");
-  }
-
-  async function requestCode(): Promise<boolean> {
-    setRequestError(null);
-    try {
-      const res = await fetch("/api/leads/request-code", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          email,
-          job_id: job.id,
-          consent_given: consent,
-        }),
-      });
-      const data = await res.json();
-
-      if (!res.ok) {
-        setRequestError(data.error ?? "Something went wrong. Please try again.");
-        return false;
-      }
-
-      if (data.skip_verification) {
-        goToApplyUrl(data.apply_url ?? null);
-        return true;
-      }
-
-      setResendCooldown(RESEND_COOLDOWN_SECONDS);
-      return true;
-    } catch {
-      setRequestError("Something went wrong. Please try again.");
-      return false;
-    }
-  }
-
-  async function handleFormSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!consent) {
-      setConsentError(true);
-      return;
-    }
-    setConsentError(false);
-    setSendingCode(true);
-    const ok = await requestCode();
-    setSendingCode(false);
-    if (ok && step === "form") setStep("code");
-  }
-
-  async function handleResend() {
-    if (resendCooldown > 0 || sendingCode) return;
-    setSendingCode(true);
-    await requestCode();
-    setSendingCode(false);
-  }
-
-  function handleChangeEmail() {
-    setStep("form");
-    setCode("");
-    setVerifyError(null);
-  }
-
-  async function handleVerifySubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!/^\d{6}$/.test(code)) {
-      setVerifyError("Enter the 6-digit code from your email.");
-      return;
-    }
-    setVerifyError(null);
-    setVerifying(true);
-
-    try {
-      const res = await fetch("/api/leads/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, job_id: job.id, code }),
-      });
-      const data = await res.json();
-
-      if (!res.ok) {
-        setVerifyError(data.error ?? "Something went wrong. Please try again.");
-        setVerifying(false);
-        return;
-      }
-
-      goToApplyUrl(data.apply_url ?? null);
-    } catch {
-      setVerifyError("Something went wrong. Please try again.");
-      setVerifying(false);
-    }
-  }
-
-  const fieldInputStyle: React.CSSProperties = {
-    width: "100%",
-    padding: "13px 16px",
-    fontSize: "14.5px",
-    borderRadius: "11px",
-    border: `1.5px solid ${BORDER}`,
-    outline: "none",
-    color: INK_NAVY,
-    background: "#F9FAFC",
-    boxSizing: "border-box",
-    transition: "border-color 0.15s ease, background 0.15s ease",
-  };
-
-  const primaryButtonStyle: React.CSSProperties = {
-    background: `linear-gradient(135deg, ${ORANGE}, #EA6A0C)`,
-    borderColor: ORANGE,
-    borderRadius: "11px",
-    padding: "14px",
-    fontSize: "15px",
-    fontWeight: 700,
-    boxShadow: "0 8px 20px rgba(249, 115, 22, 0.28)",
-    letterSpacing: "0.2px",
-  };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
 
   return (
     <>
@@ -872,6 +751,7 @@ function ApplyModal({ job, onClose }: { job: Job; onClose: () => void }) {
       <div
         role="dialog"
         aria-modal="true"
+        aria-labelledby="job-dialog-title"
         style={{
           position: "fixed",
           inset: 0,
@@ -880,54 +760,32 @@ function ApplyModal({ job, onClose }: { job: Job; onClose: () => void }) {
           alignItems: "center",
           justifyContent: "center",
           padding: "16px",
+          pointerEvents: "none",
         }}
       >
         <div
-          onClick={(e) => e.stopPropagation()}
           style={{
+            pointerEvents: "auto",
             background: "#fff",
             borderRadius: "22px",
             width: "100%",
-            maxWidth: "460px",
+            maxWidth: "520px",
             maxHeight: "90vh",
             overflowY: "auto",
-            padding: "36px 36px 32px",
+            padding: "32px 32px 28px",
             boxShadow: "0 30px 80px rgba(15, 23, 42, 0.35), 0 2px 6px rgba(15, 23, 42, 0.08)",
             border: "1px solid rgba(15, 23, 42, 0.04)",
           }}
         >
-          <div className="d-flex justify-content-between align-items-start" style={{ marginBottom: "22px" }}>
-            <div>
-              {step !== "done" && (
-                <span
-                  style={{
-                    display: "inline-block",
-                    fontSize: "11px",
-                    fontWeight: 700,
-                    letterSpacing: "0.8px",
-                    color: INDIGO,
-                    textTransform: "uppercase",
-                    marginBottom: "6px",
-                  }}
-                >
-                  {step === "code" ? "Step 2 of 2" : "Step 1 of 2"}
-                </span>
-              )}
-              <h3 style={{ fontSize: "20px", margin: 0, color: INK_NAVY, fontWeight: 700, lineHeight: 1.3 }}>
-                {step === "done"
-                  ? "Application Received"
-                  : step === "code"
-                    ? "Verify your email"
-                    : "Apply for this role"}
-              </h3>
-              {step !== "done" && (
-                <p style={{ fontSize: "13.5px", color: PAPER_DIM, margin: "6px 0 0" }}>{job.title}</p>
-              )}
-            </div>
+          <div className="d-flex justify-content-between align-items-start" style={{ marginBottom: "18px", gap: "12px" }}>
+            <h3 id="job-dialog-title" style={{ fontSize: "20px", margin: 0, color: INK_NAVY, fontWeight: 700, lineHeight: 1.3 }}>
+              {job.title}
+            </h3>
             <button
               type="button"
               aria-label="Close"
               onClick={onClose}
+              autoFocus
               style={{
                 background: "#F1F3F9",
                 border: "none",
@@ -942,254 +800,38 @@ function ApplyModal({ job, onClose }: { job: Job; onClose: () => void }) {
                 cursor: "pointer",
               }}
             >
-              <i className="far fa-times"></i>
+              <i className="far fa-times" aria-hidden="true"></i>
             </button>
           </div>
 
-          <div style={{ height: "1px", background: BORDER, marginBottom: "24px" }} />
+          <JobTrustDetails job={job} place={placeLabel(job.city, job.country)} />
 
-          {step === "done" && (
-            <div style={{ textAlign: "center", padding: "12px 0 8px" }}>
-              <div
-                style={{
-                  width: "56px",
-                  height: "56px",
-                  borderRadius: "999px",
-                  background: "rgba(20, 184, 166, 0.12)",
-                  color: TEAL,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  margin: "0 auto 18px",
-                  fontSize: "24px",
-                }}
-              >
-                <i className="far fa-check"></i>
-              </div>
-              <p className="mb-0" style={{ fontSize: "14.5px", color: INK_NAVY }}>
-                Thanks! The job posting is opening in a new tab.
-              </p>
-              <p className="mb-0 mt-2" style={{ fontSize: "13px", color: PAPER_DIM }}>
-                Nothing opened?{" "}
-                <a href={finalApplyUrl} target="_blank" rel="noopener noreferrer" style={{ color: INDIGO }}>
-                  Open the job posting
-                </a>
-              </p>
-            </div>
-          )}
+          <a
+            href={job.apply_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="th-btn w-100"
+            style={{
+              background: `linear-gradient(135deg, ${ORANGE}, #EA6A0C)`,
+              borderColor: ORANGE,
+              borderRadius: "11px",
+              padding: "14px",
+              fontSize: "15px",
+              fontWeight: 700,
+              textAlign: "center",
+            }}
+          >
+            Apply on {site}
+            <span className="visually-hidden"> (opens in a new tab)</span>
+          </a>
+          <p style={{ fontSize: "12.5px", color: PAPER_DIM, margin: "14px 0 0", lineHeight: 1.5 }}>
+            You apply directly on {site === "the job site" ? "the original job site" : site}. World Teachers Academy
+            doesn&rsquo;t receive or forward your application.
+          </p>
 
-          {step === "form" && (
-            <form onSubmit={handleFormSubmit}>
-              <JobTrustDetails job={job} place={placeLabel(job.city, job.country)} />
-
-              <div
-                style={{
-                  display: "flex",
-                  gap: "10px",
-                  alignItems: "flex-start",
-                  background: "rgba(79, 70, 229, 0.06)",
-                  border: `1px solid rgba(79, 70, 229, 0.18)`,
-                  borderLeft: `3px solid ${INDIGO}`,
-                  borderRadius: "10px",
-                  padding: "12px 14px",
-                  marginBottom: "22px",
-                }}
-              >
-                <i className="far fa-envelope" style={{ color: INDIGO, fontSize: "14px", marginTop: "2px" }}></i>
-                <p style={{ margin: 0, fontSize: "13px", fontWeight: 700, color: INK_NAVY, lineHeight: 1.5 }}>
-                  Please provide your working email address so employers can contact you about this role.
-                </p>
-              </div>
-
-              <div style={{ marginBottom: "16px" }}>
-                <label
-                  htmlFor="apply-name"
-                  style={{
-                    display: "block",
-                    fontSize: "12px",
-                    fontWeight: 600,
-                    color: INK_NAVY,
-                    marginBottom: "6px",
-                  }}
-                >
-                  Full name
-                </label>
-                <input
-                  id="apply-name"
-                  type="text"
-                  placeholder="e.g. Jane Dlamini"
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  style={fieldInputStyle}
-                />
-              </div>
-
-              <div style={{ marginBottom: "18px" }}>
-                <label
-                  htmlFor="apply-email"
-                  style={{
-                    display: "block",
-                    fontSize: "12px",
-                    fontWeight: 600,
-                    color: INK_NAVY,
-                    marginBottom: "6px",
-                  }}
-                >
-                  Email address
-                </label>
-                <input
-                  id="apply-email"
-                  type="email"
-                  placeholder="you@example.com"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  style={fieldInputStyle}
-                />
-              </div>
-
-              <label
-                htmlFor="apply-consent"
-                style={{
-                  display: "flex",
-                  gap: "10px",
-                  alignItems: "flex-start",
-                  marginBottom: "22px",
-                  cursor: "pointer",
-                }}
-              >
-                <input
-                  type="checkbox"
-                  id="apply-consent"
-                  checked={consent}
-                  onChange={(e) => {
-                    setConsent(e.target.checked);
-                    if (e.target.checked) setConsentError(false);
-                  }}
-                  style={{ position: "absolute", opacity: 0, width: 0, height: 0 }}
-                />
-                <span
-                  aria-hidden="true"
-                  style={{
-                    width: "18px",
-                    height: "18px",
-                    marginTop: "1px",
-                    flexShrink: 0,
-                    borderRadius: "5px",
-                    border: `1.5px solid ${consent ? INDIGO : BORDER}`,
-                    background: consent ? INDIGO : "#fff",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    transition: "background 0.15s ease, border-color 0.15s ease",
-                  }}
-                >
-                  {consent && <i className="far fa-check" style={{ color: "#fff", fontSize: "10px" }}></i>}
-                </span>
-                <span style={{ fontSize: "13px", color: PAPER_DIM, lineHeight: 1.5 }}>
-                  I agree to be contacted about this and similar teaching opportunities.
-                </span>
-              </label>
-
-              {consentError && (
-                <p style={{ color: "#E01717", fontSize: "13px", marginBottom: "16px" }}>
-                  Please agree to be contacted before submitting.
-                </p>
-              )}
-              {requestError && (
-                <p style={{ color: "#E01717", fontSize: "13px", marginBottom: "16px" }}>
-                  {requestError}
-                </p>
-              )}
-              <button type="submit" className="th-btn w-100" style={primaryButtonStyle} disabled={sendingCode}>
-                {sendingCode ? "Sending code..." : "Continue"}
-              </button>
-            </form>
-          )}
-
-          {step === "form" && (
-            <div style={{ marginTop: "18px", paddingTop: "14px", borderTop: `1px solid ${BORDER}` }}>
-              <ReportJob jobId={job.id} />
-            </div>
-          )}
-
-          {step === "code" && (
-            <form onSubmit={handleVerifySubmit}>
-              <p style={{ fontSize: "13.5px", color: PAPER_DIM, marginBottom: "22px", lineHeight: 1.5 }}>
-                We sent a 6-digit code to <strong style={{ color: INK_NAVY }}>{email}</strong>. Enter it
-                below to continue.
-              </p>
-              <div style={{ marginBottom: "20px" }}>
-                <label
-                  htmlFor="apply-code"
-                  style={{
-                    display: "block",
-                    fontSize: "12px",
-                    fontWeight: 600,
-                    color: INK_NAVY,
-                    marginBottom: "6px",
-                  }}
-                >
-                  Verification code
-                </label>
-                <input
-                  id="apply-code"
-                  type="text"
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
-                  placeholder="000000"
-                  maxLength={6}
-                  required
-                  value={code}
-                  onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                  style={{
-                    ...fieldInputStyle,
-                    letterSpacing: "10px",
-                    fontSize: "22px",
-                    fontWeight: 700,
-                    textAlign: "center",
-                    padding: "14px 16px",
-                  }}
-                />
-              </div>
-              {verifyError && (
-                <p style={{ color: "#E01717", fontSize: "13px", marginBottom: "16px" }}>{verifyError}</p>
-              )}
-              <button
-                type="submit"
-                className="th-btn w-100"
-                style={{ ...primaryButtonStyle, marginBottom: "20px" }}
-                disabled={verifying}
-              >
-                {verifying ? "Verifying..." : "Verify & Continue"}
-              </button>
-              <div className="d-flex justify-content-between" style={{ fontSize: "13px" }}>
-                <button
-                  type="button"
-                  onClick={handleChangeEmail}
-                  style={{ background: "none", border: "none", color: PAPER_DIM, padding: 0, cursor: "pointer", fontWeight: 600 }}
-                >
-                  Change email
-                </button>
-                <button
-                  type="button"
-                  onClick={handleResend}
-                  disabled={resendCooldown > 0 || sendingCode}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    color: resendCooldown > 0 ? PAPER_DIM : INDIGO,
-                    padding: 0,
-                    cursor: resendCooldown > 0 ? "default" : "pointer",
-                    fontWeight: 600,
-                  }}
-                >
-                  {resendCooldown > 0 ? `Resend code (${resendCooldown}s)` : "Resend code"}
-                </button>
-              </div>
-            </form>
-          )}
+          <div style={{ marginTop: "18px", paddingTop: "14px", borderTop: `1px solid ${BORDER}` }}>
+            <ReportJob jobId={job.id} />
+          </div>
         </div>
       </div>
     </>

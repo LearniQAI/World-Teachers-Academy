@@ -27,6 +27,11 @@ check(!/Confirmed open/.test(txt),'Reed: not shown as confirmed open');
 check(/doesn't confirm the employer is still accepting applications/.test(txt),'explains listed ≠ open');
 check(/Closing date/.test(txt)&&/Employer/.test(txt)&&/Location/.test(txt)&&/Posted/.test(txt)&&/Source/.test(txt),'all detail fields present');
 await p.screenshot({path:O+'trust-dialog-reed-desktop.png'});
+// direct apply: no personal details asked for
+check(await p.getByRole('dialog').locator('input[type=email], input[type=text]').count()===0,'no name/email fields before applying');
+check(await p.getByRole('dialog').getByRole('link',{name:/Apply on Reed/}).count()===1,'primary button opens the original listing');
+check(/doesn.t receive or forward your application/.test(txt),'says WTA does not receive applications');
+check(!/employers can contact/i.test(txt),'no "employers can contact you" wording');
 // report flow
 await p.getByRole('button',{name:'Report an unavailable job'}).click(); await p.waitForTimeout(200);
 await p.getByRole('button',{name:'Send report'}).click(); await p.waitForTimeout(200);

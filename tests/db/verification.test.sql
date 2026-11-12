@@ -197,7 +197,7 @@ reset role;
 select ok(:anon_reports = 0 and :anon_events = 0, 'public cannot read reports or audit history');
 do $$ declare f text; begin
   foreach f in array array['begin_source_run(text,text)','upsert_feed_jobs(bigint,jsonb)',
-    'finish_source_run(bigint,boolean,text,boolean,boolean)','expire_jobs()','claim_jobs_for_check(integer,text[])',
+    'finish_source_run(bigint,boolean,text,boolean,boolean,timestamp with time zone)','expire_jobs()','claim_jobs_for_check(integer,text[])',
     'record_check(uuid,text,text,integer,jsonb)','mark_duplicates()','report_job(uuid,text,text)'] loop
     perform ok(not has_function_privilege('anon', f, 'execute'), 'anon cannot run ' || f);
     perform ok(not has_function_privilege('authenticated', f, 'execute'), 'signed-in users cannot run ' || f);
@@ -236,6 +236,21 @@ select ok((expire_jobs()->>'not_seen_21_days')::int = 3, 'not listed for 21+ day
 select ok(st('adzuna','za4') = 'active', 'not listed for 20 days: still shown');
 select run_import('adzuna','ZA', jsonb_build_array(tj('za1','ZA')), true, false, false);
 select ok(st('adzuna','za1') = 'active', 'listed again: shown again');
+
+\echo '== Paged Adzuna search limited to the last 30 days (reconciliation window)'
+-- 60 CA jobs: 40 posted within 30 days, 20 older. The 30-day search returns only the 40.
+select run_import('adzuna','CA', (select jsonb_agg(tj('ca'||i,'CA', jsonb_build_object('posted_at', (now() - (i||' days')::interval)::text))) from generate_series(1,60) i));
+-- switching to the 30-day window halves the count: a person confirms that once (p_accept_drop)
+select ok((run_import('adzuna','CA', (select jsonb_agg(tj('ca'||i,'CA', jsonb_build_object('posted_at', (now() - (i||' days')::interval)::text))) from generate_series(1,29) i),
+                  true, true, true, now() - interval '30 days')->>'missing_marked')::int = 0, 'first windowed run: older jobs not counted as missing');
+select run_import('adzuna','CA', (select jsonb_agg(tj('ca'||i,'CA', jsonb_build_object('posted_at', (now() - (i||' days')::interval)::text))) from generate_series(1,29) i where i <> 15),
+                  true, false, true, now() - interval '30 days');
+select run_import('adzuna','CA', (select jsonb_agg(tj('ca'||i,'CA', jsonb_build_object('posted_at', (now() - (i||' days')::interval)::text))) from generate_series(1,29) i where i <> 15),
+                  true, false, true, now() - interval '30 days');
+select ok((select count(*) from jobs where country='CA' and status='active' and external_id ~ '^ca(3[1-9]|[45][0-9]|60)$') = 30,
+          'jobs older than the search window are not removed for being absent');
+select ok(st('adzuna','ca15') = 'removed_at_source', 'a job inside the window missing from two complete paged runs is removed');
+select ok(st('adzuna','ca1') = 'active' and st('adzuna','ca29') = 'active', 'jobs still listed stay');
 
 \echo '== A wrong relevance rule is undone by the next import'
 select run_import('reed','GB', jsonb_build_array(tj('rel-1','GB','{"title":"Nursery Nurse","is_relevant":false}'),

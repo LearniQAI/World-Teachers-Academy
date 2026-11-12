@@ -25,7 +25,7 @@ drop trigger if exists jobs_log_status_change on jobs;
 drop function if exists
   begin_source_run(text, text),
   upsert_feed_jobs(bigint, jsonb),
-  finish_source_run(bigint, boolean, text, boolean, boolean),
+  finish_source_run(bigint, boolean, text, boolean, boolean, timestamptz),
   expire_jobs(),
   claim_jobs_for_check(int, text[]),
   record_check(uuid, text, text, int, jsonb),

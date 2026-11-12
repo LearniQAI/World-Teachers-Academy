@@ -17,7 +17,8 @@ create or replace function tjs(prefix text, n_from int, n_to int, country text d
 language sql as $$ select coalesce(jsonb_agg(tj(prefix || i, country)), '[]') from generate_series(n_from, n_to) i $$;
 -- run one complete import of the given jobs for source/scope; returns finish summary
 create or replace function run_import(p_source text, p_scope text, p_jobs jsonb, p_complete boolean default true,
-                                      p_accept_drop boolean default false, p_exhaustive boolean default true) returns jsonb
+                                      p_accept_drop boolean default false, p_exhaustive boolean default true,
+                                      p_window_start timestamptz default null) returns jsonb
 language plpgsql as $$
 declare v_run bigint; v_page jsonb; i int := 0;
 begin
@@ -30,7 +31,7 @@ begin
     perform upsert_feed_jobs(v_run, v_page);
     i := i + 50;
   end loop;
-  return finish_source_run(v_run, p_complete, case when p_complete then null else 'simulated outage' end, p_accept_drop, p_exhaustive);
+  return finish_source_run(v_run, p_complete, case when p_complete then null else 'simulated outage' end, p_accept_drop, p_exhaustive, p_window_start);
 end $$;
 create or replace function st(p_source text, ext text) returns text language sql as
   $$ select status from jobs where source = p_source and external_id = ext $$;

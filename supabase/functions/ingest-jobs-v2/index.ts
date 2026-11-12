@@ -23,7 +23,16 @@ import {
 } from "../_shared/jobs/normalise.ts";
 
 const ADZUNA_MARKETS = ["za", "gb", "us", "ca", "au", "sg", "in", "de", "fr", "nl"];
-const ADZUNA_PAGES = 1; // 50 results per market; raising it multiplies API calls (see the cost table)
+// Adzuna: search only the last ADZUNA_WINDOW_DAYS days, newest first, 50 per
+// page. With enough pages to reach the end of that window the run is
+// "exhaustive within the window", so a job posted inside the window that is
+// absent from two such runs can be removed; older jobs are never counted as
+// missing (finish_source_run p_window_start). With fewer pages the run is
+// capped and nothing is removed for absence (the 21-day rule applies).
+// ADZUNA_MAX_PAGES defaults to 1 (today's request volume) until the account's
+// limits are confirmed; see the Phase C plan for the request estimate.
+const ADZUNA_WINDOW_DAYS = 30;
+const ADZUNA_MAX_PAGES = Math.max(1, Number(Deno.env.get("ADZUNA_MAX_PAGES") ?? "1") || 1);
 const UA = "WorldTeachersAcademy-JobImport/2.0";
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -47,7 +56,7 @@ async function getJson<T>(url: string, init: RequestInit = {}, attempts = 4): Pr
 }
 
 /** Set by each provider generator: did we reach the end of the results? */
-type Coverage = { exhaustive: boolean };
+type Coverage = { exhaustive: boolean; windowStart?: string };
 
 type RunSummary = { source: string; scope: string; result?: unknown; error?: string; skipped?: string };
 
@@ -75,6 +84,7 @@ async function runFeed(db: SupabaseClient, dryRun: boolean, source: string, scop
   }
   const { data, error: e3 } = await db.rpc("finish_source_run", {
     p_run_id: runId, p_complete: complete, p_error: error, p_exhaustive: cov.exhaustive,
+    p_window_start: cov.windowStart ?? null,
   });
   return { source, scope, result: data, error: e3?.message ?? error ?? undefined };
 }
@@ -82,13 +92,18 @@ async function runFeed(db: SupabaseClient, dryRun: boolean, source: string, scop
 // --- providers -----------------------------------------------------------------------------
 async function* adzunaPages(market: string, appId: string, appKey: string, cov: Coverage) {
   cov.exhaustive = false;
-  for (let page = 1; page <= ADZUNA_PAGES; page++) {
+  // a day of margin so a job posted right at the edge is not counted as missing
+  cov.windowStart = new Date(Date.now() - (ADZUNA_WINDOW_DAYS - 1) * 86_400_000).toISOString();
+  for (let page = 1; page <= ADZUNA_MAX_PAGES; page++) {
     const url = `https://api.adzuna.com/v1/api/jobs/${market}/search/${page}?app_id=${appId}&app_key=${appKey}` +
-      `&results_per_page=50&what=teacher&content-type=application/json`;
-    const data = await getJson<{ results: AdzunaJob[] }>(url);
+      `&results_per_page=50&what=teacher&max_days_old=${ADZUNA_WINDOW_DAYS}&sort_by=date&content-type=application/json`;
+    const data = await getJson<{ results: AdzunaJob[]; count?: number }>(url);
     yield data.results.map((j) => normaliseAdzuna(j, market));
-    if (data.results.length < 50) { cov.exhaustive = true; return; }
-    await sleep(500);
+    if (data.results.length < 50 || (data.count != null && page * 50 >= data.count)) {
+      cov.exhaustive = true;
+      return;
+    }
+    await sleep(1000);
   }
 }
 

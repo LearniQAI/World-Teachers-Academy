@@ -264,9 +264,13 @@ end $$;
 -- for this scope. A capped run (e.g. Adzuna's first 50 results) proves nothing
 -- about a job that is absent — it may simply be on page 2 — so absence is not
 -- counted; such jobs are handled by expire_jobs() (not seen for 21 days).
+-- p_window_start: for a search limited to recent jobs (Adzuna max_days_old),
+-- only jobs posted on or after this time are expected in the results, so only
+-- they can be counted as missing. Older jobs fall out of the window naturally.
 create or replace function finish_source_run(p_run_id bigint, p_complete boolean, p_error text default null,
                                              p_accept_drop boolean default false,
-                                             p_exhaustive boolean default true)
+                                             p_exhaustive boolean default true,
+                                             p_window_start timestamptz default null)
 returns jsonb language plpgsql as $$
 declare
   r job_source_runs%rowtype;
@@ -306,6 +310,7 @@ begin
        where source = r.source and (r.scope = '*' or country = r.scope)
          and status in ('active','uncertain')
          and last_seen_run_id is distinct from r.id
+         and (p_window_start is null or posted_at >= p_window_start)
       returning id)
     select count(*) into v_missing from missing;
 
@@ -558,7 +563,7 @@ alter table job_reports       enable row level security;
 -- Supabase grants EXECUTE on new functions to anon and authenticated by
 -- default, so revoking from PUBLIC alone is not enough.
 revoke execute on function begin_source_run(text, text), upsert_feed_jobs(bigint, jsonb),
-  finish_source_run(bigint, boolean, text, boolean, boolean), expire_jobs(), claim_jobs_for_check(int, text[]),
+  finish_source_run(bigint, boolean, text, boolean, boolean, timestamptz), expire_jobs(), claim_jobs_for_check(int, text[]),
   record_check(uuid, text, text, int, jsonb), mark_duplicates(), report_job(uuid, text, text)
   from public, anon, authenticated;
 
@@ -580,7 +585,7 @@ commit;
 --   create policy "Public can read active jobs" on jobs for select using (is_active = true);
 --   drop trigger if exists jobs_log_status_change on jobs; drop trigger if exists jobs_status_bookkeeping on jobs;
 --   drop function if exists jobs_log_status_change(), jobs_status_bookkeeping(), begin_source_run(text,text),
---     upsert_feed_jobs(bigint,jsonb), finish_source_run(bigint,boolean,text,boolean,boolean), expire_jobs(),
+--     upsert_feed_jobs(bigint,jsonb), finish_source_run(bigint,boolean,text,boolean,boolean,timestamptz), expire_jobs(),
 --     claim_jobs_for_check(int,text[]), record_check(uuid,text,text,int,jsonb), mark_duplicates(),
 --     job_source_rank(text), report_job(uuid,text,text);
 --   drop table if exists job_reports, job_alerts, job_status_events, job_checks, job_source_runs;
