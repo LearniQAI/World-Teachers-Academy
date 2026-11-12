@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 
 // Course card image with a safe fallback: if the file is missing or fails to
 // load, the designed banner is shown instead of a broken image.
@@ -10,10 +10,12 @@ export default function CourseImage({
   src,
   alt,
   fallback,
+  style,
 }: {
   src: string | null;
   alt: string;
   fallback: ReactNode;
+  style?: CSSProperties;
 }) {
   const [failed, setFailed] = useState(false);
   const ref = useRef<HTMLImageElement>(null);
@@ -24,5 +26,5 @@ export default function CourseImage({
   }, []);
 
   if (!src || failed) return <>{fallback}</>;
-  return <img ref={ref} src={src} alt={alt} loading="lazy" onError={() => setFailed(true)} />;
+  return <img ref={ref} src={src} alt={alt} loading="lazy" style={style} onError={() => setFailed(true)} />;
 }

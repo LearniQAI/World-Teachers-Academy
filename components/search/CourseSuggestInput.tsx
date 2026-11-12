@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { searchCourses, type CourseCatalogEntry } from "@/lib/courses-catalog";
+import CourseImage from "@/components/courses/CourseImage";
 
 const MAX_SUGGESTIONS = 6;
 const DEBOUNCE_MS = 200;
@@ -185,11 +186,16 @@ export default function CourseSuggestInput({
                     background: i === activeIndex ? HIGHLIGHT_BG : "transparent",
                   }}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <CourseImage
                     src={course.image}
                     alt=""
                     style={{ width: "44px", height: "44px", borderRadius: "8px", objectFit: "cover", flex: "0 0 44px" }}
+                    fallback={
+                      <span
+                        aria-hidden="true"
+                        style={{ width: "44px", height: "44px", borderRadius: "8px", flex: "0 0 44px", background: "linear-gradient(135deg, #0f172a, #4f46e5)" }}
+                      />
+                    }
                   />
                   <span>{course.title}</span>
                 </a>

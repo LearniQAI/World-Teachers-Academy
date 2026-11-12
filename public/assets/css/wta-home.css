@@ -59,8 +59,8 @@
 .wta-hero__lede { font: italic 400 clamp(20px, 2vw, 25px)/1.45 var(--wta-serif); color: var(--wta-indigo-deep) !important; margin-top: 26px !important; max-width: 32ch; }
 .wta-hero__body { color: var(--wta-slate) !important; margin: 18px 0 34px !important; max-width: 54ch; }
 .wta-hero__ctas { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
-.wta-hero__note { margin-top: 20px !important; font-size: 15px; color: var(--wta-slate) !important; }
-.wta-rotor { display: inline-grid; height: 1.5em; overflow: hidden; vertical-align: bottom; color: var(--wta-indigo); font-weight: 700; }
+.wta-hero__note { margin-top: 20px !important; font-size: 15px; line-height: 1.5 !important; color: var(--wta-slate) !important; }
+.wta-rotor { display: inline-grid; height: 1.5em; line-height: 1.5; overflow: hidden; vertical-align: top; color: var(--wta-indigo); font-weight: 700; }
 .wta-rotor__item { grid-area: 1 / 1; opacity: 0; animation: wta-rotor 10.5s var(--wta-ease) infinite; }
 .wta-rotor__item:nth-child(2) { animation-delay: 3.5s; }
 .wta-rotor__item:nth-child(3) { animation-delay: 7s; }
