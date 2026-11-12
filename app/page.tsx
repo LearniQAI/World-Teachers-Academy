@@ -1,3 +1,4 @@
+import type React from "react";
 import VideoTestimonials from "@/components/home/VideoTestimonials";
 import TextTestimonials from "@/components/home/TextTestimonials";
 import HeroSearchForm from "@/components/home/HeroSearchForm";
@@ -105,23 +106,25 @@ export default async function Home() {
                         </div>
                     </div>
                     <div className="category-slider3 th_fade_anim">
-                                                <div className="swiper th-slider has-shadow" id="categorySlider3" data-slider-options='{"breakpoints":{"0":{"slidesPerView":"1"},"526":{"slidesPerView":"2"},"768":{"slidesPerView":"3"},"991":{"slidesPerView":"4"},"1200":{"slidesPerView":"5"},"1400":{"slidesPerView":"5"}}}'>
+                                                <div className="swiper th-slider has-shadow" id="categorySlider3" data-slider-options='{"spaceBetween":20,"breakpoints":{"0":{"slidesPerView":1.15},"526":{"slidesPerView":2.15},"768":{"slidesPerView":3},"991":{"slidesPerView":4},"1200":{"slidesPerView":5},"1400":{"slidesPerView":5}}}'>
                             <div className="swiper-wrapper">
                                 {/* Cards and destinations: CATEGORY_CARDS at the bottom of this file.
                                     Listed twice so the looping slider always has enough slides. */}
                                 {[...CATEGORY_CARDS, ...CATEGORY_CARDS].map((card, i) => (
-                                    <div className="swiper-slide th_fade_anim" key={`${card.title}-${i}`}>
-                                        <div className="category-card3" data-theme-color={card.color} data-border={card.border}>
-                                            <div className="box-icon">
-                                                <img src={card.icon} alt="" />
+                                    <div className="swiper-slide" key={`${card.title}-${i}`}>
+                                        <div className={`category-card3 wta-cat wta-cat--${card.theme}`}>
+                                            <div className="wta-cat__top">
+                                                <span className="wta-cat__icon"><CategoryIcon name={card.icon} /></span>
+                                                <span className="wta-cat__tag">{THEME_LABEL[card.theme]}</span>
                                             </div>
                                             <h3 className="box-title">
-                                                {card.href ? <a href={card.href}>{card.title[0]} <br /> {card.title[1]}</a> : <span>{card.title[0]} <br /> {card.title[1]}</span>}
+                                                {card.href ? <a href={card.href}>{card.title}</a> : <span>{card.title}</span>}
                                             </h3>
+                                            <p className="wta-cat__text">{card.text}</p>
                                             {card.href ? (
-                                                <a className="icon-btn style8" href={card.href} aria-label={`${card.title.join(" ")}`}><CategoryArrow /></a>
+                                                <a className="icon-btn style8 wta-cat__btn" href={card.href} aria-label={card.title}><CategoryArrow /></a>
                                             ) : (
-                                                <span className="wta-category-soon">Coming soon</span>
+                                                <span className="wta-category-soon wta-cat__btn">Coming soon</span>
                                             )}
                                         </div>
                                     </div>
@@ -902,17 +905,39 @@ FAQ Area
   );
 }
 
-// Homepage category cards: teaching, professional skills and international
-// career preparation. Each links to a real page, or shows "Coming soon" when
-// the destination doesn't exist yet (never a template placeholder page).
-const CATEGORY_CARDS: { title: [string, string]; href: string | null; icon: string; color: string; border: string }[] = [
-  { title: ["TEFL / TESOL", "Certification"], href: "/courses?q=TEFL", icon: "/assets/img/icon/category/category3-1.svg", color: "#4F46E5", border: "#A5B4FC" },
-  { title: ["Online Teaching", "& Tutoring"], href: "/courses?q=Online", icon: "/assets/img/icon/category/category3-2.svg", color: "#14B8A6", border: "#5EEAD4" },
-  { title: ["Career", "Readiness"], href: "/resources", icon: "/assets/img/icon/category/category3-3.svg", color: "#334155", border: "#CBD5E1" },
-  { title: ["Working", "Abroad"], href: "/countries", icon: "/assets/img/icon/category/category3-4.svg", color: "#0F766E", border: "#5EEAD4" },
-  { title: ["International", "Job Search"], href: "/job-portal", icon: "/assets/img/icon/category/category3-5.svg", color: "#F97316", border: "#FDBA74" },
-  { title: ["Digital Skills", "& Tools"], href: null, icon: "/assets/img/icon/category/category3-5.svg", color: "#7C3AED", border: "#C4B5FD" },
+// Homepage category cards (owner-approved design, 12 Nov 2026): three themes,
+// mixed order so every view of the slider shows teaching, career and abroad.
+// Each card links to a real page, or shows "Coming soon" when its page doesn't
+// exist yet (never a template placeholder page).
+type CategoryTheme = "teaching" | "career" | "abroad";
+const THEME_LABEL: Record<CategoryTheme, string> = { teaching: "TEACHING", career: "CAREER", abroad: "ABROAD" };
+const CATEGORY_CARDS: { title: string; text: string; href: string | null; icon: IconName; theme: CategoryTheme }[] = [
+  { title: "TEFL / TESOL Certification", text: "Build the skills to teach English locally or internationally.", href: "/courses?q=TEFL", icon: "language", theme: "teaching" },
+  { title: "Working Abroad", text: "Explore countries, work requirements and life overseas.", href: "/countries", icon: "globe", theme: "abroad" },
+  { title: "Career Readiness", text: "Prepare your CV, interviews and professional skills for global opportunities.", href: "/resources", icon: "briefcase", theme: "career" },
+  { title: "Online Teaching & Tutoring", text: "Learn to teach and tutor students from anywhere.", href: "/courses?q=Online", icon: "laptop", theme: "teaching" },
+  { title: "International Job Search", text: "Discover international vacancies and apply directly to employers.", href: "/job-portal", icon: "search", theme: "abroad" },
+  { title: "Digital Skills & Tools", text: "Develop practical digital skills for today\u2019s global workplace.", href: null, icon: "code", theme: "career" },
 ];
+
+type IconName = "language" | "globe" | "briefcase" | "laptop" | "search" | "code";
+// One line-icon set: 48×48 grid, 1.8 stroke, round caps — same size and weight everywhere.
+const ICON_PATHS: Record<IconName, React.ReactNode> = {
+  language: (<><path d="M6 10h22a3 3 0 0 1 3 3v11a3 3 0 0 1-3 3H15l-6 5v-5H6a3 3 0 0 1-3-3V13a3 3 0 0 1 3-3z" /><path d="M34 18h8a3 3 0 0 1 3 3v11a3 3 0 0 1-3 3h-3v5l-6-5h-9a3 3 0 0 1-3-3v-2" /><path d="M11 22l3.5-8 3.5 8M12.2 19.5h4.6" /></>),
+  globe: (<><circle cx="22" cy="25" r="15" /><path d="M7 25h30M22 10c4.3 4.2 6.2 9.5 6.2 15S26.3 35.8 22 40c-4.3-4.2-6.2-9.5-6.2-15S17.7 14.2 22 10z" /><path d="M34 6l8 2.5-2.5 1.8 1.7 5-2.6.9-2.5-4.2-2.6 1.7-.9-2.6z" /></>),
+  briefcase: (<><rect x="5" y="14" width="38" height="26" rx="4" /><path d="M17 14v-3a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v3" /><path d="M5 24h38" /><path d="M19 31l4 4 7-8" /></>),
+  laptop: (<><rect x="6" y="9" width="36" height="24" rx="3" /><path d="M2 39h44" /><circle cx="24" cy="18" r="4" /><path d="M16 29c1.5-4 4.5-6 8-6s6.5 2 8 6" /></>),
+  search: (<><path d="M12 5h16l8 8v28a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z" /><path d="M28 5v8h8" /><path d="M16 20h12M16 26h8" /><circle cx="31" cy="32" r="6" /><path d="M35.5 36.5L42 43" /></>),
+  code: (<><rect x="5" y="8" width="38" height="26" rx="3" /><path d="M17 41h14M24 34v7" /><path d="M19 17l-5 4 5 4M29 17l5 4-5 4M26 15l-4 12" /></>),
+};
+
+function CategoryIcon({ name }: { name: IconName }) {
+  return (
+    <svg viewBox="0 0 48 48" width="36" height="36" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {ICON_PATHS[name]}
+    </svg>
+  );
+}
 
 function CategoryArrow() {
   return (
