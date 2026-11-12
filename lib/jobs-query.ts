@@ -9,20 +9,41 @@ import { isRelevantTeachingJob } from "@/lib/job-relevance";
 // ones, and only then load full rows for the page being shown. With ~1,000
 // active jobs this is two small queries. Supabase returns at most 1,000 rows
 // per request, so reads are paged.
+//
+// Duplicates: the same vacancy is often posted many times (an agency
+// re-listing one role, or two feeds carrying it). Rows with the same
+// normalised title, employer, place and country are shown once — the newest
+// copy. Nothing is deleted; the other copies simply aren't listed.
 
 const CHUNK = 1000;
 const MAX_ROWS = 20_000; // safety stop
 
 export type JobFilters = { country?: string | null; employmentType?: string | null; keyword?: string | null };
 
-type LightRow = { id: string; title: string | null; country: string };
+type LightRow = { id: string; title: string | null; country: string; company_name?: string | null; city?: string | null };
+
+function norm(s: string | null | undefined): string {
+  return (s ?? "")
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/&amp;/g, "&")
+    .replace(/\(.*?\)/g, " ")
+    .replace(/[^a-z0-9 ]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+export function duplicateKey(r: LightRow): string {
+  return `${norm(r.title)}|${norm(r.company_name)}|${norm(r.city)}|${r.country}`;
+}
 
 export async function relevantJobIndex(filters: JobFilters): Promise<LightRow[]> {
   const out: LightRow[] = [];
+  const seen = new Set<string>();
   for (let from = 0; from < MAX_ROWS; from += CHUNK) {
     let q = supabaseAnon
       .from("jobs")
-      .select("id, title, country")
+      .select("id, title, country, company_name, city")
       .eq("is_active", true)
       .order("posted_at", { ascending: false, nullsFirst: false })
       .order("id", { ascending: true });
@@ -35,7 +56,13 @@ export async function relevantJobIndex(filters: JobFilters): Promise<LightRow[]>
     const { data, error } = await q.range(from, from + CHUNK - 1);
     if (error) throw error;
     const rows = (data ?? []) as LightRow[];
-    for (const r of rows) if (isRelevantTeachingJob(r.title)) out.push(r);
+    for (const r of rows) {
+      if (!isRelevantTeachingJob(r.title)) continue;
+      const key = duplicateKey(r);
+      if (seen.has(key)) continue; // rows arrive newest first, so the newest copy is kept
+      seen.add(key);
+      out.push(r);
+    }
     if (rows.length < CHUNK) break;
   }
   return out;
