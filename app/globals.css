@@ -776,6 +776,45 @@
   }
 }
 
+/* Tablet and mobile: the photo no longer sits behind the title. The title
+   block gets its own clean band, and the photo is shown underneath it,
+   cropped to the three teachers, so neither covers the other. */
+@media (max-width: 991px) {
+  .breadcumb-wrapper--country {
+    background-image: linear-gradient(180deg, #F5F7FF 0%, #ECEBFF 100%) !important;
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+  }
+  .breadcumb-wrapper--country::after {
+    content: "";
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background-image: url(/assets/countries.png);
+    background-repeat: no-repeat;
+    background-size: 120% auto;
+    background-position: 100% 70%;
+  }
+  .breadcumb-wrapper--country .breadcumb-content {
+    padding: 40px 0 24px !important;
+    text-align: left;
+  }
+  .breadcumb-wrapper--country .breadcumb-menu {
+    justify-content: flex-start;
+  }
+}
+@media (max-width: 575px) {
+  .breadcumb-wrapper--country::after {
+    aspect-ratio: 920 / 764;
+    background-size: 172% auto;
+    background-position: 100% 65%;
+  }
+  .breadcumb-wrapper--country .breadcumb-content {
+    padding: 32px 0 20px !important;
+  }
+}
+
 /* Course detail hero (app/courses/[slug]). Same pattern as the resource hero. */
 .breadcumb-wrapper--course {
   background-color: #F5F7FF !important;
