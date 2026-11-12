@@ -23,7 +23,11 @@ export interface Job extends TrustFields {
   salary_min: number | null;
   salary_max: number | null;
   currency: string | null;
-  apply_url: string;
+  /** null when the source sits behind the one-time verification and this browser isn't verified yet */
+  apply_url: string | null;
+  access?: "verified" | "open" | "hidden";
+  locked?: boolean;
+  source_url?: string | null;
   posted_at: string | null;
   salary_period?: "year" | "month" | "week" | "day" | "hour" | null;
   salary_is_predicted?: boolean | null;
@@ -101,6 +105,11 @@ export default function JobPortal() {
   const [country, setCountry] = useState("all");
   const [employmentType, setEmploymentType] = useState<Job["employment_type"] | "all">("all");
   const [applyJob, setApplyJob] = useState<Job | null>(null);
+  // One-time verification: null = not known yet.
+  const [verified, setVerified] = useState<boolean | null>(null);
+  const [verifyFor, setVerifyFor] = useState<Job | null>(null);
+  const [pendingJobId, setPendingJobId] = useState<string | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const [page, setPage] = useState(1);
@@ -169,6 +178,7 @@ export default function JobPortal() {
         .then((res) => res.json())
         .then((data) => {
           setJobs(data.jobs ?? []);
+          if (typeof data.verified === "boolean") setVerified(data.verified);
           setTotalPages(typeof data.total_pages === "number" ? data.total_pages : 1);
           setTotalResults(typeof data.total === "number" ? data.total : (data.jobs ?? []).length);
         })
@@ -182,7 +192,35 @@ export default function JobPortal() {
       clearTimeout(timeout);
       controller.abort();
     };
-  }, [country, employmentType, keyword, page]);
+  }, [country, employmentType, keyword, page, reloadKey]);
+
+  // After verifying, reopen the vacancy the visitor chose, now with its link.
+  useEffect(() => {
+    if (!pendingJobId) return;
+    const j = jobs.find((x) => x.id === pendingJobId);
+    if (j && !j.locked) {
+      setApplyJob(j);
+      setPendingJobId(null);
+    }
+  }, [jobs, pendingJobId]);
+
+  function openJob(job: Job) {
+    if (job.locked && !verified) setVerifyFor(job);
+    else setApplyJob(job);
+  }
+
+  function handleVerified(jobId: string) {
+    setVerified(true);
+    setVerifyFor(null);
+    setPendingJobId(jobId);
+    setReloadKey((k) => k + 1);
+  }
+
+  async function signOut() {
+    await fetch("/api/portal/session", { method: "DELETE" }).catch(() => {});
+    setVerified(false);
+    setReloadKey((k) => k + 1);
+  }
 
   function goToPage(next: number) {
     const clamped = Math.min(Math.max(next, 1), totalPages);
@@ -397,7 +435,7 @@ export default function JobPortal() {
             <>
               <div className="d-flex flex-column" style={{ gap: "10px" }}>
                 {jobs.map((job) => (
-                  <JobRow key={job.id} job={job} onApply={() => setApplyJob(job)} />
+                  <JobRow key={job.id} job={job} onApply={() => openJob(job)} />
                 ))}
               </div>
               <Pagination page={page} totalPages={totalPages} onChange={goToPage} />
@@ -407,6 +445,17 @@ export default function JobPortal() {
       </section>
 
       {applyJob && <JobDialog job={applyJob} onClose={() => setApplyJob(null)} />}
+      {verifyFor && (
+        <VerifyAccess job={verifyFor} onClose={() => setVerifyFor(null)} onVerified={() => handleVerified(verifyFor.id)} />
+      )}
+      {verified && (
+        <p className="jp-access-note" style={{ textAlign: "center", fontSize: "12.5px", color: PAPER_DIM, margin: "0 0 32px" }}>
+          Your email is verified on this browser, so every vacancy is open to you.{" "}
+          <button type="button" onClick={signOut} style={{ background: "none", border: 0, padding: 0, color: INDIGO, textDecoration: "underline", cursor: "pointer" }}>
+            Sign out
+          </button>
+        </p>
+      )}
     </>
   );
 }
@@ -806,7 +855,7 @@ function JobDialog({ job, onClose }: { job: Job; onClose: () => void }) {
           <JobTrustDetails job={job} place={placeLabel(job.city, job.country)} />
 
           <a
-            href={job.apply_url}
+            href={job.apply_url ?? "#"}
             target="_blank"
             rel="noopener noreferrer"
             className="th-btn w-100"
@@ -831,6 +880,195 @@ function JobDialog({ job, onClose }: { job: Job; onClose: () => void }) {
           <div style={{ marginTop: "18px", paddingTop: "14px", borderTop: `1px solid ${BORDER}` }}>
             <ReportJob jobId={job.id} />
           </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+// One-time verification. Shown the first time an unverified visitor opens a
+// vacancy from a source that sits behind verification. After the 6-digit
+// code is accepted, the server sets an httpOnly cookie (lib/portal-access.ts)
+// and every vacancy opens without asking again on this browser.
+const RESEND_SECONDS = 30;
+
+function VerifyAccess({ job, onClose, onVerified }: { job: Job; onClose: () => void; onVerified: () => void }) {
+  const [step, setStep] = useState<"details" | "code">("details");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [consent, setConsent] = useState(false);
+  const [code, setCode] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [cooldown, setCooldown] = useState(0);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const t = setInterval(() => setCooldown((s) => Math.max(s - 1, 0)), 1000);
+    return () => clearInterval(t);
+  }, [cooldown]);
+
+  async function requestCode(): Promise<boolean> {
+    setError(null);
+    try {
+      const res = await fetch("/api/leads/request-code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        // job_id is left out on purpose: this verification is for the whole portal.
+        body: JSON.stringify({ name, email, consent_given: consent }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(data.error ?? "Something went wrong. Please try again.");
+        return false;
+      }
+      setCooldown(RESEND_SECONDS);
+      return true;
+    } catch {
+      setError("We couldn't reach the server. Check your connection and try again.");
+      return false;
+    }
+  }
+
+  async function submitDetails(e: React.FormEvent) {
+    e.preventDefault();
+    if (!name.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError("Enter your name and a valid email address.");
+      return;
+    }
+    if (!consent) {
+      setError("Please tick the box to continue.");
+      return;
+    }
+    setBusy(true);
+    const ok = await requestCode();
+    setBusy(false);
+    if (ok) setStep("code");
+  }
+
+  async function submitCode(e: React.FormEvent) {
+    e.preventDefault();
+    if (!/^\d{6}$/.test(code)) {
+      setError("Enter the 6-digit code from your email.");
+      return;
+    }
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/leads/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, code }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(data.error ?? "That code didn't work. Check it and try again.");
+        setBusy(false);
+        return;
+      }
+      if (!data.access) {
+        setError("Your email is verified, but access couldn't be saved on this browser. Please try again later.");
+        setBusy(false);
+        return;
+      }
+      onVerified();
+    } catch {
+      setError("We couldn't reach the server. Check your connection and try again.");
+      setBusy(false);
+    }
+  }
+
+  const input: React.CSSProperties = {
+    width: "100%", padding: "12px 14px", fontSize: "14.5px", borderRadius: "11px",
+    border: `1.5px solid ${BORDER}`, color: INK_NAVY, background: "#F9FAFC", boxSizing: "border-box",
+  };
+  const label: React.CSSProperties = { display: "block", fontSize: "12px", fontWeight: 600, color: INK_NAVY, marginBottom: "6px" };
+  const primary: React.CSSProperties = {
+    background: `linear-gradient(135deg, ${ORANGE}, #EA6A0C)`, borderColor: ORANGE, borderRadius: "11px",
+    padding: "14px", fontSize: "15px", fontWeight: 700,
+  };
+
+  return (
+    <>
+      <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(15,23,42,0.6)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", zIndex: 1050 }} />
+      <div role="dialog" aria-modal="true" aria-labelledby="verify-title"
+        style={{ position: "fixed", inset: 0, zIndex: 1055, display: "flex", alignItems: "center", justifyContent: "center", padding: "16px", pointerEvents: "none" }}>
+        <div style={{ pointerEvents: "auto", background: "#fff", borderRadius: "22px", width: "100%", maxWidth: "460px", maxHeight: "90vh", overflowY: "auto", padding: "32px 32px 28px", boxShadow: "0 30px 80px rgba(15, 23, 42, 0.35), 0 2px 6px rgba(15, 23, 42, 0.08)" }}>
+          <div className="d-flex justify-content-between align-items-start" style={{ marginBottom: "14px", gap: "12px" }}>
+            <div>
+              <h3 id="verify-title" style={{ fontSize: "20px", margin: 0, color: INK_NAVY, fontWeight: 700, lineHeight: 1.3 }}>
+                {step === "details" ? "Verify your email once" : "Enter your code"}
+              </h3>
+              <p style={{ fontSize: "13px", color: PAPER_DIM, margin: "6px 0 0" }}>To open: {job.title}</p>
+            </div>
+            <button type="button" aria-label="Close" onClick={onClose} autoFocus
+              style={{ background: "#F1F3F9", border: "none", borderRadius: "999px", width: "34px", height: "34px", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", color: INK_NAVY, cursor: "pointer" }}>
+              <i className="far fa-times" aria-hidden="true"></i>
+            </button>
+          </div>
+
+          {step === "details" ? (
+            <form onSubmit={submitDetails} noValidate>
+              <p style={{ fontSize: "13.5px", color: INK_NAVY, lineHeight: 1.55, margin: "0 0 18px" }}>
+                Verify your email once and every vacancy in the Job Portal opens for you on this browser for the next
+                3 months. You won&rsquo;t be asked again when you open other jobs. You apply directly with each employer
+                or job site; World Teachers Academy doesn&rsquo;t receive or forward applications.
+              </p>
+              <div style={{ marginBottom: "14px" }}>
+                <label htmlFor="verify-name" style={label}>Full name</label>
+                <input id="verify-name" type="text" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} style={input} />
+              </div>
+              <div style={{ marginBottom: "14px" }}>
+                <label htmlFor="verify-email" style={label}>Email address</label>
+                <input id="verify-email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} style={input} />
+              </div>
+              <label htmlFor="verify-consent" style={{ display: "flex", gap: "10px", alignItems: "flex-start", fontSize: "12.5px", color: PAPER_DIM, lineHeight: 1.5, marginBottom: "16px", cursor: "pointer" }}>
+                <input id="verify-consent" type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)}
+                  style={{ marginTop: "3px", width: "16px", height: "16px", flex: "none", accentColor: INDIGO, display: "inline-block", visibility: "visible", opacity: 1, position: "static", appearance: "auto" }} />
+                <span>
+                  I agree that World Teachers Academy may keep my name and email to give me Job Portal access, and may
+                  email me about teaching opportunities and WTA courses. I can ask to be removed at any time.
+                </span>
+              </label>
+              {error && <p role="alert" style={{ color: "#B91C1C", fontSize: "13px", margin: "0 0 12px" }}>{error}</p>}
+              <button type="submit" className="th-btn w-100" style={primary} disabled={busy}>
+                {busy ? "Sending code…" : "Email me a code"}
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={submitCode} noValidate>
+              <p style={{ fontSize: "13.5px", color: INK_NAVY, lineHeight: 1.55, margin: "0 0 16px" }}>
+                We sent a 6-digit code to <strong>{email}</strong>. It expires in 10 minutes.
+              </p>
+              <label htmlFor="verify-code" style={label}>Verification code</label>
+              <input id="verify-code" inputMode="numeric" autoComplete="one-time-code" maxLength={6} value={code}
+                onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+                style={{ ...input, fontSize: "22px", letterSpacing: "6px", textAlign: "center", marginBottom: "14px" }} />
+              {error && <p role="alert" style={{ color: "#B91C1C", fontSize: "13px", margin: "0 0 12px" }}>{error}</p>}
+              <button type="submit" className="th-btn w-100" style={{ ...primary, marginBottom: "14px" }} disabled={busy}>
+                {busy ? "Checking…" : "Verify and open the job"}
+              </button>
+              <div className="d-flex justify-content-between" style={{ fontSize: "13px" }}>
+                <button type="button" onClick={() => { setStep("details"); setCode(""); setError(null); }}
+                  style={{ background: "none", border: "none", color: PAPER_DIM, padding: 0, cursor: "pointer", fontWeight: 600 }}>
+                  Change email
+                </button>
+                <button type="button" disabled={cooldown > 0 || busy}
+                  onClick={async () => { setBusy(true); await requestCode(); setBusy(false); }}
+                  style={{ background: "none", border: "none", color: cooldown > 0 ? PAPER_DIM : INDIGO, padding: 0, cursor: cooldown > 0 ? "default" : "pointer", fontWeight: 600 }}>
+                  {cooldown > 0 ? `Resend code (${cooldown}s)` : "Resend code"}
+                </button>
+              </div>
+            </form>
+          )}
         </div>
       </div>
     </>

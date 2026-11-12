@@ -1,5 +1,6 @@
 import { supabaseAnon } from "@/lib/supabase";
 import { isRelevantTeachingJob } from "@/lib/job-relevance";
+import { sourceAccess } from "@/lib/source-access";
 
 // Shared read-only helpers for the Job Portal API routes.
 //
@@ -20,7 +21,7 @@ const MAX_ROWS = 20_000; // safety stop
 
 export type JobFilters = { country?: string | null; employmentType?: string | null; keyword?: string | null };
 
-type LightRow = { id: string; title: string | null; country: string; company_name?: string | null; city?: string | null };
+type LightRow = { id: string; title: string | null; country: string; company_name?: string | null; city?: string | null; source?: string | null };
 
 function norm(s: string | null | undefined): string {
   return (s ?? "")
@@ -45,7 +46,7 @@ export async function relevantJobIndex(filters: JobFilters): Promise<LightRow[]>
   for (let from = 0; from < MAX_ROWS; from += CHUNK) {
     let q = supabaseAnon
       .from("jobs")
-      .select("id, title, country, company_name, city")
+      .select("id, title, country, company_name, city, source")
       .eq("is_active", true)
       .order("posted_at", { ascending: false, nullsFirst: false })
       .order("id", { ascending: true });
@@ -60,6 +61,7 @@ export async function relevantJobIndex(filters: JobFilters): Promise<LightRow[]>
     const rows = (data ?? []) as LightRow[];
     for (const r of rows) {
       if (!isRelevantTeachingJob(r.title)) continue;
+      if (sourceAccess(r.source) === "hidden") continue;
       const key = duplicateKey(r);
       if (seen.has(key)) continue; // rows arrive newest first, so the newest copy is kept
       seen.add(key);

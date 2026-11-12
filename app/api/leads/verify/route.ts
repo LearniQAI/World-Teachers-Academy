@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { supabaseServiceRole } from "@/lib/supabase";
 import { createLead } from "@/lib/leads";
+import { ACCESS_COOKIE, accessCookieOptions, signAccessToken } from "@/lib/portal-access";
 
 const GENERIC_ERROR = "Invalid or expired code";
 
@@ -81,7 +82,12 @@ export async function POST(request: NextRequest) {
       jobId: otp.job_id,
       sourceIp,
     });
-    return NextResponse.json(result);
+    // One verification unlocks the whole Job Portal on this browser.
+    const access = signAccessToken(result.id);
+    const res = NextResponse.json({ ...result, access: !!access, access_expires_at: access?.expires.toISOString() ?? null });
+    if (access) res.cookies.set(ACCESS_COOKIE, access.token, accessCookieOptions(access.expires));
+    else console.error("[verify] PORTAL_ACCESS_SECRET missing or too short; portal access not granted");
+    return res;
   } catch {
     return NextResponse.json({ error: "Something went wrong. Please try again." }, { status: 500 });
   }
