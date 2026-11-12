@@ -10,7 +10,7 @@ export default function Footer() {
                         <div className="subscribe-box">
                             <div className="row gy-40 align-items-center justify-content-center">
                                 <div className="col-xl-6">
-                                    <h3 className="subscribe-box_title text-title th-text-perspective">Preparing for your next teaching opportunity?</h3>
+                                    <h3 className="subscribe-box_title text-title th-text-perspective">Preparing for your next international opportunity?</h3>
                                 </div>
                                 <div className="col-xl-6 col-lg-8">
                                     {/* The template's subscribe form was not connected to anything (emails were lost).

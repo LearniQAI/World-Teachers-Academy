@@ -297,3 +297,8 @@
   .wta-badge--wide { min-width: 0; }
   .wta-badge--stack { width: 120px; }
 }
+
+/* Tailwind's `collapse` utility (visibility: collapse) clashes with Bootstrap's
+   .collapse class, which left the open FAQ answer blank on the homepage. */
+.accordion-collapse.collapse.show,
+.accordion-collapse.collapsing { visibility: visible; }

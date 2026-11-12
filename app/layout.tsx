@@ -12,9 +12,9 @@ import ThemeScripts from "@/components/layout/ThemeScripts";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "World Teachers Academy — Free, Career-Focused Teacher Training",
+  title: "World Teachers Academy — Free Training for International Careers",
   description:
-    "Free, practical training for teachers who want to build skills and confidence and prepare for teaching opportunities around the world.",
+    "Free, practical training, country guides and verified job listings to help you build skills and prepare for international careers, including teaching.",
   icons: {
     icon: [
       { url: "/assets/favicons/favicon.svg", type: "image/svg+xml" },

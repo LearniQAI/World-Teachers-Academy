@@ -262,7 +262,7 @@ export default async function Home() {
                         </div>
                     </div>
                     <div className="slider-area">
-                        <div className="swiper th-slider course-slider11 has-shadow" id="CourseSlider11" data-slider-options='{"autoHeight": "true","breakpoints":{"0":{"slidesPerView":1},"576":{"slidesPerView":"1"},"768":{"slidesPerView":"2"},"992":{"slidesPerView":"2"},"1200":{"slidesPerView":"3"}}}'>
+                        <div className="swiper th-slider course-slider11 has-shadow" id="CourseSlider11" data-slider-options='{"loop": false, "autoHeight": "true","breakpoints":{"0":{"slidesPerView":1},"576":{"slidesPerView":"1"},"768":{"slidesPerView":"2"},"992":{"slidesPerView":"2"},"1200":{"slidesPerView":"3"}}}'>
                             <div className="swiper-wrapper">
                                 {/* The new course cards (free, with launch countdowns) from
                                     components/courses/CourseCard.tsx, inside the original slider.

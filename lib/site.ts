@@ -9,7 +9,7 @@ export const START_TRAINING_URL =
 export const CONTACT_EMAIL = "hello@worldteachers.academy";
 
 export const MISSION_LINE =
-  "World Teachers Academy prepares educators with practical skills, professional confidence and career readiness for teaching opportunities around the world.";
+  "World Teachers Academy helps people build practical skills, professional confidence and career readiness for opportunities around the world.";
 
 /**
  * Official World Teachers Academy social accounts. Empty until the owner
