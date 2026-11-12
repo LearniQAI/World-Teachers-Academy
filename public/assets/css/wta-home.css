@@ -430,10 +430,13 @@
 .wta-journey__btn--secondary:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
 .wta-journey__image { position: relative; z-index: 1; align-self: end; }
 .wta-journey__image picture, .wta-journey__image img { display: block; width: 100%; height: auto; }
-/* Soft left edge so the photo melts into the banner background. */
+/* Soft left and top edges so the photo melts into the banner background
+   (no visible rectangle where the photo's own background starts). */
 .wta-journey__image img {
-  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 22%);
-          mask-image: linear-gradient(90deg, transparent 0%, #000 22%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 22%), linear-gradient(180deg, transparent 0%, #000 18%);
+  -webkit-mask-composite: source-in;
+          mask-image: linear-gradient(90deg, transparent 0%, #000 22%), linear-gradient(180deg, transparent 0%, #000 18%);
+          mask-composite: intersect;
 }
 @media (max-width: 1199px) {
   .wta-journey__content { padding: 48px 0 48px 40px; }
@@ -446,8 +449,8 @@
   .wta-journey p { margin-left: auto; margin-right: auto; }
   .wta-journey__actions { justify-content: center; }
   .wta-journey__image img {
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 16%);
-            mask-image: linear-gradient(90deg, transparent 0%, #000 16%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 8%), linear-gradient(180deg, transparent 0%, #000 22%);
+            mask-image: linear-gradient(90deg, transparent 0%, #000 8%), linear-gradient(180deg, transparent 0%, #000 22%);
   }
 }
 @media (max-width: 768px) {
