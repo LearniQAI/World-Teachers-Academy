@@ -7,6 +7,9 @@ import { hashOtp } from "@/lib/portal-access";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const EMAIL_RATE_LIMIT = 3;
+// Across all codes: at most 6 codes per email per day (so at most 30 guesses a day).
+const EMAIL_DAILY_LIMIT = 6;
+const DAY_MS = 24 * 60 * 60 * 1000;
 const IP_RATE_LIMIT = 10;
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
 const RECENT_VERIFICATION_WINDOW_MS = 24 * 60 * 60 * 1000;
@@ -73,7 +76,13 @@ export async function POST(request: NextRequest) {
     .eq("email", normalizedEmail)
     .gte("created_at", windowStart);
 
-  if ((emailCount ?? 0) >= EMAIL_RATE_LIMIT) {
+  const { count: emailDayCount } = await supabaseServiceRole
+    .from("email_otps")
+    .select("id", { count: "exact", head: true })
+    .eq("email", normalizedEmail)
+    .gte("created_at", new Date(Date.now() - DAY_MS).toISOString());
+
+  if ((emailCount ?? 0) >= EMAIL_RATE_LIMIT || (emailDayCount ?? 0) >= EMAIL_DAILY_LIMIT) {
     return NextResponse.json(
       { error: "Too many code requests for this email. Please try again later." },
       { status: 429 }

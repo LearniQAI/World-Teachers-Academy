@@ -5,6 +5,10 @@ import { ACCESS_COOKIE, accessCookieOptions, otpMatches } from "@/lib/portal-acc
 import { createSession } from "@/lib/portal-session";
 
 const GENERIC_ERROR = "Invalid or expired code";
+// Across all of an email's codes: after 10 wrong guesses in 24 hours, no code
+// for that email is accepted until the window passes (stops someone rotating
+// through new codes to keep guessing).
+const MAX_FAILED_PER_EMAIL_PER_DAY = 10;
 
 
 export async function POST(request: NextRequest) {
@@ -41,6 +45,16 @@ export async function POST(request: NextRequest) {
 
   if (fetchError || !otp) {
     return NextResponse.json({ error: GENERIC_ERROR }, { status: 400 });
+  }
+
+  const { data: recentCodes } = await supabaseServiceRole
+    .from("email_otps")
+    .select("attempts")
+    .eq("email", normalizedEmail)
+    .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
+  const failedToday = (recentCodes ?? []).reduce((n: number, r: { attempts?: number }) => n + (r.attempts ?? 0), 0);
+  if (failedToday >= MAX_FAILED_PER_EMAIL_PER_DAY) {
+    return NextResponse.json({ error: "Too many attempts. Please try again tomorrow." }, { status: 429 });
   }
 
   if (otp.attempts >= otp.max_attempts) {

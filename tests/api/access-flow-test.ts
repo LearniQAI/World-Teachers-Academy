@@ -79,6 +79,31 @@ async function verifyOnce(email: string, marketing: boolean, ip?: string) {
   t("4th code for the same email within an hour is refused (429)", lastStatus === 429);
   let ipStatus = 0; for (let i = 0; i < 11; i++) ipStatus = (await call(requestCode(req({ name: "V", email: `ip${i}@example.com` }, undefined, undefined, "203.0.113.77")))).status;
   t("11th code request from one connection within an hour is refused (429)", ipStatus === 429);
+  // Rate limits across codes, not just per code
+  const slow = "rotate@example.com"; let wrongTotal = 0; let locked429 = false;
+  for (let round = 0; round < 3; round++) {
+    tables.email_otps.filter((o) => o.email === slow).forEach((o) => (o.created_at = new Date(Date.now() - 2 * 3600_000).toISOString()));
+    const rc = await call(requestCode(req({ name: "V", email: slow })));
+    if (rc.status !== 200) break;
+    const good = sent[sent.length - 1].code;
+    for (let i = 0; i < 5; i++) {
+      const w = String((Number(good) + 7 + i) % 1_000_000).padStart(6, "0");
+      const st = (await call(verify(req({ email: slow, code: w })))).status;
+      if (st === 429) { locked429 = true; break; }
+      wrongTotal++;
+    }
+    if (locked429) break;
+  }
+  const lastGood = sent[sent.length - 1].code;
+  t("across new codes, an email is locked after 10 wrong guesses in a day (429), even with the right code",
+    wrongTotal === 10 && (await call(verify(req({ email: slow, code: lastGood })))).status === 429);
+  tables.email_otps.filter((o) => o.email === "daily@example.com");
+  let dayStatus = 0;
+  for (let i = 0; i < 7; i++) {
+    tables.email_otps.filter((o) => o.email === "daily@example.com").forEach((o) => (o.created_at = new Date(Date.now() - 2 * 3600_000).toISOString()));
+    dayStatus = (await call(requestCode(req({ name: "V", email: "daily@example.com" })))).status;
+  }
+  t("a 7th code for the same email within 24 hours is refused, even spread over hours (429)", dayStatus === 429);
   // 6. Sign out, replay, sign out everywhere
   await call(signOut(req(null, v1.cookie, "http://x/api/portal/session")));
   t("after signing out, the old cookie no longer works even if copied (session theft)", (await listAll(v1.cookie, 1)).verified === false);

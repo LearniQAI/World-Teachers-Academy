@@ -8,7 +8,7 @@ const DEFAULTS: Record<string, () => Record<string, unknown>> = {
 };
 function q(table: string) {
   const filters: F[] = []; let op: "select" | "insert" | "update" = "select"; let payload: Record<string, unknown> | null = null;
-  let range: [number, number] | null = null; let countMode = false; let cols: string | null = null;
+  let range: [number, number] | null = null; let sort: [string, boolean] | null = null; let countMode = false; let cols: string | null = null;
   const api: Record<string, unknown> = {
     select: (c?: string, o?: { count?: string; head?: boolean }) => { if (o?.count) countMode = true; if (op === "select") cols = c ?? "*"; return api; },
     insert: (p: Record<string, unknown>) => { op = "insert"; payload = p; return api; },
@@ -19,7 +19,8 @@ function q(table: string) {
     is: (k: string, v: unknown) => { filters.push((r) => (r[k] ?? null) === v); return api; },
     gt: (k: string, v: string) => { filters.push((r) => String(r[k]) > v); return api; },
     gte: (k: string, v: string) => { filters.push((r) => String(r[k]) >= v); return api; },
-    or: () => api, order: () => api, limit: () => api,
+    or: () => api, limit: () => api,
+    order: (k: string, o?: { ascending?: boolean }) => { if (!sort) sort = [k, o?.ascending !== false]; return api; },
     range: (a: number, b: number) => { range = [a, b]; return api; },
     single: () => run(true), maybeSingle: () => run(true),
     then: (res: (v: unknown) => unknown, rej: (e: unknown) => unknown) => run(false).then(res, rej),
@@ -33,6 +34,7 @@ function q(table: string) {
     if (table === "jobs" && cols && (cols === "*" || /apply_url/.test(cols)) && !(globalThis as { __serviceCall?: boolean }).__serviceCall) {
       (globalThis as { __anonApplyUrlAttempt?: number }).__anonApplyUrlAttempt = ((globalThis as { __anonApplyUrlAttempt?: number }).__anonApplyUrlAttempt ?? 0) + 1;
     }
+    if (sort) { const [k, asc] = sort; hit = [...hit].sort((a, b) => (String(a[k]) < String(b[k]) ? -1 : String(a[k]) > String(b[k]) ? 1 : 0) * (asc ? 1 : -1)); }
     const count = hit.length; if (range) hit = hit.slice(range[0], range[1] + 1);
     if (cols && cols !== "*") { const keep = cols.split(",").map((c) => c.trim()); hit = hit.map((r) => Object.fromEntries(keep.map((k) => [k, r[k]]))); }
     return one ? { data: hit[0] ?? null, error: null } : { data: hit, error: null, count: countMode ? count : null };
