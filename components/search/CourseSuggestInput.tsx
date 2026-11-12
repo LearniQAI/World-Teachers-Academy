@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { searchCourses, type CourseCatalogEntry } from "@/lib/courses-catalog";
-import { getCourseBySlug } from "@/lib/mock-courses";
 
 const MAX_SUGGESTIONS = 6;
 const DEBOUNCE_MS = 200;
@@ -14,14 +13,10 @@ const PAPER_DIM = "#6B7280";
 const BORDER = "#E2E5EE";
 const HIGHLIGHT_BG = "#EEF0FF";
 
-// Only courses that have a real detail page get a direct link. The catalog's
-// "Supply Chain Management" has no mock-courses entry, and the [slug] route
-// would silently render the TEFL course for it — so send that one to the
-// filtered catalog instead of a mislabeled page.
+// A course with a profile page links straight to it; any other course goes to
+// the filtered catalog, where its card shows "Coming Soon" and the countdown.
 function courseHref(course: CourseCatalogEntry): string {
-  return getCourseBySlug(course.slug)
-    ? `/courses/${course.slug}`
-    : `/courses?q=${encodeURIComponent(course.title)}`;
+  return course.profileUrl ?? `/courses?q=${encodeURIComponent(course.title)}`;
 }
 
 // Input + live suggestions dropdown. Renders a fragment, so the dropdown is

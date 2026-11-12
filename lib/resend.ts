@@ -1,6 +1,9 @@
 import { Resend } from "resend";
 
-export const resend = new Resend(process.env.RESEND_API_KEY);
+// Preview builds have no RESEND_API_KEY (production-only in Vercel) and the SDK
+// throws at import without one. The placeholder lets the build finish; sends in
+// a preview are rejected by Resend instead of emailing anyone. Production is unchanged.
+export const resend = new Resend(process.env.RESEND_API_KEY || "re_preview_no_key");
 
 const INK_NAVY = "#0F172A";
 const SIGNAL_INDIGO = "#4F46E5";

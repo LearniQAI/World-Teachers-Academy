@@ -1,5 +1,6 @@
 import { searchCourses } from "@/lib/courses-catalog";
 import CourseSearchForm from "@/components/courses/CourseSearchForm";
+import CourseCard from "@/components/courses/CourseCard";
 import TextTestimonials from "@/components/home/TextTestimonials";
 
 const DELAYS = [".3", ".5", ".7", ".3", ".5"];
@@ -44,58 +45,13 @@ Course Area
                 </p>
               )}
               <div className="th-course-row columns-3">
-                {courses.map((course, i) => {
-                  // Supply Chain Management has no course-details entry yet
-                  // (pending confirmation it should exist on the site at all) —
-                  // linking it to /courses/supply-chain-management would silently
-                  // fall back to showing the TEFL course's details instead.
-                  const detailsHref =
-                    course.slug === "supply-chain-management"
-                      ? "/contact"
-                      : `/courses/${course.slug}`;
-                  return (
-                  <div className="th-course-single th_fade_anim" data-delay={DELAYS[i]} key={course.slug}>
-                    <div className="course-card">
-                      <div className="box-img">
-                        <a href={detailsHref}><img src={course.image} alt={course.title} /></a>
-                        <span className="box-price">[Price TBD]</span>
-                      </div>
-                      <h2 className="box-title"><a href={detailsHref}>{course.title}</a></h2>
-                      {/* Star rating and review count withheld until genuine reviews exist. */}
-                      <div className="box-content">
-                        <div className="course-info">
-                          <div className="box-icon">
-                            <i className="fal fa-file-lines"></i>
-                          </div>
-                          <div className="course-info-details">
-                            <span className="course-info-title">Lessons:</span>
-                            <h3 className="course-info-text">50+ Lessons</h3>
-                          </div>
-                        </div>
-                        <div className="course-info">
-                          <div className="box-icon">
-                            <i className="fal fa-users"></i>
-                          </div>
-                          <div className="course-info-details">
-                            <span className="course-info-title">Students:</span>
-                            <h3 className="course-info-text">160+ Students</h3>
-                          </div>
-                        </div>
-                      </div>
-                      {/* Instructor meta-box removed — no real instructor is confirmed yet, and a
-                          "[Instructor TBD]" placeholder next to a generic stock photo reads as broken,
-                          not as pending content. */}
-                      <div className="btn-wrap">
-                        <a href={detailsHref} className="th-btn btn-sm style-border2">VIEW DETAILS<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
-                        </svg></a>
-                      </div>
-                    </div>
+                {courses.map((course, i) => (
+                  <div className="th-course-single th_fade_anim" data-delay={DELAYS[i % DELAYS.length]} key={course.slug}>
+                    <CourseCard course={course} headingLevel="h2" />
                   </div>
-                  );
-                })}
+                ))}
               </div>
-              {/* Pagination removed — all 5 real courses fit on one page. The old
+              {/* Pagination removed — all courses fit on one page. The old
                   "Prev/1/2/Next" links pointed at /blog and were themselves
                   placeholder artifacts. */}
             </div>
@@ -110,8 +66,8 @@ Cta Area
               <div className="row gy-40 justify-content-between align-items-center">
                 <div className="col-xxl-6 col-xl-7 col-lg-7">
                   <div className="title-area mb-0 text-lg-start text-center">
-                    <h2 className="sec-title text-white">Get 15% off tuition for all <span className="fw-normal">courses this Spring!</span></h2>
-                    <p className="text-white mb-0 mt-30">Don&apos;t forget to register for the course to unlock access to all learning materials.</p>
+                    <h2 className="sec-title text-white">Every course is free <span className="fw-normal">right now.</span></h2>
+                    <p className="text-white mb-0 mt-30">Start with our open course today. New programmes open on the dates shown above.</p>
                   </div>
                 </div>
                 <div className="col-lg-auto">

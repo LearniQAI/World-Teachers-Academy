@@ -59,6 +59,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             cascade without needing !important. See the file for the full
             variable mapping. */}
         <link rel="stylesheet" href="/assets/css/wta-brand.css" />
+        <link rel="stylesheet" href="/assets/css/wta-courses.css" />
       </head>
       <body className="th-magic-cursor theme-style4">
         <MagicCursor />

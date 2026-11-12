@@ -1,0 +1,170 @@
+/* World Teachers Academy — course cards (free badge, status, countdown).
+   Builds on the template's .course-card; loaded after style.css and wta-brand.css. */
+
+.wta-course-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.wta-course-card .box-img {
+  margin-bottom: 20px;
+  aspect-ratio: 752 / 440;
+  background: #eef0ff;
+}
+.wta-course-card .box-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Free badge on the image (replaces "[Price TBD]") */
+.wta-course-card .wta-price {
+  color: #15803d;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 14px;
+  line-height: 1;
+  padding: 12px 22px 10px 16px;
+}
+
+/* Designed banner for courses without a photo */
+.wta-course-banner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  padding: 24px 28px 48px;
+  background:
+    radial-gradient(120% 90% at 100% 0%, rgba(245, 158, 11, 0.28) 0%, rgba(245, 158, 11, 0) 55%),
+    linear-gradient(135deg, #0f172a 0%, #312e81 60%, #4f46e5 100%);
+  color: #fff;
+}
+.wta-course-banner__kicker {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #fcd34d;
+}
+.wta-course-banner__title {
+  font-family: var(--title-font);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+/* Status pill */
+.wta-status {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.wta-status::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.wta-status--open {
+  background: #dcfce7;
+  color: #15803d;
+}
+.wta-status--soon {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.wta-course-card .box-title {
+  margin-bottom: 10px;
+}
+.wta-course-card .box-title span {
+  color: inherit;
+}
+.wta-course-summary {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #475569;
+  margin-bottom: 20px;
+}
+
+/* Countdown */
+.wta-countdown {
+  border-radius: 14px;
+  background: #0f172a;
+  color: #fff;
+  padding: 14px 16px 16px;
+  margin-bottom: 22px;
+}
+.wta-countdown__date {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #fcd34d;
+  margin: 0 0 10px;
+}
+.wta-countdown__units {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.wta-countdown__unit {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 8px 4px 6px;
+  text-align: center;
+}
+.wta-countdown__num {
+  display: block;
+  font-family: var(--title-font);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.wta-countdown__label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #cbd5e1;
+}
+.wta-countdown--pending .wta-countdown__note {
+  margin: 0;
+  font-size: 14px;
+  color: #e2e8f0;
+}
+
+/* Buttons */
+.wta-course-card .btn-wrap {
+  margin-top: auto;
+}
+.wta-btn-disabled,
+.wta-btn-disabled:hover {
+  cursor: default;
+  pointer-events: none;
+  background: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+  color: #64748b !important;
+  box-shadow: none !important;
+}
+
+@media (max-width: 575px) {
+  .wta-countdown__num {
+    font-size: 20px;
+  }
+  .wta-course-banner__title {
+    font-size: 19px;
+  }
+}
