@@ -18,35 +18,30 @@ export default async function Home() {
     <>
             <div className="th-hero-wrapper hero-11" id="hero" data-bg-src="/assets/img/hero/hero_bg_11_1.png">
                 <div className="hero-inner">
-                    <div className="hero-bg-shape11-1 wow animate__fadeInUp">
-                        <img src="/assets/img/hero/hero-bg-shape4-4.png" data-speed="0.8" alt="img" />
-                    </div>
                     <div className="container">
-                        <div className="row gy-50 flex-row-reverse">
-                            <div className="col-lg-5">
-                                <div className="hero-thumb11-1 wow animate__fadeInUp">
-                                    <div className="thumb">
-                                        <img src="/assets/hero-teacher.png" alt="World Teachers Academy student" />
-                                    </div>
-                                    <div className="about-tag">
-                                        <div className="about-experience-tag">
-                                            <span className="circle-title-anime">EXPLORE. PREPARE. WORK ANYWHERE IN THE WORLD.YOUR FUTURE HAS NO BORDERS. GO FURTHER.</span>
-                                        </div>
-                                    </div>
-                                    <div className="hero-info-chart jump-reverse ">
-                                        <img src="/assets/img/hero/hero_thumb3_2.png" alt="img" />
-                                    </div>
-                                    <div className="hero-thumb-info jump">
-                                        {/* Replaces the template image "275k+ Assigned Students" (unverified figure). */}
-                                        <div className="wta-badge wta-badge--stack">
-                                            <img src="/assets/img/hero/wta-badge-icon.png" alt="" width={64} height={64} />
-                                            <strong>Free</strong>
-                                            <span>Courses open now</span>
-                                        </div>
+                        <div className="row gy-50 flex-row-reverse align-items-center">
+                            <div className="col-lg-6">
+                                {/* Owner-supplied hero image (12 Nov 2026). Headline and text stay as HTML.
+                                    WebP for speed; the PNG is the fallback for very old browsers. */}
+                                <div className="global-career-hero wow animate__fadeInUp">
+                                    <picture>
+                                        <source type="image/webp" srcSet="/images/your-future-no-borders-768.webp 768w, /images/your-future-no-borders.webp 1536w" sizes="(min-width: 992px) 50vw, 100vw" />
+                                        <img
+                                            src="/images/your-future-no-borders.png"
+                                            alt="International career opportunities with a professional traveller, world landmarks and global connections"
+                                            width={1536}
+                                            height={1024}
+                                            loading="eager"
+                                            fetchPriority="high"
+                                        />
+                                    </picture>
+                                    <div className="wta-badge wta-badge--hero">
+                                        <img src="/assets/img/hero/wta-badge-icon.png" alt="" width={48} height={48} />
+                                        <div><strong>Free</strong><span>Courses open now</span></div>
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-lg-7">
+                            <div className="col-lg-6">
                                 <div className="hero-style11">
                                     <div className="hero-subtitle wow animate__fadeInUp" data-wow-delay="0.2s">EXPLORE. PREPARE. WORK ABROAD.</div>
                                     <h2 className="hero-title">

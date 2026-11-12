@@ -302,3 +302,43 @@
    .collapse class, which left the open FAQ answer blank on the homepage. */
 .accordion-collapse.collapse.show,
 .accordion-collapse.collapsing { visibility: visible; }
+
+/* ---- Homepage hero: owner-supplied "Your Future Has No Borders" image ---- */
+.global-career-hero {
+  position: relative;
+  width: 100%;
+  border-radius: 20px;
+  box-shadow: 0 24px 60px rgba(30, 27, 75, 0.18);
+}
+.global-career-hero picture,
+.global-career-hero img:not(.wta-badge img) {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+}
+.global-career-hero > picture img { object-fit: contain; }
+.wta-badge--hero {
+  position: absolute;
+  right: 18px;
+  bottom: -22px;
+  min-width: 0;
+  padding: 10px 18px 10px 10px;
+}
+.wta-badge--hero strong { font-size: 20px; }
+.wta-badge--hero span { font-size: 13px; }
+@media (max-width: 991px) {
+  .global-career-hero { max-width: 720px; margin: 0 auto; }
+}
+@media (max-width: 768px) {
+  .global-career-hero,
+  .global-career-hero picture,
+  .global-career-hero > picture img { border-radius: 12px; }
+  .wta-badge--hero { right: 10px; bottom: -18px; padding: 6px 12px 6px 6px; }
+  .wta-badge--hero img { width: 34px; height: 34px; }
+  .wta-badge--hero strong { font-size: 16px; }
+  .wta-badge--hero span { font-size: 12px; }
+}
+/* Room under the hero image for the overlapping badge (.hero-inner clips overflow). */
+#hero .hero-inner { padding-bottom: 70px; }
+@media (max-width: 991px) { #hero .hero-inner { padding-bottom: 50px; } }
