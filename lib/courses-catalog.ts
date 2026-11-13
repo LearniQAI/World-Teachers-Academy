@@ -117,13 +117,21 @@ export const realCourses: CourseCatalogEntry[] = [
       "Learn to code, build websites and develop practical programming skills for today\u2019s global digital workplace.",
   },
   {
-    slug: "diploma-320-hour",
-    title: "Diploma — 320 Hour",
-    image: "/assets/diploma320.jpeg",
+    // Added 13 Nov 2026 at the owner's request. Scheduled launch 28 Nov 2026,
+    // 09:00 SAST. Not in the LMS yet: no profile link and no enrolment button
+    // until the owner approves opening registration. Pricing not confirmed,
+    // so the "Free" label is hidden. Image pending: until it is added the card
+    // shows the designed title banner.
+    slug: "business-english-professional-skills",
+    title: "Business English Communication & Professional Skills",
+    image: null,
+    showFreeLabel: false,
+    launchPendingLabel: "Launch pending confirmation",
     status: "coming_soon",
-    launchAt: "2026-11-22T09:00:00+02:00",
+    launchAt: "2026-11-28T09:00:00+02:00",
     profileUrl: null,
-    summary: "Deepen your teaching practice with a broader professional diploma.",
+    summary:
+      "Build confidence in business English, professional communication, workplace meetings and international career opportunities.",
   },
   {
     slug: "advanced-diploma-395-hour",
@@ -151,6 +159,16 @@ export const realCourses: CourseCatalogEntry[] = [
     launchAt: "2026-12-07T09:00:00+02:00",
     profileUrl: null,
     summary: "A professional course in planning, sourcing and moving goods efficiently.",
+  },
+  {
+    // Moved to position 8 on 13 Nov 2026 at the owner's request (unchanged otherwise).
+    slug: "diploma-320-hour",
+    title: "Diploma — 320 Hour",
+    image: "/assets/diploma320.jpeg",
+    status: "coming_soon",
+    launchAt: "2026-11-22T09:00:00+02:00",
+    profileUrl: null,
+    summary: "Deepen your teaching practice with a broader professional diploma.",
   },
 ];
 
