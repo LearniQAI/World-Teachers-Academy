@@ -151,7 +151,11 @@ export const realCourses: CourseCatalogEntry[] = [
   {
     slug: "tefl-comprehensive-520-hour",
     title: "TEFL Comprehensive — 520 Hours",
-    image: "/assets/520%20hours.jpeg",
+    // Owner-generated photo (13 Nov 2026), replacing the "WORL TEACHERS" banner.
+    // Master PNG at /images/tefl-comprehensive-520.png.
+    image: "/images/tefl-comprehensive-520.webp",
+    imageSrcSet: "/images/tefl-comprehensive-520-752.webp 752w, /images/tefl-comprehensive-520.webp 1504w",
+    imageAlt: "Latin American educator teaching a multicultural group of adult learners in a modern classroom",
     status: "coming_soon",
     launchAt: "2026-12-02T09:00:00+02:00",
     profileUrl: null,
