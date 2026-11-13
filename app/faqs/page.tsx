@@ -11,7 +11,12 @@ const faqs = [
     q: "Do I need previous teaching experience?",
     a: "No — our programmes are designed for both new and experienced educators.",
   },
-  // The next three match the owner-approved homepage FAQ (13 Nov 2026, B6).
+  // The next four match the owner-approved homepage FAQ (13 Nov 2026, B6;
+  // pricing answer approved the same day: all eight courses are free).
+  {
+    q: "Are the courses free?",
+    a: "Yes. All eight World Teachers Academy courses are currently offered free of charge. Some courses are already available, while others will open for enrolment on their announced launch dates, subject to confirmation. Course availability and pricing may change in the future.",
+  },
   {
     q: "Will you help me find a job?",
     a: "We provide Country Guides and career resources to help you explore international employment opportunities. Our updated Job Portal is being developed to make discovering opportunities easier. We do not guarantee employment or placement.",

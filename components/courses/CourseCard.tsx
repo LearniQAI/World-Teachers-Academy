@@ -4,8 +4,8 @@ import LaunchCountdown from "@/components/courses/LaunchCountdown";
 import CourseImage from "@/components/courses/CourseImage";
 
 // One course card, used on the homepage course grid and on /courses.
-// Launch courses are free (a course can hide its "Free" label with
-// showFreeLabel: false while pricing is unconfirmed). No lesson or student counts, no prices, no ratings,
+// All courses are currently free. (A course can hide its "Free" label with
+// showFreeLabel: false if its pricing ever changes.) No lesson or student counts, no prices, no ratings,
 // and no links to the old template course-details page.
 
 const Arrow = () => (

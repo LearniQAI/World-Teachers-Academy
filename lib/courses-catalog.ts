@@ -1,8 +1,8 @@
 // World Teachers Academy course catalog and release schedule — the ONE place
 // that decides what each course card shows.
 //
-// Launch courses are free; Coding & Software Development hides its "Free"
-// label until pricing is confirmed. A card shows one of three states:
+// All eight courses are currently free (owner decision, 13 Nov 2026). A card
+// shows one of three states:
 //   - status "open"                          → "Free — Enrolment Open"
 //   - status "coming_soon", launch ahead      → "Coming Soon" + live countdown
 //   - status "coming_soon", launch has passed → "Launch Update Pending"
@@ -37,8 +37,9 @@ export interface CourseCatalogEntry {
   /** Optional responsive versions of the image (srcset), e.g. smaller WebP files for phones. */
   imageSrcSet?: string;
   /**
-   * Set to false to hide the "Free" label on the card image while a course's
-   * pricing is not confirmed. Defaults to showing it.
+   * Set to false to hide the "Free" label on the card image (e.g. if a
+   * course's pricing ever changes). Defaults to showing it; all eight
+   * courses currently show it.
    */
   showFreeLabel?: boolean;
   /**
@@ -102,13 +103,12 @@ export const realCourses: CourseCatalogEntry[] = [
     // Added 13 Nov 2026 at the owner's request. Scheduled launch 28 Nov 2026,
     // 09:00 SAST (15 days, same launch hour as the other courses). No profile
     // link and no enrolment button until the owner approves opening
-    // registration. Pricing not confirmed, so the "Free" label is hidden.
+    // registration. Free, like all courses (owner, 13 Nov 2026).
     slug: "coding-software-development",
     title: "Coding & Software Development — From Beginner to Career-Ready",
     image: "/images/coding-software-development.webp",
     imageSrcSet: "/images/coding-software-development-752.webp 752w, /images/coding-software-development.webp 1504w",
     imageAlt: "Software developer smiling at his laptop in a modern coding workspace with code on two monitors",
-    showFreeLabel: false,
     launchPendingLabel: "Launch pending confirmation",
     status: "coming_soon",
     launchAt: "2026-11-28T09:00:00+02:00",
@@ -119,15 +119,14 @@ export const realCourses: CourseCatalogEntry[] = [
   {
     // Added 13 Nov 2026 at the owner's request. Scheduled launch 28 Nov 2026,
     // 09:00 SAST. Not in the LMS yet: no profile link and no enrolment button
-    // until the owner approves opening registration. Pricing not confirmed,
-    // so the "Free" label is hidden. Owner-generated photo (13 Nov 2026);
+    // until the owner approves opening registration. Free, like all courses
+    // (owner, 13 Nov 2026). Owner-generated photo (13 Nov 2026);
     // master PNG at /images/business-english-communication.png.
     slug: "business-english-professional-skills",
     title: "Business English Communication & Professional Skills",
     image: "/images/business-english-communication.webp",
     imageSrcSet: "/images/business-english-communication-752.webp 752w, /images/business-english-communication.webp 1504w",
     imageAlt: "International professionals participating in a Business English communication workshop",
-    showFreeLabel: false,
     launchPendingLabel: "Launch pending confirmation",
     status: "coming_soon",
     launchAt: "2026-11-28T09:00:00+02:00",

@@ -211,7 +211,7 @@ export default async function Home() {
                                 </div>
                                 <div className="box-details">
                                     <h3 className="box-title"><span className="text-theme">Free</span> Online Training</h3>
-                                    <p className="box-text">Our launch courses are free, with more exciting programmes coming soon.</p>
+                                    <p className="box-text">All our courses are currently free, with more programmes coming soon.</p>
                                 </div>
                             </div>
                         </div>
@@ -926,7 +926,8 @@ function CategoryArrow() {
   );
 }
 
-// Homepage FAQ — owner-approved wording (13 Nov 2026, B6). No certificate
+// Homepage FAQ — owner-approved wording (13 Nov 2026, B6; "Are the courses
+// free?" updated by the owner the same day: all eight courses are free). No certificate
 // promises until the completion and certificate rules are confirmed.
 const HOME_FAQS: { q: string; a: string }[] = [
   {
@@ -943,7 +944,7 @@ const HOME_FAQS: { q: string; a: string }[] = [
   },
   {
     q: "Are the courses free?",
-    a: "Our launch courses are free. Pricing for Coding & Software Development and Business English Communication & Professional Skills will be confirmed before they launch.",
+    a: "Yes. All eight World Teachers Academy courses are currently offered free of charge. Some courses are already available, while others will open for enrolment on their announced launch dates, subject to confirmation. Course availability and pricing may change in the future.",
   },
   {
     q: "Do you arrange visas, work permits or relocation?",
