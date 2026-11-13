@@ -341,7 +341,7 @@ export default async function Home() {
                                         <div className="why-img-shape-line" data-mask-src="/assets/img/normal/why-thumb-mask10-1.png"></div>
                                     </div>
                                     <div className="thumb" data-mask-src="/assets/img/normal/why-thumb-mask10-1.png">
-                                        <img src="/images/diverse-learners.webp" alt="People from different backgrounds learning together on a laptop" width={960} height={910} loading="lazy" />
+                                        <img src="/images/diverse-learners.webp" alt="People from different backgrounds learning together on a laptop" width={960} height={910} loading="eager" />
                                     </div>
                                     <div className="why-info-card11-1 jump">
                                         {/* Replaces the template image "275k+ Assigned Students" (unverified figure). */}

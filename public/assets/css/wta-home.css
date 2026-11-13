@@ -486,6 +486,13 @@
   object-position: 50% 35%;
 }
 .wta-why-learners .why-img-box10 .wta-badge span { max-width: 240px; }
+/* First floating card: lower and slightly inside the photo, so it clears the
+   text column and the learners' faces (as in the approved sample). */
+.wta-why-learners .why-img-box10 .why-info-card11-1 { left: -60px; bottom: 110px; }
+@media (max-width: 767px) {
+  .wta-why-learners .why-img-box10 .why-info-card11-1 { left: 0; bottom: 90px; }
+  .wta-why-learners .why-img-box10 .wta-badge span { max-width: 190px; }
+}
 
 .wta-why-learners .why-wrap10 .why-card10:nth-child(1)::before,
 .wta-why-learners .why-wrap10 .why-card10:nth-child(4)::before { content: none; }
