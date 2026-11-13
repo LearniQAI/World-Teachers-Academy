@@ -178,7 +178,11 @@ export const realCourses: CourseCatalogEntry[] = [
     // Moved to position 8 on 13 Nov 2026 at the owner's request (unchanged otherwise).
     slug: "diploma-320-hour",
     title: "Diploma — 320 Hour",
-    image: "/assets/diploma320.jpeg",
+    // Owner-generated photo (13 Nov 2026), replacing the "WORL TEACHERS" banner.
+    // Master PNG at /images/tefl-diploma-320.png.
+    image: "/images/tefl-diploma-320.webp",
+    imageSrcSet: "/images/tefl-diploma-320-752.webp 752w, /images/tefl-diploma-320.webp 1504w",
+    imageAlt: "Southeast Asian female educator leading an interactive English teaching workshop with international students",
     status: "coming_soon",
     launchAt: "2026-11-22T09:00:00+02:00",
     profileUrl: null,
