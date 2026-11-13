@@ -6,7 +6,7 @@ const testimonials = [
     { name: "Lwazi Mokoena", image: "/assets/Testimonial image 3.jpeg", quote: "Connecting one-on-one with an industry expert changed everything for me. Instead of guessing my way through professional challenges, I had tailored guidance every step of the way." },
     { name: "Zola Dlamini", image: "/assets/Testimonial image 4.jpeg", quote: "The resources and mentorship platform provided an incredible support system. It’s amazing how fast you can grow and gain practical skills when you have a mentor who truly listens to your goals." },
     { name: "Priya Naidoo", image: "/assets/Testimonial image 5.jpeg", quote: "This mentorship framework is absolute gold. Being able to solve real-world challenges through direct digital sessions accelerated my learning curve beyond what I expected." },
-    { name: "Keegan van Rooyen", image: "/assets/Testimonial image 6.jpeg", quote: "Having direct access to experienced professionals through this platform helped me bridge the gap between classroom theory and real industry practice. Highly recommended for any student!" },
+    { name: "Keegan van Rooyen", image: "/assets/Testimonial image 6.jpeg", quote: "Having direct access to experienced professionals through this platform helped me bridge the gap between theory and real industry practice. Highly recommended for any student!" },
 ];
 
 // "fade" is the homepage layout (one quote at a time beside the contact form);
@@ -28,8 +28,8 @@ export default function TextTestimonials({ variant = "fade" }: { variant?: "fade
     return (
         <>
             <div className={isCarousel ? "title-area text-center" : "title-area"}>
-                <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Testimonials</span>
-                <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">What Trainer Says</span></h2>
+                <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="" />Testimonials</span>
+                <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">What Our Learners Say</span></h2>
             </div>
             <div className={isCarousel ? "slider-area testi-carousel th_fade_anim" : "slider-area testi-slider7 th_fade_anim"}>
                 <div className="swiper th-slider" id={sliderId} data-slider-options={JSON.stringify(SLIDER_OPTIONS[variant])}>
@@ -40,16 +40,6 @@ export default function TextTestimonials({ variant = "fade" }: { variant?: "fade
                                     <div className="testi-meta-wrap">
                                         <div className="quote-icon">
                                             <img src="/assets/img/icon/quote5.svg" alt="" />
-                                        </div>
-                                        <div className="testi-review-wrap">
-                                            <h3 className="rating-title"><strong>4.9</strong>/5.0</h3>
-                                            <span className="testi-card_review">
-                                                <i className="fas fa-star"></i>
-                                                <i className="fas fa-star"></i>
-                                                <i className="fas fa-star"></i>
-                                                <i className="fas fa-star"></i>
-                                                <i className="fas fa-star"></i>
-                                            </span>
                                         </div>
                                     </div>
                                     <p className="box-text">“{t.quote}”</p>

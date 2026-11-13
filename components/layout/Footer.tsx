@@ -1,3 +1,6 @@
+import SocialLinks from "@/components/layout/SocialLinks";
+import { CONTACT_EMAIL, MISSION_LINE, START_TRAINING_URL } from "@/lib/site";
+
 export default function Footer() {
   return (
     <>
@@ -7,26 +10,15 @@ export default function Footer() {
                         <div className="subscribe-box">
                             <div className="row gy-40 align-items-center justify-content-center">
                                 <div className="col-xl-6">
-                                    <h3 className="subscribe-box_title text-title th-text-perspective">Get Updated on New Courses & Job Openings</h3>
+                                    <h3 className="subscribe-box_title text-title th-text-perspective">Preparing for your next international opportunity?</h3>
                                 </div>
                                 <div className="col-xl-6 col-lg-8">
-                                    <form className="newsletter-form th_fade_anim" data-delay=".3">
-                                        <div className="form-group">
-                                            <input className="form-control" type="email" placeholder="Enter Email Address" required />
-                                        </div>
-                                        <button type="submit" className="th-btn">SUBSCRIBE NOW<svg className="ms-2" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <g clipPath="url(#clip0_458_9379)">
-                                                    <path d="M14.0331 2.03512C12.5811 0.471411 1.65895 4.30197 1.66797 5.7005C1.6782 7.28644 5.93336 7.7743 7.11277 8.10524C7.82203 8.30417 8.01197 8.50817 8.1755 9.2519C8.91617 12.6202 9.28803 14.2955 10.1356 14.3329C11.4865 14.3926 15.4502 3.56117 14.0331 2.03512Z" fill="transparent" stroke="currentColor" strokeWidth="1.5"  />
-                                                    <path d="M7.66797 8.33333L10.0013 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"  />
-                                                </g>
-                                                <defs>
-                                                    <clipPath>
-                                                        <rect width="16" height="16" fill="currentColor"  />
-                                                    </clipPath>
-                                                </defs>
-                                            </svg>
-                                        </button>
-                                    </form>
+                                    {/* The template's subscribe form was not connected to anything (emails were lost).
+                                        Until a real, consented newsletter exists, this invites visitors to email us. */}
+                                    <div className="th_fade_anim" data-delay=".3" style={{ display: "flex", flexWrap: "wrap", gap: 16, alignItems: "center", justifyContent: "flex-end" }}>
+                                        <p style={{ margin: 0 }}>Questions about a programme or a launch date?</p>
+                                        <a href={`mailto:${CONTACT_EMAIL}`} className="th-btn">Email us</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -43,8 +35,8 @@ export default function Footer() {
                                                 <img src="/assets/img/world-teachers-logo.png" alt="World Teachers Academy" style={{ height: '96px', width: 'auto' }} />
                                             </a>
                                         </div>
-                                        <p className="about-text"> World Teachers Academy helps educators get certified and get hired — training and real teaching opportunities, in one place.</p>
-                                        <a href="/support" className="th-btn style2 btn-sm">Enroll Now<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <p className="about-text">{MISSION_LINE}</p>
+                                        <a href={START_TRAINING_URL} className="th-btn style2 btn-sm">Start Free Training<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"  />
                                             </svg>
                                         </a>
@@ -101,16 +93,10 @@ export default function Footer() {
                                                 </svg>
                                             </div>
                                             <div className="box-details">
-                                                <p className="box-text"><a href="mailto:hello@worldteachers.academy" className="box-link">hello@worldteachers.academy</a></p>
+                                                <p className="box-text"><a href={`mailto:${CONTACT_EMAIL}`} className="box-link">{CONTACT_EMAIL}</a></p>
                                             </div>
                                         </div>
-                                        <div className="th-social style6">
-                                            <a href="https://www.facebook.com/"><i className="fab fa-facebook-f"></i></a>
-                                            <a href="https://www.twitter.com/"><i className="fab fa-twitter"></i></a>
-                                            <a href="https://www.linkedin.com/"><i className="fab fa-linkedin-in"></i></a>
-                                            <a href="https://www.youtube.com/"><i className="fab fa-youtube"></i></a>
-                                            <a href="https://www.instagram.com/"><i className="fab fa-instagram"></i></a>
-                                        </div>
+                                        <SocialLinks className="th-social style6" />
                                     </div>
                                 </div>
                             </div>
@@ -122,7 +108,7 @@ export default function Footer() {
                         <div className="row gy-2 align-items-center">
                             <div className="col-lg-6">
                                 <p className="copyright-text">Copyright
-                                    <i className="fal fa-copyright"></i> 2026 <a href="index.html">World Teachers Academy</a>, All rights reserved.
+                                    <i className="fal fa-copyright"></i> 2026 <a href="/">World Teachers Academy</a>, All rights reserved.
                                 </p>
                             </div>
                             <div className="col-lg-6 text-center text-lg-end">

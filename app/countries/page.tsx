@@ -14,7 +14,7 @@ export default function Countries() {
           <div className="row">
             <div className="col-lg-7">
               <div className="breadcumb-content" style={{ "--space": "45px" } as React.CSSProperties}>
-                <span className="sub-title text-theme"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Countries</span>
+                <span className="sub-title text-theme"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="" />Countries</span>
                 <h1 className="breadcumb-title">Country Guides</h1>
                 <ul className="breadcumb-menu">
                   <li><a href="/">Home</a></li>
@@ -35,7 +35,7 @@ Countries Area
               <div className="col-lg-4 col-md-6 th_fade_anim" data-delay={DELAYS[i % 3]} key={country.slug}>
                 <a href={`/countries/${country.slug}`} className="country-card" aria-label={`${country.name} teaching guide`}>
                   <div className="country-card__top">
-                    <span className="country-card__flag" aria-hidden="true"><CountryFlag country={country} height={28} /></span>
+                    <span className="country-card__flag" aria-hidden="true"><CountryFlag country={country} height={28} frame={false} maxWidth={60} /></span>
                     <span className="country-card__code">{country.code}</span>
                   </div>
                   <h2 className="country-card__name">{country.name}</h2>

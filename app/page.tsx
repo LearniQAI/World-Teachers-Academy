@@ -1,7 +1,10 @@
+import type React from "react";
 import VideoTestimonials from "@/components/home/VideoTestimonials";
 import TextTestimonials from "@/components/home/TextTestimonials";
+import { SHOW_UNVERIFIED_TESTIMONIALS } from "@/lib/site";
 import HeroSearchForm from "@/components/home/HeroSearchForm";
 import { realCourses } from "@/lib/courses-catalog";
+import CourseCard from "@/components/courses/CourseCard";
 import { getJobStats } from "@/lib/job-stats";
 
 export const revalidate = 3600;
@@ -9,6 +12,10 @@ export const revalidate = 3600;
 // Job Portal section is hidden for now (kept in the code, not deleted). Flip to
 // true to bring it back — the live job stats are only fetched while it is shown.
 const SHOW_JOB_PORTAL: boolean = false;
+// Resource sign-up form: off until its backend (storage, consent, spam
+// protection, confirmation email) is built, tested and approved. See B1 in
+// docs/review/2026-11-functionality-backlog.md.
+const SHOW_RESOURCE_SIGNUP_FORM: boolean = false;
 
 export default async function Home() {
   const jobStats = SHOW_JOB_PORTAL ? await getJobStats() : { openRoles: null, countries: null };
@@ -17,38 +24,37 @@ export default async function Home() {
     <>
             <div className="th-hero-wrapper hero-11" id="hero" data-bg-src="/assets/img/hero/hero_bg_11_1.png">
                 <div className="hero-inner">
-                    <div className="hero-bg-shape11-1 wow animate__fadeInUp">
-                        <img src="/assets/img/hero/hero-bg-shape4-4.png" data-speed="0.8" alt="img" />
-                    </div>
                     <div className="container">
-                        <div className="row gy-50 flex-row-reverse">
-                            <div className="col-lg-5">
-                                <div className="hero-thumb11-1 wow animate__fadeInUp">
-                                    <div className="thumb">
-                                        <img src="/assets/hero-teacher.png" alt="World Teachers Academy student" />
-                                    </div>
-                                    <div className="about-tag">
-                                        <div className="about-experience-tag">
-                                            <span className="circle-title-anime">TRAIN. CERTIFY. TEACH ANYWHERE IN THE WORLD.BUILT BY TEACHERS, FOR TEACHERS, WORLDWIDE</span>
-                                        </div>
-                                    </div>
-                                    <div className="hero-info-chart jump-reverse ">
-                                        <img src="/assets/img/hero/hero_thumb3_2.png" alt="img" />
-                                    </div>
-                                    <div className="hero-thumb-info jump">
-                                        {/* TODO: confirm real teacher-trained count — suggested replacement "320+ Teachers Trained" pending confirmation, or remove badge entirely if it crowds the image. */}
-                                        <img src="/assets/img/hero/hero_thumb-info11_1.png" alt="img" />
+                        <div className="row gy-50 flex-row-reverse align-items-center">
+                            <div className="col-lg-6">
+                                {/* Owner-supplied hero image (12 Nov 2026). Headline and text stay as HTML.
+                                    WebP for speed; the PNG is the fallback for very old browsers. */}
+                                <div className="global-career-hero wow animate__fadeInUp">
+                                    <picture>
+                                        <source type="image/webp" srcSet="/images/your-future-no-borders-768.webp 768w, /images/your-future-no-borders.webp 1536w" sizes="(min-width: 992px) 50vw, 100vw" />
+                                        <img
+                                            src="/images/your-future-no-borders.png"
+                                            alt="International career opportunities with a professional traveller, world landmarks and global connections"
+                                            width={1536}
+                                            height={1024}
+                                            loading="eager"
+                                            fetchPriority="high"
+                                        />
+                                    </picture>
+                                    <div className="wta-badge wta-badge--hero">
+                                        <img src="/assets/img/hero/wta-badge-icon.png" alt="" width={48} height={48} />
+                                        <div><strong>Free</strong><span>Courses open now</span></div>
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-lg-7">
+                            <div className="col-lg-6">
                                 <div className="hero-style11">
-                                    <div className="hero-subtitle wow animate__fadeInUp" data-wow-delay="0.2s">CERTIFY. TEACH. GET HIRED.</div>
+                                    <div className="hero-subtitle wow animate__fadeInUp" data-wow-delay="0.2s">EXPLORE. PREPARE. WORK ABROAD.</div>
                                     <h2 className="hero-title">
-                                        <span className="title1 wow animate__fadeInUp" data-wow-delay="0.3s">Get Certified. Get Placed. Go Teach the World.</span>
+                                        <span className="title1 wow animate__fadeInUp" data-wow-delay="0.3s">Your Future Has No Borders.</span>
                                     </h2>
                                     <p className="hero-text wow animate__fadeInUp" data-wow-delay="0.6s">
-                                        Internationally recognised teaching certifications and a live directory of verified teaching jobs, in one place — so you&apos;re never juggling five different sites to build your career.
+                                        Explore countries, understand international job opportunities, and prepare with the skills, knowledge, and confidence to work abroad.
                                     </p>
                                     <div className="header-search-form wow animate__fadeInUp" data-wow-delay="0.7s">
                                         <HeroSearchForm />
@@ -62,16 +68,16 @@ export default async function Home() {
                     <div className="container">
                         <div className="row gy-4 justify-content-center text-center stat-strip">
                             <div className="col-6 col-md-3">
-                                <div className="counter-card"><div className="media-body"><h2 className="box-number"><span className="counter-number">500</span>+</h2><p className="box-text">Teachers Certified</p></div></div>
+                                <div className="counter-card"><div className="media-body"><h2 className="box-number">Free</h2><p className="box-text">Online Courses</p></div></div>
                             </div>
                             <div className="col-6 col-md-3">
-                                <div className="counter-card"><div className="media-body"><h2 className="box-number"><span className="counter-number">50</span>+</h2><p className="box-text">Partner Schools</p></div></div>
+                                <div className="counter-card"><div className="media-body"><h2 className="box-number">Global</h2><p className="box-text">Country Guides</p></div></div>
                             </div>
                             <div className="col-6 col-md-3">
-                                <div className="counter-card"><div className="media-body"><h2 className="box-number"><span className="counter-number">20</span>+</h2><p className="box-text">Countries</p></div></div>
+                                <div className="counter-card"><div className="media-body"><h2 className="box-number">8</h2><p className="box-text">Programmes</p></div></div>
                             </div>
                             <div className="col-6 col-md-3">
-                                <div className="counter-card"><div className="media-body"><h2 className="box-number"><span className="counter-number">150</span>+</h2><p className="box-text">Active Job Listings</p></div></div>
+                                <div className="counter-card"><div className="media-body"><h2 className="box-number">Practical</h2><p className="box-text">Career Skills</p></div></div>
                             </div>
                         </div>
                     </div>
@@ -84,7 +90,7 @@ export default async function Home() {
                     <div className="row justify-content-lg-between justify-content-center align-items-center">
                         <div className="col-xxl-7 col-lg-8">
                             <div className="title-area text-lg-start text-center">
-                                <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Browse Teaching Certifications & Training Programs</span></h2>
+                                <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Browse Certifications & Training Programmes</span></h2>
                             </div>
                         </div>
                         <div className="col-auto">
@@ -105,149 +111,29 @@ export default async function Home() {
                         </div>
                     </div>
                     <div className="category-slider3 th_fade_anim">
-                        {/* TODO: add one supporting line per certification card once course names are finalized (e.g. under "TEFL / TESOL Certification": "Your first step to teaching abroad or online") */}
-                        <div className="swiper th-slider has-shadow" id="categorySlider3" data-slider-options='{"breakpoints":{"0":{"slidesPerView":"1"},"526":{"slidesPerView":"2"},"768":{"slidesPerView":"3"},"991":{"slidesPerView":"4"},"1200":{"slidesPerView":"5"},"1400":{"slidesPerView":"5"}}}'>
+                                                <div className="swiper th-slider has-shadow" id="categorySlider3" data-slider-options='{"spaceBetween":20,"breakpoints":{"0":{"slidesPerView":1.15},"526":{"slidesPerView":2.15},"768":{"slidesPerView":3},"991":{"slidesPerView":4},"1200":{"slidesPerView":5},"1400":{"slidesPerView":5}}}'>
                             <div className="swiper-wrapper">
-                                <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#4F46E5" data-border="#A5B4FC">
-                                        <div className="box-icon">
-                                            <img src="/assets/img/icon/category/category3-1.svg" alt="Image" />
+                                {/* Cards and destinations: CATEGORY_CARDS at the bottom of this file.
+                                    Listed twice so the looping slider always has enough slides. */}
+                                {[...CATEGORY_CARDS, ...CATEGORY_CARDS].map((card, i) => (
+                                    <div className="swiper-slide" key={`${card.title}-${i}`}>
+                                        <div className={`category-card3 wta-cat wta-cat--${card.theme}`}>
+                                            <div className="wta-cat__top">
+                                                <span className="wta-cat__icon"><CategoryIcon name={card.icon} /></span>
+                                                <span className="wta-cat__tag">{THEME_LABEL[card.theme]}</span>
+                                            </div>
+                                            <h3 className="box-title">
+                                                {card.href ? <a href={card.href}>{card.title}</a> : <span>{card.title}</span>}
+                                            </h3>
+                                            <p className="wta-cat__text">{card.text}</p>
+                                            {card.href ? (
+                                                <a className="icon-btn style8 wta-cat__btn" href={card.href} aria-label={card.title}><CategoryArrow /></a>
+                                            ) : (
+                                                <span className="wta-category-soon wta-cat__btn">Coming soon</span>
+                                            )}
                                         </div>
-                                        <h3 className="box-title"><a href="course.html">TEFL / TESOL <br /> Certification </a></h3>
-                                        <a className="icon-btn style8" href="course-details.html">
-                                            <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
-                                            </svg>
-                                        </a>
                                     </div>
-                                </div>
-
-                                <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#14B8A6" data-border="#5EEAD4">
-                                        <div className="box-icon">
-                                            <img src="/assets/img/icon/category/category3-2.svg" alt="Image" />
-                                        </div>
-                                        <h3 className="box-title"><a href="course.html">Classroom <br /> Management</a></h3>
-                                        <a className="icon-btn style8" href="course-details.html">
-                                            <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#334155" data-border="#CBD5E1">
-                                        <div className="box-icon">
-                                            <img src="/assets/img/icon/category/category3-3.svg" alt="Image" />
-                                        </div>
-                                        <h3 className="box-title"><a href="course.html">Curriculum <br /> Design</a></h3>
-                                        <a className="icon-btn style8" href="course-details.html">
-                                            <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#0F766E" data-border="#5EEAD4">
-                                        <div className="box-icon">
-                                            <img src="/assets/img/icon/category/category3-4.svg" alt="Image" />
-                                        </div>
-                                        <h3 className="box-title"><a href="course.html">Special Education <br /> Training</a></h3>
-                                        <a className="icon-btn style8" href="course-details.html">
-                                            <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#F97316" data-border="#FDBA74">
-                                        <div className="box-icon">
-                                            <img src="/assets/img/icon/category/category3-5.svg" alt="Image" />
-                                        </div>
-                                        <h3 className="box-title"><a href="course.html">Digital Teaching <br /> Tools</a></h3>
-                                        <a className="icon-btn style8" href="course-details.html">
-                                            <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#4F46E5" data-border="#A5B4FC">
-                                        <div className="box-icon">
-                                            <img src="/assets/img/icon/category/category3-1.svg" alt="Image" />
-                                        </div>
-                                        <h3 className="box-title"><a href="course.html">TEFL / TESOL <br /> Certification </a></h3>
-                                        <a className="icon-btn style8" href="course-details.html">
-                                            <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#14B8A6" data-border="#5EEAD4">
-                                        <div className="box-icon">
-                                            <img src="/assets/img/icon/category/category3-2.svg" alt="Image" />
-                                        </div>
-                                        <h3 className="box-title"><a href="course.html">Classroom <br /> Management</a></h3>
-                                        <a className="icon-btn style8" href="course-details.html">
-                                            <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#334155" data-border="#CBD5E1">
-                                        <div className="box-icon">
-                                            <img src="/assets/img/icon/category/category3-3.svg" alt="Image" />
-                                        </div>
-                                        <h3 className="box-title"><a href="course.html">Curriculum <br /> Design</a></h3>
-                                        <a className="icon-btn style8" href="course-details.html">
-                                            <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#0F766E" data-border="#5EEAD4">
-                                        <div className="box-icon">
-                                            <img src="/assets/img/icon/category/category3-4.svg" alt="Image" />
-                                        </div>
-                                        <h3 className="box-title"><a href="course.html">Special Education <br /> Training</a></h3>
-                                        <a className="icon-btn style8" href="course-details.html">
-                                            <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div className="swiper-slide th_fade_anim">
-                                    <div className="category-card3" data-theme-color="#F97316" data-border="#FDBA74">
-                                        <div className="box-icon">
-                                            <img src="/assets/img/icon/category/category3-5.svg" alt="Image" />
-                                        </div>
-                                        <h3 className="box-title"><a href="course.html">Digital Teaching <br /> Tools</a></h3>
-                                        <a className="icon-btn style8" href="course-details.html">
-                                            <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor"  />
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
-
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -256,10 +142,8 @@ export default async function Home() {
             
             <div className="space-bottom overflow-hidden" id="about-sec">
                 <div className="about-bg-shape11-1 d-xxl-block d-none shape-mockup" data-speed="0.8" data-top="15%" data-left="5%">
-                    <img src="/assets/img/shape/course_shape5_1.png" alt="img" />
                 </div>
                 <div className="about-bg-shape10-2 shape-mockup d-xxl-block d-none" data-speed="0.9" data-bottom="15%" data-right="5%">
-                    <img src="/assets/img/shape/about_shape3_2.png" alt="img" />
                 </div>
                 <div className="about-wrap11 space-bottom">
                     <div className="container">
@@ -268,7 +152,10 @@ export default async function Home() {
                                 <div className="img-box11">
                                     <div className="img1 th--hover-item th_fade_anim">
                                         <div className="thumb th--hover-img" data-displacement="/assets/img/imghover/fluid.jpg" data-intensity="0.2" data-speedin="1" data-speedout="1">
-                                            <img className="img-cover" src="/assets/img/normal/more-aboutus-1.jpg" alt="World Teachers Academy team" />
+                                            {/* Owner-supplied photo (13 Nov 2026). Master: /images/global-career-professional.png (1122×1402).
+                                                Served as a 3:5 WebP crop that matches this frame exactly, so the hover
+                                                ripple (which reads the img src directly) never stretches it. */}
+                                            <img className="img-cover" src="/images/global-career-professional-3x5.webp" width={841} height={1402} loading="lazy" decoding="async" alt="Black African professional woman working on a laptop in a bright modern workspace, preparing for global career opportunities" />
                                         </div>
                                     </div>
                                     <div className="img2 th--hover-item th_fade_anim">
@@ -278,10 +165,10 @@ export default async function Home() {
                                     </div>
                                     <div className="about-tag th_fade_anim">
                                         <div className="about-experience-tag">
-                                            <span className="circle-title-anime">Years Of Experience ** Years Of Experience **</span>
+                                            <span className="circle-title-anime">Your Future Has No Borders ** Work Abroad **</span>
                                         </div>
                                         <div className="year-counter">
-                                            <div className="box-title"><span className="counter-number">10</span></div>
+                                            <div className="box-title wta-circle-word">WTA</div>
                                         </div>
                                     </div>
                                 </div>
@@ -289,9 +176,9 @@ export default async function Home() {
                             <div className="col-xl-6">
                                 <div className="title-area mb-35">
                                     <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />More About Us</span>
-                                    <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Everything a Teacher Needs to Build a Global Career</span></h2>
-                                    <p className="th_fade_anim">World Teachers Academy was built for one purpose: helping educators get certified, stay current, and find teaching roles that genuinely fit their skills — without juggling five different websites to do it.</p>
-                                    <p className="th_fade_anim">From certification courses taught by educators who actually teach, to a live directory of verified teaching jobs across multiple countries, we bring the training and the opportunity together in one place.</p>
+                                    <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Everything You Need to Build a Global Career</span></h2>
+                                    <p className="th_fade_anim">World Teachers Academy was built for one purpose: helping people get certified, stay current, and find international roles that genuinely fit their skills — without juggling five different websites to do it.</p>
+                                    <p className="th_fade_anim">From practical certification courses to free Country Guides, we bring training and international career resources together in one place.</p>
                                 </div>
                                 <div className="about-info-card style2 th_fade_anim">
                                     <div className="box-icon">
@@ -300,8 +187,8 @@ export default async function Home() {
                                         </svg>
                                     </div>
                                     <div className="box-content">
-                                        <h3 className="box-title">Certified Teaching Programs</h3>
-                                        <p className="box-text">Every course is designed around real classroom needs, not generic online-course filler — built by people who&apos;ve actually stood in front of a class.</p>
+                                        <h3 className="box-title">Career Programmes</h3>
+                                        <p className="box-text">Courses designed around practical, real-world skills.</p>
                                     </div>
                                 </div>
                                 <div className="btn-wrap mt-40 th_fade_anim">
@@ -323,8 +210,8 @@ export default async function Home() {
                                     <img src="/assets/img/icon/about-card-icon11-1.svg" alt="img" />
                                 </div>
                                 <div className="box-details">
-                                    <h3 className="box-title"><span className="text-theme">320+</span> Teachers Trained</h3>
-                                    <p className="box-text">Real educators, genuinely certified and placed — not a projection.</p>
+                                    <h3 className="box-title"><span className="text-theme">Free</span> Online Training</h3>
+                                    <p className="box-text">All our courses are currently free, with more programmes coming soon.</p>
                                 </div>
                             </div>
                         </div>
@@ -334,8 +221,8 @@ export default async function Home() {
                                     <img src="/assets/img/icon/about-card-icon11-2.svg" alt="img" />
                                 </div>
                                 <div className="box-details">
-                                    <h3 className="box-title"><span className="text-theme">200+</span> Partner Schools</h3>
-                                    <p className="box-text">A real, growing network of schools that hire our graduates directly.</p>
+                                    <h3 className="box-title"><span className="text-theme">Global</span> Country Guides</h3>
+                                    <p className="box-text">Practical guides to living and working in countries around the world.</p>
                                 </div>
                             </div>
                         </div>
@@ -345,8 +232,8 @@ export default async function Home() {
                                     <img src="/assets/img/icon/about-card-icon11-3.svg" alt="img" />
                                 </div>
                                 <div className="box-details">
-                                    <h3 className="box-title">Job Listings Updated Daily</h3>
-                                    <p className="box-text">Kept as-is if genuinely true — a strong claim worth keeping if your Job Portal is actively maintained.</p>
+                                    <h3 className="box-title"><span className="text-theme">Career</span> Resources</h3>
+                                    <p className="box-text">Guides to help you explore international opportunities. Our updated Job Portal is being developed.</p>
                                 </div>
                             </div>
                         </div>
@@ -361,11 +248,9 @@ export default async function Home() {
             <section className="space bg-smoke3 overflow-hidden" id="course-sec">
                 <div className="course-bg-shape7-1 shape-mockup" data-speed="0.9" data-left="6%" data-bottom="30%">
                     <div className="thumb">
-                        <img src="/assets/img/shape/course_shape7_1.png" alt="img" />
                     </div>
                 </div>
                 <div className="course-bg-shape7-2 shape-mockup th_fade_anim" data-speed="1.08" data-right="3%" data-top="30%">
-                    <img src="/assets/img/shape/about_shape1_1.png" alt="img" />
                 </div>
                 <div className="container">
                     <div className="row justify-content-center align-items-center">
@@ -373,66 +258,23 @@ export default async function Home() {
                             <div className="title-area text-center">
                                 <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Our Courses</span>
                                 <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Our Featured Courses</span></h2>
-                                {/* Course images/titles now come from lib/courses-catalog.ts (the 5 real
-                                    courses). Still need real data — price, hours/access period, and
-                                    instructor name only if crediting one is confirmed — do NOT re-add star
-                                    ratings or review counts unless there are genuine reviews to back them. */}
+                                {/* Cards: components/courses/CourseCard.tsx (no prices, lesson or student
+                                    counts, or ratings; "Free" label per course, see showFreeLabel). */}
                             </div>
                         </div>
                     </div>
                     <div className="slider-area">
-                        <div className="swiper th-slider course-slider11 has-shadow" id="CourseSlider11" data-slider-options='{"autoHeight": "true","breakpoints":{"0":{"slidesPerView":1},"576":{"slidesPerView":"1"},"768":{"slidesPerView":"2"},"992":{"slidesPerView":"2"},"1200":{"slidesPerView":"3"}}}'>
+                        <div className="swiper th-slider course-slider11 has-shadow" id="CourseSlider11" data-slider-options='{"loop": false, "autoplay": {"enabled": false}, "autoHeight": "true","breakpoints":{"0":{"slidesPerView":1},"576":{"slidesPerView":"1"},"768":{"slidesPerView":"2"},"992":{"slidesPerView":"2"},"1200":{"slidesPerView":"3"}}}'>
                             <div className="swiper-wrapper">
-                                {realCourses.map((course, i) => {
-                                    // Supply Chain Management has no course-details entry yet
-                                    // (pending confirmation it should exist on the site at all) —
-                                    // linking it to /courses/supply-chain-management would silently
-                                    // fall back to showing the TEFL course's details instead.
-                                    const detailsHref =
-                                        course.slug === "supply-chain-management"
-                                            ? "/contact"
-                                            : `/courses/${course.slug}`;
-                                    return (
-                                    <div className="swiper-slide th_fade_anim" data-delay={[".3", ".5", ".7", ".3", ".5"][i]} key={course.slug}>
-                                        <div className="course-card">
-                                            <div className="box-img">
-                                                <a href={detailsHref}><img src={course.image} alt={course.title} /></a>
-                                                <span className="box-price">[Price TBD]</span>
-                                            </div>
-                                            <h3 className="box-title"><a href={detailsHref}>{course.title}</a></h3>
-                                            {/* Star rating and review count withheld until genuine reviews exist. */}
-                                            <div className="box-content">
-                                                <div className="course-info">
-                                                    <div className="box-icon">
-                                                        <i className="fal fa-file-lines"></i>
-                                                    </div>
-                                                    <div className="course-info-details">
-                                                        <span className="course-info-title">Lessons:</span>
-                                                        <h4 className="course-info-text">50+ Lessons</h4>
-                                                    </div>
-                                                </div>
-                                                <div className="course-info">
-                                                    <div className="box-icon">
-                                                        <i className="fal fa-users"></i>
-                                                    </div>
-                                                    <div className="course-info-details">
-                                                        <span className="course-info-title">Students:</span>
-                                                        <h4 className="course-info-text">160+ Students</h4>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {/* Instructor meta-box removed — no real instructor is confirmed yet, and a
-                                                "[Instructor TBD]" placeholder next to a generic stock photo reads as broken,
-                                                not as pending content. */}
-                                            <div className="btn-wrap">
-                                                <a href={detailsHref} className="th-btn btn-sm style-border2">VIEW DETAILS<svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
-                                                    </svg></a>
-                                            </div>
-                                        </div>
+                                {/* The new course cards (free, with launch countdowns) from
+                                    components/courses/CourseCard.tsx, inside the original slider.
+                                    Order and launch dates come from lib/courses-catalog.ts; the
+                                    Online Teaching & Tutoring course is first and open now. */}
+                                {realCourses.map((course, i) => (
+                                    <div className="swiper-slide th_fade_anim" data-delay={[".3", ".5", ".7", ".3", ".5", ".7"][i] ?? ".3"} key={course.slug}>
+                                        <CourseCard course={course} />
                                     </div>
-                                    );
-                                })}
+                                ))}
                             </div>
                         </div>
                         <button data-slider-prev="#CourseSlider11" className="slider-arrow style9 slider-prev">
@@ -456,31 +298,29 @@ export default async function Home() {
                     <div className="counter-wrap1 bg-theme th_fade_anim p-lg-0">
                         <div className="counter-card">
                             <div className="media-body">
-                                <h2 className="box-number text-white"><span className="counter-number">3.9</span>k+</h2>
-                                <p className="box-text">Teachers Certified</p>
+                                <h2 className="box-number text-white">Free</h2>
+                                <p className="box-text">Courses to Start Today</p>
                             </div>
                         </div>
                         <div className="divider"></div>
                         <div className="counter-card">
                             <div className="media-body">
-                                {/* TODO: "85+" predates the real 5-course catalog wired in above and is now
-                                    inconsistent with it — confirm the real course count with the client. */}
-                                <h2 className="box-number text-white"><span className="counter-number">85</span>+</h2>
-                                <p className="box-text">Courses Available</p>
+                                <h2 className="box-number text-white">Online</h2>
+                                <p className="box-text">Learn From Anywhere</p>
                             </div>
                         </div>
                         <div className="divider"></div>
                         <div className="counter-card">
                             <div className="media-body">
-                                <h2 className="box-number text-white"><span className="counter-number">320</span>+</h2>
-                                <p className="box-text">Verified Instructors</p>
+                                <h2 className="box-number text-white">Global</h2>
+                                <p className="box-text">Career Opportunities</p>
                             </div>
                         </div>
                         <div className="divider"></div>
                         <div className="counter-card">
                             <div className="media-body">
-                                <h2 className="box-number text-white"><span className="counter-number">5.5</span>k+</h2>
-                                <p className="box-text">Job Placements Facilitated</p>
+                                <h2 className="box-number text-white">Practical</h2>
+                                <p className="box-text">Skills for Work</p>
                             </div>
                         </div>
                         <div className="divider"></div>
@@ -501,12 +341,18 @@ export default async function Home() {
                                         <img src="/assets/Why-choose-section.jpeg" alt="Student holding books" />
                                     </div>
                                     <div className="why-info-card11-1 jump">
-                                        {/* TODO: confirm replacement stat before changing — candidate is "200+ Partner Schools" but confirm this doesn't duplicate Section 4's stat awkwardly, or remove the badge entirely. */}
-                                        <img src="/assets/img/hero/hero_thumb-info3_1.png" alt="img" />
+                                        {/* Replaces the template image "275k+ Assigned Students" (unverified figure). */}
+                                        <div className="wta-badge">
+                                            <img src="/assets/img/hero/wta-badge-icon.png" alt="" width={56} height={56} />
+                                            <div><strong>Free</strong><span>Online training</span></div>
+                                        </div>
                                     </div>
                                     <div className="why-info-card11-2 jump-reverse">
-                                        {/* TODO: replace with a real scheduled session snippet (e.g. "TEFL Foundations — Live Q&A, Today at 6:00 PM") once a real session exists, or remove this widget entirely if no live sessions are scheduled yet. */}
-                                        <img src="/assets/img/hero/hero_thumb-info11_2.png" alt="img" />
+                                        {/* Replaces the template image "User Experience Class, Today at 12.00 PM" (not a real session). */}
+                                        <div className="wta-badge wta-badge--wide">
+                                            <img src="/assets/img/hero/wta-badge-icon.png" alt="" width={56} height={56} />
+                                            <div><strong>Online Teaching &amp; Tutoring</strong><span>Free — enrolment open now</span></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -514,8 +360,8 @@ export default async function Home() {
                         <div className="col-xl-5">
                             <div className="title-area mb-50">
                                 <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Why Choose World Teachers Academy</span>
-                                <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Train With People Who Actually Teach</span></h2>
-                                <p className="th_fade_anim">Every course here is built by educators who&apos;ve genuinely stood in front of a classroom — not a generic curriculum written by people who&apos;ve never taught. That&apos;s the difference between a certificate and real preparation.</p>
+                                <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Learn From Real-World Experience</span></h2>
+                                <p className="th_fade_anim">Our courses focus on practical skills and real-world preparation for working internationally, alongside free Country Guides that explain what each destination expects.</p>
                                 <div className="btn-wrap mt-40 th_fade_anim">
                                     <a href="about.html" className="th-btn">Get Started
                                         <svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -529,34 +375,35 @@ export default async function Home() {
                     </div>
                     <div className="why-wrap10">
                         <div className="why-card10 th_fade_anim">
-                            <div className="why-card-bg"><img src="/assets/img/normal/certification-card-image.jpg" alt="Certified student" /></div>
+                            <div className="why-card-bg"><img src="/assets/img/normal/certification-card-image.jpg" alt="Student studying online" /></div>
                             <div className="box-icon">
                                 <img src="/assets/img/icon/why-card-icon10-1.svg" alt="img" />
                             </div>
-                            <h3 className="box-title">Recognized Certification</h3>
-                            <p className="box-text">Credentials that schools and recruiters actually trust.</p>
+                            {/* B3 #1: interim wording until certificate details are confirmed in the course platform. */}
+                            <h3 className="box-title">Clear Course Information</h3>
+                            <p className="box-text">Each course sets out what you will learn and when it opens, so you know exactly what you are signing up for.</p>
                         </div>
                         <div className="why-card10 th_fade_anim">
                             <div className="box-icon">
                                 <img src="/assets/img/icon/why-card-icon10-2.svg" alt="img" />
                             </div>
-                            <h3 className="box-title">Certified Trainers</h3>
-                            <p className="box-text">Learn from educators who&apos;ve taught in real classrooms, not just online.</p>
+                            <h3 className="box-title">Practical Training</h3>
+                            <p className="box-text">Lessons focus on skills you can use, not just theory.</p>
                         </div>
                         <div className="why-card10 th_fade_anim">
                             <div className="box-icon">
                                 <img src="/assets/img/icon/why-card-icon10-3.svg" alt="img" />
                             </div>
-                            <h3 className="box-title">Direct Job Access</h3>
-                            <p className="box-text">Finish your certification and go straight to real job listings — no separate site, no waiting.</p>
+                            <h3 className="box-title">Job Search Guidance</h3>
+                            <p className="box-text">Our guides explain how to search and apply for roles abroad safely. Our updated Job Portal is being developed.</p>
                         </div>
                         <div className="why-card10 th_fade_anim">
                             <div className="why-card-bg"><img src="/assets/img/normal/support-card-image.jpg" alt="Supported student" /></div>
                             <div className="box-icon">
                                 <img src="/assets/img/icon/why-card-icon10-4.svg" alt="img" />
                             </div>
-                            <h3 className="box-title">Support That Doesn&apos;t Disappear</h3>
-                            <p className="box-text">Real help before, during, and after certification.</p>
+                            <h3 className="box-title">Support When You Need It</h3>
+                            <p className="box-text">Contact our team with questions before and during your course.</p>
                         </div>
                     </div>
                 </div>
@@ -571,7 +418,7 @@ export default async function Home() {
                                 <span className="jp-deco" aria-hidden="true" />
                                 <span className="jp-card" aria-hidden="true" />
                                 {/* Cutout generated from about-job-portal-346x580.png by scripts/cutout-job-portal.cjs. TODO: source is only 346px wide — swap in a higher-res photo for sharper high-DPI rendering when available. */}
-                                <img className="jp-girl" src="/assets/img/normal/job-portal-cutout.png" alt="Teacher thinking about her next job" width={341} height={492} />
+                                <img className="jp-girl" src="/assets/img/normal/job-portal-cutout.png" alt="Professional thinking about her next job" width={341} height={492} />
                                 {jobStats.openRoles !== null && (
                                     <div className="jp-chip jp-chip--roles">
                                         <span className="jp-chip-icon">
@@ -594,11 +441,11 @@ export default async function Home() {
                             <div className="jp-content">
                                 <div className="title-area mb-0">
                                     <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Job Portal</span>
-                                    <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Certified? Your Next Teaching Job Is Already Listed</span></h2>
-                                    <p className="th_fade_anim">Browse verified teaching positions across multiple countries — updated regularly, with direct application links.</p>
+                                    <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Certified? Your Next Job Abroad Is Already Listed</span></h2>
+                                    <p className="th_fade_anim">Browse verified positions across multiple countries — updated regularly, with direct application links.</p>
                                 </div>
                                 <ul className="jp-features th_fade_anim">
-                                    <li><span className="jp-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2 5 8.5l4.5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg></span>Teaching roles pulled from major job boards</li>
+                                    <li><span className="jp-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2 5 8.5l4.5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg></span>Roles pulled from official job boards</li>
                                     <li><span className="jp-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2 5 8.5l4.5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg></span>Listings refreshed daily, expired ones removed</li>
                                     <li><span className="jp-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2 5 8.5l4.5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg></span>Apply on the original job listing</li>
                                 </ul>
@@ -617,36 +464,34 @@ export default async function Home() {
             </section>
             )}
 
-            <section className="overflow-hidden position-relative z-index-common" data-bg-src="/assets/img/bg/cta-bg10-1.jpg">
-                <div className="cta-wrap10 space">
-                    <div className="cta-thumb-wrap10-1 th_fade_anim">
-                        <img src="/assets/img/normal/cta-cutout-student-left.png" alt="Student pointing toward the offer" />
-                    </div>
-                    <div className="container">
-                        <div className="row justify-content-center">
-                            <div className="col-xl-6 col-lg-9">
-                                <div className="title-area text-center mb-0">
-                                    {/* TODO: confirm this 30%-off-first-100-teachers promotion is a real, currently-live offer with an actually-enforced 100-teacher cap before publishing this headline. A scarcity claim that isn't real is the kind of thing that damages trust if a customer notices later — do not apply this copy until I explicitly confirm the offer is real. */}
-                                    <h2 className="sec-title text-white th-text-perspective"><span className="text-theme2">30%</span> Off Certification for Our First 100 Teachers</h2>
-                                    <p className="fw-semibold text-white th_fade_anim mb-0 mt-30">Get certified and get matched with real teaching opportunities — join early and lock in founder pricing.</p>
-                                    <div className="btn-wrap mt-40 th_fade_anim justify-content-center">
-                                        <a href="/courses" className="th-btn">JOIN WITH US
-                                            <svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
-                                            </svg>
-                                        </a>
-                                        <a href="/support" className="th-btn style-border3">BECOME AN INSTRUCTOR
-                                            <svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
+            {/* Promotional banner (owner-approved reference, 13 Nov 2026). Text and buttons are HTML;
+                the professionals are one separate image extracted from the owner's reference. */}
+            <section className="wta-journey-wrap" aria-labelledby="wta-journey-title">
+                <div className="container">
+                    <div className="wta-journey">
+                        <div className="wta-journey__content">
+                            <span className="wta-journey__eyebrow">YOUR GLOBAL JOURNEY STARTS HERE</span>
+                            <h2 id="wta-journey-title">
+                                Free Training. Global Opportunities.
+                                <span>A Future Without Borders.</span>
+                            </h2>
+                            <p>
+                                Whatever your profession or ambition, start preparing for opportunities at home and abroad.
+                                Explore countries, understand international employment requirements, and build the skills
+                                and confidence to take your career further.
+                            </p>
+                            <div className="wta-journey__actions">
+                                <a href="/courses" className="wta-journey__btn wta-journey__btn--primary">EXPLORE FREE TRAINING <span aria-hidden="true">&rarr;</span></a>
+                                <a href="/countries" className="wta-journey__btn wta-journey__btn--secondary">EXPLORE COUNTRIES <span aria-hidden="true">&rarr;</span></a>
                             </div>
                         </div>
-                    </div>
-                    <div className="cta-thumb-wrap10-2 th_fade_anim">
-                        <img src="/assets/img/normal/cta-cutout-student-right.png" alt="Student holding a notebook" />
+                        <div className="wta-journey__image">
+                            <picture>
+                                <source type="image/webp" srcSet="/images/global-professionals-600.webp 591w, /images/global-professionals.webp 1182w" sizes="(min-width: 992px) 55vw, 100vw" />
+                                <img src="/images/global-professionals.png" width={1182} height={724} loading="lazy" decoding="async"
+                                    alt="Professionals from different industries preparing for international careers" />
+                            </picture>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -655,7 +500,6 @@ export default async function Home() {
             {false && (
             <section className="space bg-smoke3 overflow-hidden">
                 <div className="event-bg-shape3-1 shape-mockup th_fade_anim d-xxl-block d-none" data-speed="0.9" data-left="4%" data-top="10%">
-                    <img src="/assets/img/shape/event_shape2_1.png" alt="img" />
                 </div>
                 <div className="container">
                     <div className="row justify-content-center">
@@ -791,6 +635,8 @@ export default async function Home() {
             {/*==============================
 Video Testimonials Area
 ==============================*/}
+            {/* Hidden until verified (B2): see SHOW_UNVERIFIED_TESTIMONIALS in lib/site.ts */}
+            {SHOW_UNVERIFIED_TESTIMONIALS && (
             <section className="space overflow-hidden" id="video-testi-sec">
                 <div className="container">
                     <div className="title-area text-center">
@@ -800,20 +646,25 @@ Video Testimonials Area
                     <VideoTestimonials />
                 </div>
             </section>
+            )}
 
             <section className="testi-area-1 space overflow-hidden" id="testi-sec">
                 <div className="testi-bg-shape8-1 shape-mockup th_fade_anim d-xxl-block d-none" data-speed="0.9" data-left="6%" data-top="7%">
-                    <img src="/assets/img/shape/testi_shape8_1.png" alt="img" />
                 </div>
                 <div className="container">
                     <div className="row gy-40 gx-80">
+                        {SHOW_UNVERIFIED_TESTIMONIALS && (
                         <div className="col-xl-6">
                             <TextTestimonials />
                         </div>
-                        <div className="col-xl-6">
+                        )}
+                        <div className={SHOW_UNVERIFIED_TESTIMONIALS ? "col-xl-6" : "col-xl-8 col-lg-10 mx-auto"}>
                             
                             <div className="contact-form contact-form-4 th_fade_anim" id="contact-sec">
-                                {/* TODO: wire to actual form handler */}
+                                {/* B1 (13 Nov 2026): the template form posted to mail.php, which does not
+                                    exist, so every submission was lost. It stays switched off (markup kept
+                                    below) until a tested backend is approved. Nothing is collected. */}
+                                {SHOW_RESOURCE_SIGNUP_FORM ? (
                                 <form action="mail.php" method="POST" className="contact-form ajax-contact">
                                     <div className="title-area">
                                         <span className="sub-title text-theme"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Get In Touch</span>
@@ -864,6 +715,19 @@ Video Testimonials Area
                                     </div>
                                     <p className="form-messages mb-0 mt-3"></p>
                                 </form>
+                                ) : (
+                                <div className="wta-signup-soon">
+                                    <div className="title-area mb-0">
+                                        <span className="sub-title text-theme"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="" />Free Resources</span>
+                                        <h2 className="sec-title">Free Resource Sign-Up Opens Soon</h2>
+                                    </div>
+                                    <p className="wta-signup-soon__text">We&apos;re setting up our free resources mailing list and aren&apos;t collecting sign-ups yet. Until it opens, all of our free guides and country information are available without signing up.</p>
+                                    <div className="wta-signup-soon__actions">
+                                        <a href="/resources" className="th-btn">Browse Free Resources</a>
+                                        <a href="/countries" className="th-btn style-border2">Explore Country Guides</a>
+                                    </div>
+                                </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -960,7 +824,6 @@ FAQ Area
 ==============================*/}
             <div className="space overflow-hidden">
                 <div className="faq-bg-shape4-1 d-xxl-block d-none shape-mockup th_fade_anim" data-speed="0.9" data-left="4%" data-top="10%">
-                    <img src="/assets/img/shape/faq_shape1_1.png" alt="img" />
                 </div>
                 <div className="faq-bg-shape4-2 d-xxl-block d-none shape-mockup th_fade_anim" data-speed="0.9" data-right="0%" data-bottom="5%">
                     <img src="/assets/img/shape/faq_shape4_1.png" alt="img" />
@@ -972,7 +835,7 @@ FAQ Area
                                 <div className="faq-side">
                                 <div className="img1 th--hover-item th_fade_anim">
                                     <div className="thumb th--hover-img" data-displacement="/assets/img/imghover/fluid.jpg" data-intensity="0.2" data-speedin="1" data-speedout="1">
-                                        <img className="img-cover" src="/assets/img/normal/faq-1-mentor-desk.png" alt="Teacher at his desk with a certificate" />
+                                        <img className="img-cover" src="/assets/img/normal/faq-1-mentor-desk.png" alt="Professional at his desk with a certificate" />
                                     </div>
                                 </div>
                                 <div className="faq-counter-wrap jump">
@@ -980,14 +843,14 @@ FAQ Area
                                         <img src="/assets/img/normal/faq-3-notes.jpg" alt="Handwritten notes beside a stack of books" />
                                     </div>
                                     <div className="box-details">
-                                        <h3 className="box-title"><span className="counter-number">10</span>K +</h3>
-                                        <p className="box-text">Active students</p>
+                                        <h3 className="box-title">Free</h3>
+                                        <p className="box-text">Courses open now</p>
                                     </div>
                                 </div>
                                 </div>
                                 <div className="img2 th--hover-item th_fade_anim">
                                     <div className="thumb th--hover-img" data-displacement="/assets/img/imghover/fluid.jpg" data-intensity="0.2" data-speedin="1" data-speedout="1">
-                                        <img className="img-cover" src="/assets/img/normal/faq-2-teacher.jpg" alt="Smiling teacher at her desk with a teaching certificate" />
+                                        <img className="img-cover" src="/assets/img/normal/faq-2-teacher.jpg" alt="Smiling professional at her desk with a certificate" />
                                     </div>
                                 </div>
                             </div>
@@ -995,71 +858,23 @@ FAQ Area
                         <div className="col-xl-6">
                             <div className="faq-wrap1">
                                 <div className="title-area">
-                                    <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Faq’s</span>
-                                    <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Frequently Asked have any questions?</span></h2>
+                                    <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="" />FAQs</span>
+                                    <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Frequently Asked Questions</span></h2>
                                 </div>
                                 <div className="accordion" id="faqAccordion">
-
-
-                                    <div className="accordion-card style2 th_fade_anim">
-                                        <div className="accordion-header" id="collapse-item-1">
-                                            <button className="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapse-1" aria-expanded="true" aria-controls="collapse-1">Do I need teaching experience to get certified?</button>
+                                    {/* Owner-approved wording, 13 Nov 2026 (B6). Keep in step with /faqs. */}
+                                    {HOME_FAQS.map((item, i) => (
+                                    <div className="accordion-card style2 th_fade_anim" key={item.q}>
+                                        <div className="accordion-header" id={`collapse-item-${i + 1}`}>
+                                            <button className={`accordion-button${i === 0 ? "" : " collapsed"}`} type="button" data-bs-toggle="collapse" data-bs-target={`#collapse-${i + 1}`} aria-expanded={i === 0} aria-controls={`collapse-${i + 1}`}>{item.q}</button>
                                         </div>
-                                        <div id="collapse-1" className="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                                        <div id={`collapse-${i + 1}`} className={`accordion-collapse collapse${i === 0 ? " show" : ""}`} data-bs-parent="#faqAccordion">
                                             <div className="accordion-body">
-                                                <p className="faq-text">No — our foundational certifications (like TEFL) are designed for both new and experienced educators.</p>
+                                                <p className="faq-text">{item.a}</p>
                                             </div>
                                         </div>
                                     </div>
-
-
-                                    <div className="accordion-card style2 th_fade_anim">
-                                        <div className="accordion-header" id="collapse-item-2">
-                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-2" aria-expanded="false" aria-controls="collapse-2">Are these certifications recognized internationally?</button>
-                                        </div>
-                                        <div id="collapse-2" className="accordion-collapse collapse " data-bs-parent="#faqAccordion">
-                                            <div className="accordion-body">
-                                                <p className="faq-text">Yes, our certification programs follow internationally recognized standards accepted by schools and language institutes worldwide.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div className="accordion-card style2 th_fade_anim">
-                                        <div className="accordion-header" id="collapse-item-3">
-                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-3" aria-expanded="false" aria-controls="collapse-3">Can I find a job through World Teachers Academy after I'm certified?</button>
-                                        </div>
-                                        <div id="collapse-3" className="accordion-collapse collapse " data-bs-parent="#faqAccordion">
-                                            <div className="accordion-body">
-                                                <p className="faq-text">Yes — our Job Portal lists verified teaching positions you can apply to directly once you've completed a relevant certification.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div className="accordion-card style2 th_fade_anim">
-                                        <div className="accordion-header" id="collapse-item-4">
-                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-4" aria-expanded="false" aria-controls="collapse-4">How long does certification take?</button>
-                                        </div>
-                                        <div id="collapse-4" className="accordion-collapse collapse " data-bs-parent="#faqAccordion">
-                                            <div className="accordion-body">
-                                                <p className="faq-text">This depends on the course — most programs range from a few days of intensive study to several weeks of self-paced learning.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    {/* TODO: confirm whether visa/relocation support is actually offered before launch — remove this FAQ entirely if not, per user's own flag that false claims here are reputationally risky */}
-                                    <div className="accordion-card style2 th_fade_anim">
-                                        <div className="accordion-header" id="collapse-item-5">
-                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-5" aria-expanded="false" aria-controls="collapse-5">Do you help with visa or relocation support for teaching abroad?</button>
-                                        </div>
-                                        <div id="collapse-5" className="accordion-collapse collapse " data-bs-parent="#faqAccordion">
-                                            <div className="accordion-body">
-                                                <p className="faq-text">This depends on the program — check each course's details page for visa/relocation support information.</p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>
@@ -1069,3 +884,75 @@ FAQ Area
     </>
   );
 }
+
+// Homepage category cards (owner-approved design, 12 Nov 2026): three themes,
+// mixed order so every view of the slider shows teaching, career and abroad.
+// Each card links to a real page, or shows "Coming soon" when its page doesn't
+// exist yet (never a template placeholder page).
+type CategoryTheme = "teaching" | "career" | "abroad";
+const THEME_LABEL: Record<CategoryTheme, string> = { teaching: "TEACHING", career: "CAREER", abroad: "ABROAD" };
+const CATEGORY_CARDS: { title: string; text: string; href: string | null; icon: IconName; theme: CategoryTheme }[] = [
+  { title: "TEFL / TESOL Certification", text: "Build the skills to teach English locally or internationally.", href: "/courses?q=TEFL", icon: "language", theme: "teaching" },
+  { title: "Working Abroad", text: "Explore countries, work requirements and life overseas.", href: "/countries", icon: "globe", theme: "abroad" },
+  { title: "Career Readiness", text: "Prepare your CV, interviews and professional skills for global opportunities.", href: "/resources", icon: "briefcase", theme: "career" },
+  { title: "Online Teaching & Tutoring", text: "Learn to teach and tutor students from anywhere.", href: "/courses?q=Online", icon: "laptop", theme: "teaching" },
+  { title: "International Job Search", text: "Learn how to search and apply for roles abroad. Our updated Job Portal is being developed.", href: "/resources", icon: "search", theme: "abroad" },
+  { title: "Digital Skills & Tools", text: "Develop practical digital skills for today\u2019s global workplace.", href: "/courses?q=Coding", icon: "code", theme: "career" },
+];
+
+type IconName = "language" | "globe" | "briefcase" | "laptop" | "search" | "code";
+// One line-icon set: 48×48 grid, 1.8 stroke, round caps — same size and weight everywhere.
+const ICON_PATHS: Record<IconName, React.ReactNode> = {
+  language: (<><path d="M6 10h22a3 3 0 0 1 3 3v11a3 3 0 0 1-3 3H15l-6 5v-5H6a3 3 0 0 1-3-3V13a3 3 0 0 1 3-3z" /><path d="M34 18h8a3 3 0 0 1 3 3v11a3 3 0 0 1-3 3h-3v5l-6-5h-9a3 3 0 0 1-3-3v-2" /><path d="M11 22l3.5-8 3.5 8M12.2 19.5h4.6" /></>),
+  globe: (<><circle cx="22" cy="25" r="15" /><path d="M7 25h30M22 10c4.3 4.2 6.2 9.5 6.2 15S26.3 35.8 22 40c-4.3-4.2-6.2-9.5-6.2-15S17.7 14.2 22 10z" /><path d="M34 6l8 2.5-2.5 1.8 1.7 5-2.6.9-2.5-4.2-2.6 1.7-.9-2.6z" /></>),
+  briefcase: (<><rect x="5" y="14" width="38" height="26" rx="4" /><path d="M17 14v-3a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v3" /><path d="M5 24h38" /><path d="M19 31l4 4 7-8" /></>),
+  laptop: (<><rect x="6" y="9" width="36" height="24" rx="3" /><path d="M2 39h44" /><circle cx="24" cy="18" r="4" /><path d="M16 29c1.5-4 4.5-6 8-6s6.5 2 8 6" /></>),
+  search: (<><path d="M12 5h16l8 8v28a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z" /><path d="M28 5v8h8" /><path d="M16 20h12M16 26h8" /><circle cx="31" cy="32" r="6" /><path d="M35.5 36.5L42 43" /></>),
+  code: (<><rect x="5" y="8" width="38" height="26" rx="3" /><path d="M17 41h14M24 34v7" /><path d="M19 17l-5 4 5 4M29 17l5 4-5 4M26 15l-4 12" /></>),
+};
+
+function CategoryIcon({ name }: { name: IconName }) {
+  return (
+    <svg viewBox="0 0 48 48" width="36" height="36" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {ICON_PATHS[name]}
+    </svg>
+  );
+}
+
+function CategoryArrow() {
+  return (
+    <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M8.4672 0C8.4672 0.783225 9.24338 1.95525 10.028 2.93955C11.0384 4.20682 12.2443 5.3139 13.628 6.15915C14.6645 6.79208 15.9233 7.39965 16.9344 7.39965M8.4672 14.8176C8.4672 14.0344 9.24338 12.8623 10.028 11.878C11.0384 10.6108 12.2443 9.5037 13.628 8.65845C14.6645 8.02552 15.9233 7.41795 16.9344 7.41795M16.9344 7.4088H0" stroke="currentColor" />
+    </svg>
+  );
+}
+
+// Homepage FAQ — owner-approved wording (13 Nov 2026, B6; "Are the courses
+// free?" updated by the owner the same day: all eight courses are free). No certificate
+// promises until the completion and certificate rules are confirmed.
+const HOME_FAQS: { q: string; a: string }[] = [
+  {
+    q: "Do I need work experience to join a course?",
+    a: "No. You can join our courses without previous work experience. Each course description explains who it is designed for, so check it before you enrol.",
+  },
+  {
+    q: "Will my qualification be recognised abroad?",
+    a: "Recognition of qualifications varies by country and by employer. Our Country Guides explain what each destination typically asks for, so check those requirements before you apply.",
+  },
+  {
+    q: "How long are the courses?",
+    a: "Our programmes range from 120 to 520 study hours: Professional Online Teaching & Tutoring (120 hours), TEFL Certificate (130), Diploma (320), Advanced Diploma (395) and TEFL Comprehensive (520). How long you take depends on how many hours a week you study. Study hours for Coding & Software Development, Business English and Supply Chain Management will be confirmed before those courses launch.",
+  },
+  {
+    q: "Are the courses free?",
+    a: "Yes. All eight World Teachers Academy courses are currently offered free of charge. Some courses are already available, while others will open for enrolment on their announced launch dates, subject to confirmation. Course availability and pricing may change in the future.",
+  },
+  {
+    q: "Do you arrange visas, work permits or relocation?",
+    a: "World Teachers Academy provides educational resources and career guidance. We do not arrange or guarantee visas, work permits, employment or relocation.",
+  },
+  {
+    q: "Will you help me find a job?",
+    a: "We provide Country Guides and career resources to help you explore international employment opportunities. Our updated Job Portal is being developed to make discovering opportunities easier. We do not guarantee employment or placement.",
+  },
+];

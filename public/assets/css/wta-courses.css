@@ -1,0 +1,304 @@
+/* World Teachers Academy — course cards (free badge, status, countdown).
+   Builds on the template's .course-card; loaded after style.css and wta-brand.css. */
+
+.wta-course-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+.wta-course-card .box-img {
+  border-radius: 16px;
+  margin-bottom: 20px;
+  aspect-ratio: 752 / 440;
+  background: #eef0ff;
+}
+.wta-course-card .box-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Free badge on the image (replaces "[Price TBD]") */
+.wta-course-card .wta-price {
+  color: #15803d;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 14px;
+  line-height: 1;
+  padding: 12px 22px 10px 16px;
+}
+
+/* Designed banner for courses without a photo */
+.wta-course-banner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  padding: 24px 28px 48px;
+  background:
+    radial-gradient(120% 90% at 100% 0%, rgba(245, 158, 11, 0.28) 0%, rgba(245, 158, 11, 0) 55%),
+    linear-gradient(135deg, #0f172a 0%, #312e81 60%, #4f46e5 100%);
+  color: #fff;
+}
+.wta-course-banner__kicker {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #fcd34d;
+}
+.wta-course-banner__title {
+  font-family: var(--title-font);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.wta-course-banner__hours {
+  align-self: flex-start;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: #fff;
+  color: #312e81;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* Homepage course grid (replaces the carousel) */
+.wta-course-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+}
+.wta-course-grid > div {
+  display: flex;
+}
+@media (max-width: 1199px) {
+  .wta-course-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 767px) {
+  .wta-course-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+/* Status pill */
+.wta-status {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.wta-status::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.wta-status--open {
+  background: #dcfce7;
+  color: #15803d;
+}
+.wta-status--soon {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.wta-course-card .box-title {
+  margin-bottom: 10px;
+}
+.wta-course-card .box-title span {
+  color: inherit;
+}
+.wta-course-summary {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #475569;
+  margin-bottom: 20px;
+}
+
+/* Countdown */
+.wta-countdown {
+  border-radius: 14px;
+  background: #0f172a;
+  color: #fff;
+  padding: 14px 16px 16px;
+  margin-bottom: 22px;
+}
+.wta-countdown__date {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #fcd34d;
+  margin: 0 0 10px;
+}
+.wta-countdown__units {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.wta-countdown__unit {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 8px 4px 6px;
+  text-align: center;
+}
+.wta-countdown__num {
+  display: block;
+  font-family: var(--title-font);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.wta-countdown__label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #cbd5e1;
+}
+.wta-countdown--tba {
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+}
+.wta-countdown--pending .wta-countdown__note,
+.wta-countdown--tba .wta-countdown__note {
+  margin: 0;
+  font-size: 14px;
+  color: #e2e8f0;
+}
+
+/* Buttons */
+.wta-course-card .btn-wrap {
+  margin-top: auto;
+}
+.wta-btn-disabled,
+.wta-btn-disabled:hover {
+  cursor: default;
+  pointer-events: none;
+  background: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+  color: #64748b !important;
+  box-shadow: none !important;
+}
+
+@media (max-width: 575px) {
+  .wta-countdown__num {
+    font-size: 20px;
+  }
+  .wta-course-banner__title {
+    font-size: 19px;
+  }
+}
+
+/* Hover: gentle lift, deeper shadow, slow image zoom. Transform-only, so no layout shift. */
+.wta-course-card {
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.3s cubic-bezier(0.2, 0.7, 0.2, 1), border-color 0.3s;
+}
+.wta-course-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 44px -18px rgba(15, 23, 42, 0.28);
+  border-color: #c7d2fe;
+}
+.wta-course-card .box-img img,
+.wta-course-card .wta-course-banner {
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.wta-course-card:hover .box-img img,
+.wta-course-card:hover .wta-course-banner {
+  transform: scale(1.04);
+}
+.wta-course-card .th-btn svg {
+  transition: transform 0.2s;
+}
+.wta-course-card .th-btn:hover svg {
+  transform: translateX(4px);
+}
+.wta-course-card .th-btn:focus-visible,
+.wta-course-card a:focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .wta-course-card,
+  .wta-course-card .box-img img,
+  .wta-course-card .wta-course-banner,
+  .wta-course-card .th-btn svg {
+    transition: none;
+  }
+  .wta-course-card:hover,
+  .wta-course-card:hover .box-img img,
+  .wta-course-card:hover .wta-course-banner {
+    transform: none;
+  }
+}
+
+/* Countdown motion: each changing number slides in from above; a soft "live"
+   dot pulses beside the launch date. Off for reduced-motion visitors. */
+.wta-countdown__num {
+  position: relative;
+  overflow: hidden;
+  height: 1.15em;
+}
+.wta-countdown__digit {
+  display: block;
+}
+.wta-countdown__digit.is-live {
+  animation: wta-count-in 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.wta-countdown__live {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: #f2a93b;
+  vertical-align: 1px;
+  animation: wta-live-pulse 2s ease-in-out infinite;
+}
+.wta-countdown__unit:last-child .wta-countdown__num {
+  color: #fcd34d;
+}
+@keyframes wta-count-in {
+  0% { transform: translateY(-100%); opacity: 0; }
+  60% { transform: translateY(10%); opacity: 1; }
+  100% { transform: none; opacity: 1; }
+}
+@keyframes wta-live-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(242, 169, 59, 0.55); }
+  50% { box-shadow: 0 0 0 6px rgba(242, 169, 59, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wta-countdown__digit.is-live,
+  .wta-countdown__live {
+    animation: none;
+  }
+}
+
+/* Support page: note under the form heading */
+.wta-support-note {
+  margin: 14px 0 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #475569;
+}
+.wta-support-note a {
+  color: #4f46e5;
+  font-weight: 600;
+}

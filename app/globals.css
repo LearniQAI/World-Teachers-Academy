@@ -239,7 +239,7 @@
   pointer-events: none;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0.25) 28%, rgba(255, 255, 255, 0) 48%);
 }
-/* "Support That Doesn't Disappear" card is wide (spans 2 columns) and its
+/* "Support When You Need It" card is wide (spans 2 columns) and its
    text sits bottom-left — the vertical-only fade above doesn't reach that
    corner, so the text was landing directly on the girl's face. Push the
    photo's focal point further right (out from under the text) and layer in
@@ -263,7 +263,7 @@
   margin-left: -28px;
 }
 
-/* "Recognized Certification" card: keep the icon directly above the
+/* "Clear Course Information" card: keep the icon directly above the
    title/text as one group, positioned above center in the tall card,
    shifted slightly left. */
 .why-wrap10 .why-card10:nth-child(1) {
@@ -639,9 +639,20 @@
 }
 .country-flag {
   display: inline-flex;
+  align-items: center;
   gap: 3px;
+  flex: none;
   vertical-align: middle;
   margin-right: 4px;
+}
+/* Flags keep their own proportions; the ring is a neutral mid-grey so
+   white-ground flags (Japan, Korea) show on white and dark ones on navy. */
+.country-flag__img {
+  display: block;
+  flex: none;
+  max-width: none;
+  object-fit: contain;
+  box-shadow: 0 0 0 1px rgba(128, 128, 128, 0.3);
 }
 @media (max-width: 1399px) {
   .main-menu ul.sub-menu.country-menu {
@@ -760,7 +771,7 @@
 }
 /* Height is 60% of the image's natural ratio (1586x992), so `cover` trims
    about 40% off the top/bottom; the text block is centred vertically. */
-@media (min-width: 992px) {
+@media (min-width: 1200px) {
   .breadcumb-wrapper--country {
     aspect-ratio: 1586 / 595; /* 60% of the image's natural height */
     display: flex;
@@ -773,6 +784,53 @@
 @media (max-width: 1199px) {
   .breadcumb-wrapper--country .breadcumb-content {
     padding: 72px 0 !important;
+  }
+}
+
+/* Tablet and mobile: the photo no longer sits behind the title. The title
+   block gets its own clean band, and the photo is shown underneath it,
+   cropped to the three teachers, so neither covers the other.
+   Applies below 1200px, where the photo would otherwise reach the title. */
+@media (max-width: 1199px) {
+  .breadcumb-wrapper--country {
+    background-image: linear-gradient(180deg, #F5F7FF 0%, #ECEBFF 100%) !important;
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+  }
+  .breadcumb-wrapper--country::after {
+    content: "";
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background-image: url(/assets/countries.png);
+    background-repeat: no-repeat;
+    background-size: 120% auto;
+    background-position: 100% 70%;
+  }
+  .breadcumb-wrapper--country .breadcumb-content {
+    padding: 40px 0 24px !important;
+    text-align: left;
+  }
+  .breadcumb-wrapper--country .breadcumb-menu {
+    justify-content: flex-start;
+  }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+  .breadcumb-wrapper--country::after {
+    aspect-ratio: 21 / 9;
+    background-size: 100% auto;
+    background-position: 100% 82%;
+  }
+}
+@media (max-width: 575px) {
+  .breadcumb-wrapper--country::after {
+    aspect-ratio: 920 / 764;
+    background-size: 172% auto;
+    background-position: 100% 65%;
+  }
+  .breadcumb-wrapper--country .breadcumb-content {
+    padding: 32px 0 20px !important;
   }
 }
 
@@ -797,4 +855,19 @@
    lift the theme's scroll-to-top button above it: 60px bar + 12px gap on top of its usual 55px. */
 html[data-wta-mini-player] .scroll-top {
   bottom: calc(127px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Mobile menu: keep "START FREE TRAINING" on one line in the narrow panel
+   (the theme's tight line-height made a wrapped label overlap itself). */
+.th-menu-area .th-btn {
+  white-space: nowrap;
+  line-height: 1.3;
+  padding-left: 18px;
+  padding-right: 18px;
+}
+@media (max-width: 359px) {
+  .th-menu-area .th-btn {
+    white-space: normal;
+    font-size: 13px;
+  }
 }

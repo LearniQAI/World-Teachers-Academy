@@ -1,0 +1,58 @@
+name: CI checks
+
+# Release verification for the website: lint, type check, unit tests and a
+# production build, run on GitHub's servers with the project's real
+# dependencies installed (npm ci from package-lock.json).
+#
+# Safety: this workflow uses NO secrets and NO environment variables from
+# Vercel or Supabase. It cannot deploy anything, reach a database or send
+# email. lib/supabase.ts falls back to an unreachable local address when the
+# Supabase variables are missing, so the build step never touches real data.
+
+on:
+  push:
+    branches: ["feat/**", "fix/**", "release/**"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint (npm run lint)
+        run: npm run lint
+
+      # Next.js generates route types (e.g. the global LayoutProps/PageProps
+      # helpers) into .next/types; the type check needs them first.
+      - name: Generate Next.js route types (next typegen)
+        run: npx next typegen
+
+      - name: Type check (tsc --noEmit)
+        run: npx tsc --noEmit
+
+      - name: Unit tests
+        run: node --experimental-strip-types --test tests/unit/*.test.ts
+
+      - name: Production build (no secrets)
+        run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"

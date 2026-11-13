@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { searchCourses, type CourseCatalogEntry } from "@/lib/courses-catalog";
-import { getCourseBySlug } from "@/lib/mock-courses";
+import CourseImage from "@/components/courses/CourseImage";
 
 const MAX_SUGGESTIONS = 6;
 const DEBOUNCE_MS = 200;
@@ -14,14 +14,10 @@ const PAPER_DIM = "#6B7280";
 const BORDER = "#E2E5EE";
 const HIGHLIGHT_BG = "#EEF0FF";
 
-// Only courses that have a real detail page get a direct link. The catalog's
-// "Supply Chain Management" has no mock-courses entry, and the [slug] route
-// would silently render the TEFL course for it — so send that one to the
-// filtered catalog instead of a mislabeled page.
+// A course with a profile page links straight to it; any other course goes to
+// the filtered catalog, where its card shows "Coming Soon" and the countdown.
 function courseHref(course: CourseCatalogEntry): string {
-  return getCourseBySlug(course.slug)
-    ? `/courses/${course.slug}`
-    : `/courses?q=${encodeURIComponent(course.title)}`;
+  return course.profileUrl ?? `/courses?q=${encodeURIComponent(course.title)}`;
 }
 
 // Input + live suggestions dropdown. Renders a fragment, so the dropdown is
@@ -190,11 +186,16 @@ export default function CourseSuggestInput({
                     background: i === activeIndex ? HIGHLIGHT_BG : "transparent",
                   }}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <CourseImage
                     src={course.image}
                     alt=""
                     style={{ width: "44px", height: "44px", borderRadius: "8px", objectFit: "cover", flex: "0 0 44px" }}
+                    fallback={
+                      <span
+                        aria-hidden="true"
+                        style={{ width: "44px", height: "44px", borderRadius: "8px", flex: "0 0 44px", background: "linear-gradient(135deg, #0f172a, #4f46e5)" }}
+                      />
+                    }
                   />
                   <span>{course.title}</span>
                 </a>

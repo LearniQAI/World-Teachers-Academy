@@ -5,19 +5,29 @@ import PageHero from "@/components/layout/PageHero";
 const faqs = [
   {
     q: "How do I get started?",
-    a: "Browse our course catalog, choose a certification that fits your goals, and enroll. Once certified, you can browse verified teaching positions directly through our Job Portal.",
+    a: "Start with our free Professional Online Teaching & Tutoring Certification — it's open now. Our other programmes open on the dates shown on the Courses page. Along the way, use our Country Guides and Resources to prepare for teaching abroad.",
   },
   {
     q: "Do I need previous teaching experience?",
-    a: "No — our certification programs are designed for both new and experienced educators.",
+    a: "No — our programmes are designed for both new and experienced educators.",
+  },
+  // The next four match the owner-approved homepage FAQ (13 Nov 2026, B6;
+  // pricing answer approved the same day: all eight courses are free).
+  {
+    q: "Are the courses free?",
+    a: "Yes. All eight World Teachers Academy courses are currently offered free of charge. Some courses are already available, while others will open for enrolment on their announced launch dates, subject to confirmation. Course availability and pricing may change in the future.",
   },
   {
-    q: "How does the Job Portal work?",
-    a: "We list verified teaching positions from multiple sources. Applying requires your name and email so we can connect you with the opportunity — you're then directed to complete your application on the original posting.",
+    q: "Will you help me find a job?",
+    a: "We provide Country Guides and career resources to help you explore international employment opportunities. Our updated Job Portal is being developed to make discovering opportunities easier. We do not guarantee employment or placement.",
   },
   {
-    q: "Are your certifications recognized internationally?",
-    a: "Our certification programs follow internationally recognized standards accepted by schools and language institutes. Recognition can vary by country and employer — check our Country Guides for destination-specific details.",
+    q: "Will my qualification be recognised abroad?",
+    a: "Recognition of qualifications varies by country and by employer. Our Country Guides explain what each destination typically asks for, so check those requirements before you apply.",
+  },
+  {
+    q: "Do you arrange visas, work permits or relocation?",
+    a: "World Teachers Academy provides educational resources and career guidance. We do not arrange or guarantee visas, work permits, employment or relocation.",
   },
   {
     q: "How do I contact support?",

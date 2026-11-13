@@ -21,7 +21,7 @@ export default function HeroSearchForm() {
         <CourseSuggestInput
           value={query}
           onChange={setQuery}
-          placeholder="Search TEFL, TESOL, Classroom Management..."
+          placeholder="Search courses, skills, countries..."
         />
       </div>
       <button className="th-btn" type="submit">
