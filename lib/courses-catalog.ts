@@ -164,7 +164,11 @@ export const realCourses: CourseCatalogEntry[] = [
   {
     slug: "supply-chain-management",
     title: "Supply Chain Management",
-    image: "/assets/supply%20chain.jpeg",
+    // Owner-generated photo (13 Nov 2026), replacing the red/yellow banner.
+    // Master PNG at /images/supply-chain-management.png.
+    image: "/images/supply-chain-management.webp",
+    imageSrcSet: "/images/supply-chain-management-752.webp 752w, /images/supply-chain-management.webp 1504w",
+    imageAlt: "Black African female logistics coordinator using a tablet in a modern international warehouse",
     status: "coming_soon",
     launchAt: "2026-12-07T09:00:00+02:00",
     profileUrl: null,
