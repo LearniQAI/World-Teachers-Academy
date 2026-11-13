@@ -462,3 +462,12 @@
   .wta-journey__btn { width: 100%; max-width: 320px; }
 }
 @media (prefers-reduced-motion: reduce) { .wta-journey__btn { transition: none; } }
+
+/* B1: temporary "sign-up opens soon" panel in place of the unconnected form */
+.wta-signup-soon { display: flex; flex-direction: column; gap: 20px; }
+.wta-signup-soon .sec-title { margin-bottom: 0; }
+.wta-signup-soon__text { color: #4b5563; font-size: 17px; line-height: 1.65; margin: 0; max-width: 34em; }
+.wta-signup-soon__actions { display: flex; flex-wrap: wrap; gap: 12px; }
+@media (max-width: 575px) {
+  .wta-signup-soon__actions .th-btn { width: 100%; justify-content: center; }
+}

@@ -11,6 +11,10 @@ export const revalidate = 3600;
 // Job Portal section is hidden for now (kept in the code, not deleted). Flip to
 // true to bring it back — the live job stats are only fetched while it is shown.
 const SHOW_JOB_PORTAL: boolean = false;
+// Resource sign-up form: off until its backend (storage, consent, spam
+// protection, confirmation email) is built, tested and approved. See B1 in
+// docs/review/2026-11-functionality-backlog.md.
+const SHOW_RESOURCE_SIGNUP_FORM: boolean = false;
 
 export default async function Home() {
   const jobStats = SHOW_JOB_PORTAL ? await getJobStats() : { openRoles: null, countries: null };
@@ -650,7 +654,10 @@ Video Testimonials Area
                         <div className="col-xl-6">
                             
                             <div className="contact-form contact-form-4 th_fade_anim" id="contact-sec">
-                                {/* TODO: wire to actual form handler */}
+                                {/* B1 (13 Nov 2026): the template form posted to mail.php, which does not
+                                    exist, so every submission was lost. It stays switched off (markup kept
+                                    below) until a tested backend is approved. Nothing is collected. */}
+                                {SHOW_RESOURCE_SIGNUP_FORM ? (
                                 <form action="mail.php" method="POST" className="contact-form ajax-contact">
                                     <div className="title-area">
                                         <span className="sub-title text-theme"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Get In Touch</span>
@@ -701,6 +708,19 @@ Video Testimonials Area
                                     </div>
                                     <p className="form-messages mb-0 mt-3"></p>
                                 </form>
+                                ) : (
+                                <div className="wta-signup-soon">
+                                    <div className="title-area mb-0">
+                                        <span className="sub-title text-theme"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="" />Free Resources</span>
+                                        <h2 className="sec-title">Free Resource Sign-Up Opens Soon</h2>
+                                    </div>
+                                    <p className="wta-signup-soon__text">We&apos;re setting up our free resources mailing list and aren&apos;t collecting sign-ups yet. Until it opens, all of our free guides and country information are available without signing up.</p>
+                                    <div className="wta-signup-soon__actions">
+                                        <a href="/resources" className="th-btn">Browse Free Resources</a>
+                                        <a href="/countries" className="th-btn style-border2">Explore Country Guides</a>
+                                    </div>
+                                </div>
+                                )}
                             </div>
                         </div>
                     </div>
