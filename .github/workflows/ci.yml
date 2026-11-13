@@ -41,6 +41,11 @@ jobs:
       - name: Lint (npm run lint)
         run: npm run lint
 
+      # Next.js generates route types (e.g. the global LayoutProps/PageProps
+      # helpers) into .next/types; the type check needs them first.
+      - name: Generate Next.js route types (next typegen)
+        run: npx next typegen
+
       - name: Type check (tsc --noEmit)
         run: npx tsc --noEmit
 
