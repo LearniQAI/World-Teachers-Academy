@@ -8,11 +8,13 @@ import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 
 // JavaScript started (onError would not fire for it).
 export default function CourseImage({
   src,
+  srcSet,
   alt,
   fallback,
   style,
 }: {
   src: string | null;
+  srcSet?: string;
   alt: string;
   fallback: ReactNode;
   style?: CSSProperties;
@@ -26,5 +28,17 @@ export default function CourseImage({
   }, []);
 
   if (!src || failed) return <>{fallback}</>;
-  return <img ref={ref} src={src} alt={alt} loading="lazy" style={style} onError={() => setFailed(true)} />;
+  return (
+    <img
+      ref={ref}
+      src={src}
+      srcSet={srcSet}
+      sizes={srcSet ? "(min-width: 1200px) 400px, (min-width: 768px) 45vw, 92vw" : undefined}
+      alt={alt}
+      loading="lazy"
+      decoding="async"
+      style={style}
+      onError={() => setFailed(true)}
+    />
+  );
 }

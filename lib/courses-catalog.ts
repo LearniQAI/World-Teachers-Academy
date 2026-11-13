@@ -33,6 +33,8 @@ export interface CourseCatalogEntry {
   image: string | null;
   /** Alt text for the card image; defaults to the course title. */
   imageAlt?: string;
+  /** Optional responsive versions of the image (srcset), e.g. smaller WebP files for phones. */
+  imageSrcSet?: string;
   status: CourseStatus;
   /**
    * Planned launch time, ISO 8601 with +02:00 offset (Africa/Johannesburg).
@@ -74,7 +76,11 @@ export const realCourses: CourseCatalogEntry[] = [
   {
     slug: "tefl-certificate-130-hour",
     title: "TEFL Certificate — 130 Hour",
-    image: "/assets/telf-130.jpeg",
+    // Owner-generated photo (13 Nov 2026), replacing the old banner with the
+    // "WORL TEACHERS" typo. Master PNG kept at /images/tefl-certificate-130-hour.png.
+    image: "/images/tefl-certificate-130-hour.webp",
+    imageSrcSet: "/images/tefl-certificate-130-hour-752.webp 752w, /images/tefl-certificate-130-hour.webp 1504w",
+    imageAlt: "South Asian English teacher teaching enthusiastic primary school students in a bright classroom",
     status: "coming_soon",
     // Exists in the LMS (fcf2852d-…, 25 lessons).
     launchAt: "2026-11-17T09:00:00+02:00",

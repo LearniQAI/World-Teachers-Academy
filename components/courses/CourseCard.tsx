@@ -34,6 +34,7 @@ export default function CourseCard({
         <MaybeLink href={href}>
           <CourseImage
             src={course.image}
+            srcSet={course.imageSrcSet}
             alt={course.imageAlt ?? course.title}
             fallback={
               <span className="wta-course-banner" role="img" aria-label={course.title}>
