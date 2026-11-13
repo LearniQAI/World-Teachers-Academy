@@ -501,6 +501,9 @@
     margin-top: 12px;
   }
   .wta-why-learners .why-img-box10 .wta-badge { width: 100%; }
+  /* The decorative outline is sized to the whole block, so it would run
+     through the stacked cards; the photo keeps its own shape. */
+  .wta-why-learners .why-img-box10 .img1 .why-img-shape { display: none; }
   .wta-why-learners .why-img-box10 .wta-badge span { max-width: none; }
 }
 
