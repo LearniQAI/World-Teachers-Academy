@@ -489,6 +489,12 @@
 /* First floating card: lower and slightly inside the photo, so it clears the
    text column and the learners' faces (as in the approved sample). */
 .wta-why-learners .why-img-box10 .why-info-card11-1 { left: -60px; bottom: 110px; }
+/* 768-1299px: the template limits the second floating card to 300px and
+   hides anything wider, so the wide badge must fit inside it (otherwise the
+   end of "personal" is cut off). */
+@media (min-width: 768px) and (max-width: 1299px) {
+  .wta-why-learners .why-img-box10 .wta-badge--wide { min-width: 0; width: 300px; }
+}
 /* Phones: the photo is narrow, so the two cards sit under it instead of
    covering the learners' faces. */
 @media (max-width: 767px) {
