@@ -471,3 +471,58 @@
 @media (max-width: 575px) {
   .wta-signup-soon__actions .th-btn { width: 100%; justify-content: center; }
 }
+
+/* ---- "Learn Skills" section (homepage, 13 Nov 2026) ----
+   Same layout, card sizes, pastel colours and rounded corners as before.
+   Photos sit on the right side of the two large cards so they never run
+   under the card text, and blend into the card colour on their left edge. */
+.wta-why-learners .why-img-box10 .thumb img {
+  display: block;
+  width: 680px;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 960 / 910;
+  object-fit: cover;
+  object-position: 50% 35%;
+}
+.wta-why-learners .why-img-box10 .wta-badge span { max-width: 240px; }
+
+.wta-why-learners .why-wrap10 .why-card10:nth-child(1)::before,
+.wta-why-learners .why-wrap10 .why-card10:nth-child(4)::before { content: none; }
+
+.wta-why-learners .why-wrap10 .why-card10 .why-card-bg {
+  left: auto;
+  right: 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 22%);
+          mask-image: linear-gradient(90deg, transparent 0%, #000 22%);
+}
+.wta-why-learners .why-wrap10 .why-card10:nth-child(1) .why-card-bg { width: 50%; }
+.wta-why-learners .why-wrap10 .why-card10:nth-child(1) .why-card-bg img { object-position: 60% 100%; }
+.wta-why-learners .why-wrap10 .why-card10:nth-child(4) .why-card-bg { width: 42%; }
+.wta-why-learners .why-wrap10 .why-card10:nth-child(4) .why-card-bg img { object-position: 50% 30%; }
+
+/* Text stays in the left part of the photo cards (undoes the old
+   per-card offsets used with the previous full-width photos). */
+.wta-why-learners .why-wrap10 .why-card10:nth-child(1) .box-icon {
+  margin-top: 0;
+  margin-left: 0;
+}
+.wta-why-learners .why-wrap10 .why-card10:nth-child(1) .box-title,
+.wta-why-learners .why-wrap10 .why-card10:nth-child(1) .box-text {
+  margin-left: 0;
+  max-width: 52%;
+  position: relative;
+  z-index: 1;
+}
+.wta-why-learners .why-wrap10 .why-card10:nth-child(4) .box-title,
+.wta-why-learners .why-wrap10 .why-card10:nth-child(4) .box-text {
+  margin-left: 0;
+  max-width: 55%;
+}
+/* Below 1200px the template hides the card photos; text then uses the full card. */
+@media (max-width: 1199px) {
+  .wta-why-learners .why-wrap10 .why-card10:nth-child(1) .box-title,
+  .wta-why-learners .why-wrap10 .why-card10:nth-child(1) .box-text,
+  .wta-why-learners .why-wrap10 .why-card10:nth-child(4) .box-title,
+  .wta-why-learners .why-wrap10 .why-card10:nth-child(4) .box-text { max-width: none; }
+}

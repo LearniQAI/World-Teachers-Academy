@@ -328,7 +328,10 @@ export default async function Home() {
                 </div>
             </div>
             
-            <section className="space overflow-hidden">
+            {/* "Learn Skills" section (13 Nov 2026): written for all learners, not only
+                teachers. Photos: /public/images/diverse-learners, course-learner and
+                online-learner (.webp). Styles: .wta-why-learners in wta-home.css. */}
+            <section className="space overflow-hidden wta-why-learners">
                 <div className="container">
                     <div className="row justify-content-between flex-row-reverse">
                         <div className="col-xl-7">
@@ -338,20 +341,20 @@ export default async function Home() {
                                         <div className="why-img-shape-line" data-mask-src="/assets/img/normal/why-thumb-mask10-1.png"></div>
                                     </div>
                                     <div className="thumb" data-mask-src="/assets/img/normal/why-thumb-mask10-1.png">
-                                        <img src="/assets/Why-choose-section.jpeg" alt="Student holding books" />
+                                        <img src="/images/diverse-learners.webp" alt="People from different backgrounds learning together on a laptop" width={960} height={910} loading="lazy" />
                                     </div>
                                     <div className="why-info-card11-1 jump">
                                         {/* Replaces the template image "275k+ Assigned Students" (unverified figure). */}
                                         <div className="wta-badge">
                                             <img src="/assets/img/hero/wta-badge-icon.png" alt="" width={56} height={56} />
-                                            <div><strong>Free</strong><span>Online training</span></div>
+                                            <div><strong>Free Online Learning</strong><span>Explore our currently available free courses.</span></div>
                                         </div>
                                     </div>
                                     <div className="why-info-card11-2 jump-reverse">
                                         {/* Replaces the template image "User Experience Class, Today at 12.00 PM" (not a real session). */}
                                         <div className="wta-badge wta-badge--wide">
                                             <img src="/assets/img/hero/wta-badge-icon.png" alt="" width={56} height={56} />
-                                            <div><strong>Online Teaching &amp; Tutoring</strong><span>Free — enrolment open now</span></div>
+                                            <div><strong>Skills for Your Future</strong><span>Learn practical skills for personal and professional growth.</span></div>
                                         </div>
                                     </div>
                                 </div>
@@ -360,10 +363,11 @@ export default async function Home() {
                         <div className="col-xl-5">
                             <div className="title-area mb-50">
                                 <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Why Choose World Teachers Academy</span>
-                                <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Learn From Real-World Experience</span></h2>
-                                <p className="th_fade_anim">Our courses focus on practical skills and real-world preparation for working internationally, alongside free Country Guides that explain what each destination expects.</p>
+                                <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Learn Skills. Build Confidence. Explore New Opportunities.</span></h2>
+                                <p className="th_fade_anim">Discover practical online courses designed to help you develop valuable skills, grow professionally, and prepare for opportunities locally and internationally.</p>
+                                <p className="th_fade_anim">Whether you&apos;re a student, graduate, job seeker, working professional, entrepreneur, or simply looking to learn something new, there&apos;s a place for you here.</p>
                                 <div className="btn-wrap mt-40 th_fade_anim">
-                                    <a href="about.html" className="th-btn">Get Started
+                                    <a href="/courses" className="th-btn">Explore Free Courses
                                         <svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M7.5264 0C7.5264 0.6962 8.21633 1.738 8.9138 2.61293C9.81193 3.7394 10.8838 4.72347 12.1137 5.4748C13.0351 6.0374 14.154 6.57747 15.0528 6.57747M7.5264 13.1712C7.5264 12.475 8.21633 11.4332 8.9138 10.5583C9.81193 9.43187 10.8838 8.44773 12.1137 7.6964C13.0351 7.1338 14.154 6.59373 15.0528 6.59373M15.0528 6.5856H0" stroke="currentColor" strokeWidth="1.5"></path>
                                         </svg>
@@ -375,35 +379,34 @@ export default async function Home() {
                     </div>
                     <div className="why-wrap10">
                         <div className="why-card10 th_fade_anim">
-                            <div className="why-card-bg"><img src="/assets/img/normal/certification-card-image.jpg" alt="Student studying online" /></div>
+                            <div className="why-card-bg"><img src="/images/course-learner.webp" alt="Young professional holding a laptop" width={328} height={688} loading="lazy" /></div>
                             <div className="box-icon">
                                 <img src="/assets/img/icon/why-card-icon10-1.svg" alt="img" />
                             </div>
-                            {/* B3 #1: interim wording until certificate details are confirmed in the course platform. */}
-                            <h3 className="box-title">Clear Course Information</h3>
-                            <p className="box-text">Each course sets out what you will learn and when it opens, so you know exactly what you are signing up for.</p>
+                            <h3 className="box-title">Explore Courses That Fit Your Goals</h3>
+                            <p className="box-text">Discover what each course offers, the skills you&apos;ll develop, and how it can support your next step.</p>
                         </div>
                         <div className="why-card10 th_fade_anim">
                             <div className="box-icon">
                                 <img src="/assets/img/icon/why-card-icon10-2.svg" alt="img" />
                             </div>
-                            <h3 className="box-title">Practical Training</h3>
-                            <p className="box-text">Lessons focus on skills you can use, not just theory.</p>
+                            <h3 className="box-title">Practical Skills for Everyday Success</h3>
+                            <p className="box-text">Build useful knowledge through accessible lessons, real-world examples, and practical activities.</p>
                         </div>
                         <div className="why-card10 th_fade_anim">
                             <div className="box-icon">
                                 <img src="/assets/img/icon/why-card-icon10-3.svg" alt="img" />
                             </div>
-                            <h3 className="box-title">Job Search Guidance</h3>
-                            <p className="box-text">Our guides explain how to search and apply for roles abroad safely. Our updated Job Portal is being developed.</p>
+                            <h3 className="box-title">Explore Career Opportunities</h3>
+                            <p className="box-text">Access career resources, country guides, and helpful information to make informed decisions about your future.</p>
                         </div>
                         <div className="why-card10 th_fade_anim">
-                            <div className="why-card-bg"><img src="/assets/img/normal/support-card-image.jpg" alt="Supported student" /></div>
+                            <div className="why-card-bg"><img src="/images/online-learner.webp" alt="Learner using a laptop and headphones" width={360} height={380} loading="lazy" /></div>
                             <div className="box-icon">
                                 <img src="/assets/img/icon/why-card-icon10-4.svg" alt="img" />
                             </div>
-                            <h3 className="box-title">Support When You Need It</h3>
-                            <p className="box-text">Contact our team with questions before and during your course.</p>
+                            <h3 className="box-title">Guidance Along Your Learning Journey</h3>
+                            <p className="box-text">Have questions? Our team is here to help you navigate your courses and access available resources.</p>
                         </div>
                     </div>
                 </div>
@@ -648,6 +651,9 @@ Video Testimonials Area
             </section>
             )}
 
+            {/* Testimonials + sign-up section: shown only when it has approved content.
+                The "Free Resource Sign-Up Opens Soon" panel was removed (owner, 13 Nov 2026). */}
+            {(SHOW_UNVERIFIED_TESTIMONIALS || SHOW_RESOURCE_SIGNUP_FORM) && (
             <section className="testi-area-1 space overflow-hidden" id="testi-sec">
                 <div className="testi-bg-shape8-1 shape-mockup th_fade_anim d-xxl-block d-none" data-speed="0.9" data-left="6%" data-top="7%">
                 </div>
@@ -715,26 +721,14 @@ Video Testimonials Area
                                     </div>
                                     <p className="form-messages mb-0 mt-3"></p>
                                 </form>
-                                ) : (
-                                <div className="wta-signup-soon">
-                                    <div className="title-area mb-0">
-                                        <span className="sub-title text-theme"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="" />Free Resources</span>
-                                        <h2 className="sec-title">Free Resource Sign-Up Opens Soon</h2>
-                                    </div>
-                                    <p className="wta-signup-soon__text">We&apos;re setting up our free resources mailing list and aren&apos;t collecting sign-ups yet. Until it opens, all of our free guides and country information are available without signing up.</p>
-                                    <div className="wta-signup-soon__actions">
-                                        <a href="/resources" className="th-btn">Browse Free Resources</a>
-                                        <a href="/countries" className="th-btn style-border2">Explore Country Guides</a>
-                                    </div>
-                                </div>
-                                )}
+                                ) : null}
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
+            )}
 
-            
             {/* News & Blog section — commented out per request (keep markup, don't delete). */}
             {/*
             <section className="space-bottom overflow-hidden" id="blog-sec">
