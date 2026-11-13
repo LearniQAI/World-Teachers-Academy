@@ -120,11 +120,13 @@ export const realCourses: CourseCatalogEntry[] = [
     // Added 13 Nov 2026 at the owner's request. Scheduled launch 28 Nov 2026,
     // 09:00 SAST. Not in the LMS yet: no profile link and no enrolment button
     // until the owner approves opening registration. Pricing not confirmed,
-    // so the "Free" label is hidden. Image pending: until it is added the card
-    // shows the designed title banner.
+    // so the "Free" label is hidden. Owner-generated photo (13 Nov 2026);
+    // master PNG at /images/business-english-communication.png.
     slug: "business-english-professional-skills",
     title: "Business English Communication & Professional Skills",
-    image: null,
+    image: "/images/business-english-communication.webp",
+    imageSrcSet: "/images/business-english-communication-752.webp 752w, /images/business-english-communication.webp 1504w",
+    imageAlt: "International professionals participating in a Business English communication workshop",
     showFreeLabel: false,
     launchPendingLabel: "Launch pending confirmation",
     status: "coming_soon",
