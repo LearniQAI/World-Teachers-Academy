@@ -77,12 +77,16 @@ const SCRIPT_TITLE = "FIRST IMPRESSIONS";
 const N = "NARRATOR (V.O.)";
 const GUIDE_VIDEO = "Video Script — “First Impressions,” following a South African teacher's arrival";
 
-function cta(name: string, code: string): Country["jobPortalCTA"] {
+// Closing call to action on every Country Guide (owner-approved wording,
+// 13 Nov 2026). It no longer points to job listings: the current Job Portal
+// covers only a few markets, so "opportunities currently listed for <country>"
+// was not true for most guides.
+function cta(name: string): Country["jobPortalCTA"] {
   return {
-    heading: `Ready to Teach in ${name}?`,
-    text: `See the teaching opportunities currently listed for ${name} on our Job Portal, or explore openings in other countries.`,
-    buttonLabel: "EXPLORE TEACHING OPPORTUNITIES",
-    href: `/job-portal?country=${code}`,
+    heading: `Ready to teach in ${name}?`,
+    text: "Use this guide to prepare, then start with our free courses. Our updated Job Portal is being developed.",
+    buttonLabel: "START WITH OUR FREE COURSES",
+    href: "/courses",
   };
 }
 
@@ -254,7 +258,7 @@ const argentina: Country = {
     content:
       "Argentina does not offer a predictable, plug-and-play teaching experience. It requires a strategic approach: balancing legal awareness with the Uruguay run, and offsetting peso inflation by building a dollar-denominated private hustle. For those who master this dual system, the reward is an unmatched cultural warmth, world-class landscapes, and a deeply connected daily life.",
   },
-  jobPortalCTA: cta("Argentina", "AR"),
+  jobPortalCTA: cta("Argentina"),
 };
 
 const cambodia: Country = {
@@ -413,7 +417,7 @@ const cambodia: Country = {
     content:
       "Cambodia rewards teachers who bring both genuine accessibility-seeking pragmatism and genuine cultural care in equal measure — a real entry point for career-changers, alongside a history that deserves to be approached with real respect. Go in with both, and Cambodia offers one of the warmest, most historically extraordinary teaching markets in the region.",
   },
-  jobPortalCTA: cta("Cambodia", "KH"),
+  jobPortalCTA: cta("Cambodia"),
 };
 
 const brunei: Country = {
@@ -572,7 +576,7 @@ const brunei: Country = {
     content:
       "Brunei rewards teachers who do the research first: understanding the legal landscape fully, then embracing a genuinely calm, well-funded teaching system and a slice of Southeast Asia still largely untouched by mass tourism. Go in informed, and the reward is real security, genuine hospitality, and a country most teachers never even consider.",
   },
-  jobPortalCTA: cta("Brunei", "BN"),
+  jobPortalCTA: cta("Brunei"),
 };
 
 const brazil: Country = {
@@ -723,7 +727,7 @@ const brazil: Country = {
     content:
       "Brazil rewards teachers who get the visa sequence right: a language school job first, to enter legally, then a private tutoring client base built afterward, through genuine relationships rather than a job board. For those who follow that order, the reward is a warm, socially rich teaching life in one of the most naturally extraordinary countries on earth.",
   },
-  jobPortalCTA: cta("Brazil", "BR"),
+  jobPortalCTA: cta("Brazil"),
 };
 
 const china: Country = {
@@ -876,7 +880,7 @@ const china: Country = {
     content:
       "China rewards teachers who get the legal groundwork right — a genuine Z-visa, no shortcuts — and who invest real patience in building guanxi and protecting mianzi. Get both right, and China offers unmatched history, pace, and depth of relationship in return.",
   },
-  jobPortalCTA: cta("China", "CN"),
+  jobPortalCTA: cta("China"),
 };
 
 const chile: Country = {
@@ -1033,7 +1037,7 @@ const chile: Country = {
     content:
       "Chile rewards teachers who verify before they commit: check EODP's real status, plan around the visa's real timeline, and approach the country's history with real care. Go in prepared, and Chile offers one of Latin America's most stable, rewarding teaching markets.",
   },
-  jobPortalCTA: cta("Chile", "CL"),
+  jobPortalCTA: cta("Chile"),
 };
 
 const costaRica: Country = {
@@ -1190,7 +1194,7 @@ const costaRica: Country = {
     content:
       "Costa Rica rewards teachers who go in clear-eyed: aware of the real hiring nuance, deliberate about which visa route they're actually on, and genuinely open to the Pura Vida pace of life. Go in informed, and Costa Rica offers real safety, extraordinary nature, and a philosophy of living well.",
   },
-  jobPortalCTA: cta("Costa Rica", "CR"),
+  jobPortalCTA: cta("Costa Rica"),
 };
 
 const colombia: Country = {
@@ -1337,7 +1341,7 @@ const colombia: Country = {
     content:
       "Colombia rewards teachers who take advantage of what's genuinely rare here: a real functioning legal visa, plus actual public-sector routes most other countries in the region simply don't offer. Bring your cédula paperwork on time, and Colombia offers one of the most accessible, rewarding teaching markets in Latin America.",
   },
-  jobPortalCTA: cta("Colombia", "CO"),
+  jobPortalCTA: cta("Colombia"),
 };
 
 const france: Country = {
@@ -1486,7 +1490,7 @@ const france: Country = {
     content:
       "France rewards teachers who get past the TAPIF confusion, arrive with real B1 French, and stay genuinely open to wherever the programme sends them. Get the application right, and France offers structure, culture, and a placement experience genuinely unlike anywhere else.",
   },
-  jobPortalCTA: cta("France", "FR"),
+  jobPortalCTA: cta("France"),
 };
 
 // Order shown in the navbar dropdown and the /countries catalogue.
@@ -1647,7 +1651,7 @@ const italy: Country = {
     content:
       "Italy rewards teachers who get the paperwork distinction right from day one: knowing exactly which of the three visa routes they're actually on, before making any plans around it. Get that clarity early, and Italy offers extraordinary history, regional richness, and a culture that genuinely rewards patience.",
   },
-  jobPortalCTA: cta("Italy", "IT"),
+  jobPortalCTA: cta("Italy"),
 };
 
 const japan: Country = {
@@ -1787,7 +1791,7 @@ const japan: Country = {
     content:
       "Japan rewards teachers who choose their route deliberately, and invest real patience in reading the unspoken layers of honne and tatemae. Get both right, and Japan offers deep structure, genuine respect, and a culture worth a lifetime of learning.",
   },
-  jobPortalCTA: cta("Japan", "JP"),
+  jobPortalCTA: cta("Japan"),
 };
 
 const kuwait: Country = {
@@ -1937,7 +1941,7 @@ const kuwait: Country = {
     content:
       "Kuwait rewards teachers who arrive genuinely informed: clear on the fully-dry reality, ready with real classroom experience, and open to the deep hospitality of diwaniya culture. Go in prepared, and Kuwait offers real financial reward and a genuine tradition of trust and conversation.",
   },
-  jobPortalCTA: cta("Kuwait", "KW"),
+  jobPortalCTA: cta("Kuwait"),
 };
 
 const laos: Country = {
@@ -2096,7 +2100,7 @@ const laos: Country = {
     content:
       "Laos rewards teachers who do the unglamorous work properly: the full legalisation chain, direct and professional outreach to the right departments, and genuine patience with an informal, relationship-driven market. Do that groundwork, and Laos offers a genuine, understated opportunity most other candidates never even attempt.",
   },
-  jobPortalCTA: cta("Laos", "LA"),
+  jobPortalCTA: cta("Laos"),
 };
 
 const mexico: Country = {
@@ -2243,7 +2247,7 @@ const mexico: Country = {
     content:
       "Mexico rewards teachers who take advantage of its genuine accessibility while getting the sequence right: job offer first, then the proper visa — and who approach the country's traditions on their own real terms. Get both right, and Mexico offers one of the most accessible, culturally rich teaching markets in Latin America.",
   },
-  jobPortalCTA: cta("Mexico", "MX"),
+  jobPortalCTA: cta("Mexico"),
 };
 
 // ---- Dossier-format guides -------------------------------------------------
@@ -2397,7 +2401,7 @@ const qatar: Country = {
     heading: "Strictness is the Feature, Not the Bug",
     content: "The thorough paperwork builds the foundation for unparalleled safety, prestige, and financial peace.",
   },
-  jobPortalCTA: cta("Qatar", "QA"),
+  jobPortalCTA: cta("Qatar"),
 };
 
 const saudiArabia: Country = {
@@ -2550,7 +2554,7 @@ const saudiArabia: Country = {
     heading: "Strict Cultural Roots. Rapid Modernization. Lucrative Rewards.",
     content: "For qualified educators committed to cultural respect, KSA offers an unparalleled career launchpad.",
   },
-  jobPortalCTA: cta("Saudi Arabia", "SA"),
+  jobPortalCTA: cta("Saudi Arabia"),
 };
 
 const uae: Country = {
@@ -2673,7 +2677,7 @@ const uae: Country = {
     content:
       "Master document attestation, evaluate international school packages across Dubai and Abu Dhabi, and launch your tax-free teaching career with confidence.",
   },
-  jobPortalCTA: cta("UAE", "AE"),
+  jobPortalCTA: cta("UAE"),
 };
 
 const spain: Country = {
@@ -2793,7 +2797,7 @@ const spain: Country = {
     heading: "Spain Rewards Those Who Adapt",
     content: "Prepare your documents. Adjust your internal clock. Enjoy the sobremesa.",
   },
-  jobPortalCTA: cta("Spain", "ES"),
+  jobPortalCTA: cta("Spain"),
 };
 
 const centralEurope: Country = {
@@ -2909,13 +2913,8 @@ const centralEurope: Country = {
     heading: "Your Central European Classroom is Waiting",
     content: "Use our country guide to understand the paperwork, research schools and plan your visa application.",
   },
-  // Covers two countries, so the Job Portal link isn't pre-filtered to one of them.
-  jobPortalCTA: {
-    heading: "Ready to Teach in Central Europe?",
-    text: "See the teaching opportunities currently listed for Poland and Hungary on our Job Portal, or explore openings in other countries.",
-    buttonLabel: "EXPLORE TEACHING OPPORTUNITIES",
-    href: "/job-portal?country=PL",
-  },
+  // Covers Poland and Hungary; the guide's own name is used in the heading.
+  jobPortalCTA: cta("Central Europe"),
 };
 
 const southKorea: Country = {
@@ -3046,7 +3045,7 @@ const southKorea: Country = {
     heading: "South Korea Rewards Patience & Professionalism",
     content: "Once the hierarchy and cultural nuances click, you unlock deep respect, lifelong friendships, and exceptional savings.",
   },
-  jobPortalCTA: cta("South Korea", "KR"),
+  jobPortalCTA: cta("South Korea"),
 };
 
 const taiwan: Country = {
@@ -3180,7 +3179,7 @@ const taiwan: Country = {
     content:
       "Prepare with World Teachers Academy: build your qualifications, research schools carefully and follow the official Alien Resident Certificate process.",
   },
-  jobPortalCTA: cta("Taiwan", "TW"),
+  jobPortalCTA: cta("Taiwan"),
 };
 
 const thailand: Country = {
@@ -3312,7 +3311,7 @@ const thailand: Country = {
     content:
       "Build your TEFL skills, learn the cultural essentials and research schools carefully before you accept an offer.",
   },
-  jobPortalCTA: cta("Thailand", "TH"),
+  jobPortalCTA: cta("Thailand"),
 };
 
 const vietnam: Country = {
@@ -3432,7 +3431,7 @@ const vietnam: Country = {
     content:
       "Master TEFL certification, navigate work permit document legalisation, and research reputable public and international schools in Hanoi and Ho Chi Minh City.",
   },
-  jobPortalCTA: cta("Vietnam", "VN"),
+  jobPortalCTA: cta("Vietnam"),
 };
 
 // Alphabetical by name — the catalog grid uses this order as-is.
