@@ -34,7 +34,7 @@ const whatWeDo = [
   },
   {
     title: "Country Guides",
-    text: "Honest, detailed guides on what teaching abroad actually looks like — culture, visas, and daily life — for the destinations our teachers actually go to.",
+    text: "Honest, detailed guides on what teaching abroad actually looks like — culture, visas, and daily life — for popular teaching destinations.",
   },
 ];
 
@@ -43,7 +43,7 @@ export default function About() {
     <>
       <PageHero
         eyebrow="About Us"
-        title="Built by People Who've Actually Taught"
+        title="Practical Training for International Careers"
         subhead="World Teachers Academy helps aspiring and experienced educators build practical teaching skills, professional confidence and career readiness — and prepare for teaching opportunities around the world."
         crumb="About Us"
       />
@@ -67,9 +67,8 @@ Our Story
               <p style={{ fontSize: "18px", color: "#374151", lineHeight: 1.7, textAlign: "center" }}>
                 Most teaching-certification platforms stop at the certificate. We didn&apos;t think that was good
                 enough. A certificate on its own doesn&apos;t prepare you for a real classroom, an interview or life
-                in a new country. So we bring the pieces together in one place: practical training taught by people
-                who&apos;ve stood in front of a classroom, honest country guides, and access to teaching
-                opportunities. We don&apos;t promise jobs — we help you become the teacher schools are looking
+                in a new country. So we bring the pieces together in one place: practical, skills-based training,
+                honest country guides, and access to teaching opportunities. We don&apos;t promise jobs — we help you become the teacher schools are looking
                 for, and prepare you to take your next step with confidence.
               </p>
             </div>
@@ -120,15 +119,14 @@ Our Approach
                   Our Approach
                 </span>
                 <h2 className="sec-title th_fade_anim">
-                  <span className="th-text-perspective">Built By Educators, Not Just Marketers</span>
+                  <span className="th-text-perspective">Built Around Real-World Skills</span>
                 </h2>
               </div>
               <p style={{ fontSize: "18px", color: "#374151", lineHeight: 1.7, textAlign: "center" }}>
-                Every certification program is shaped by people who&apos;ve actually taught — not just written
-                about teaching. We&apos;d rather tell you the honest, sometimes complicated reality of teaching
-                abroad (visa realities, cost-of-living tradeoffs, cultural adjustment) than oversell an easy
-                fantasy. That&apos;s the same standard behind our Country Guides, our courses, and every job
-                listing we surface.
+                Every programme is built around practical skills you can use in a classroom, an interview or a
+                new country. We&apos;d rather tell you the honest, sometimes complicated reality of working
+                abroad (visa realities, cost-of-living trade-offs, cultural adjustment) than oversell an easy
+                fantasy. That&apos;s the same standard behind our Country Guides and our courses.
               </p>
             </div>
           </div>
