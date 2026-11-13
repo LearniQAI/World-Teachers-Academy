@@ -15,8 +15,10 @@ changes all need the owner's separate, explicit approval.
 | Category cards (6 cards, mixed order, Digital Skills → `/courses?q=Coding`) | Approved |
 | "Everything You Need to Build a Global Career" main photo | Approved (secondary photo and badge still open, see S4) |
 | Promotional banner ("Free Training. Global Opportunities.") | Approved |
-| Featured Courses: 8 courses, new photos for 7 of them, countdowns, Free-label rules | Approved 13 Nov |
-| Coding & Business English: 28 Nov 09:00 SAST countdown, no Free label, enrolment disabled, "Launch pending confirmation" at zero | Approved |
+| Featured Courses: 8 courses, new photos for 7 of them, countdowns | Approved 13 Nov |
+| All eight courses free: every card shows "Free"; homepage line "All our courses are currently free, with more programmes coming soon."; FAQ "Are the courses free?" on homepage and /faqs (same wording) | Approved 13 Nov |
+| Coding & Business English: 28 Nov 09:00 SAST countdown, Free label, enrolment disabled, "Launch pending confirmation" at zero | Approved |
+| Countdowns never open enrolment: an upcoming course stays pending until the owner explicitly approves its launch | Owner rule, 13 Nov |
 | "Every course is free" wording corrected on homepage and /courses | Approved |
 | Old "WORL TEACHERS" banners: no longer used by any active page; `lib/mock-courses.ts` (unused) repointed | Done. Original files kept in `public/assets` until after release |
 | Staging database (wta-staging) steps 00–08, email allowlist safety net | Done (staging only) |

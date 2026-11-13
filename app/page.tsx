@@ -187,8 +187,8 @@ export default async function Home() {
                                         </svg>
                                     </div>
                                     <div className="box-content">
-                                        <h3 className="box-title">Certified Career Programmes</h3>
-                                        <p className="box-text">Every course is designed around real workplace needs, not generic online-course filler — built by people with genuine international experience.</p>
+                                        <h3 className="box-title">Career Programmes</h3>
+                                        <p className="box-text">Courses designed around practical, real-world skills.</p>
                                     </div>
                                 </div>
                                 <div className="btn-wrap mt-40 th_fade_anim">
@@ -361,7 +361,7 @@ export default async function Home() {
                             <div className="title-area mb-50">
                                 <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Why Choose World Teachers Academy</span>
                                 <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Learn From Real-World Experience</span></h2>
-                                <p className="th_fade_anim">Every course here is built by professionals who have genuinely lived and worked abroad — not a generic curriculum written by people who never have. That&apos;s the difference between a certificate and real preparation.</p>
+                                <p className="th_fade_anim">Our courses focus on practical skills and real-world preparation for working internationally, alongside free Country Guides that explain what each destination expects.</p>
                                 <div className="btn-wrap mt-40 th_fade_anim">
                                     <a href="about.html" className="th-btn">Get Started
                                         <svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -375,19 +375,20 @@ export default async function Home() {
                     </div>
                     <div className="why-wrap10">
                         <div className="why-card10 th_fade_anim">
-                            <div className="why-card-bg"><img src="/assets/img/normal/certification-card-image.jpg" alt="Certified student" /></div>
+                            <div className="why-card-bg"><img src="/assets/img/normal/certification-card-image.jpg" alt="Student studying online" /></div>
                             <div className="box-icon">
                                 <img src="/assets/img/icon/why-card-icon10-1.svg" alt="img" />
                             </div>
-                            <h3 className="box-title">Recognized Certification</h3>
-                            <p className="box-text">Credentials that employers and recruiters actually trust.</p>
+                            {/* B3 #1: interim wording until certificate details are confirmed in the course platform. */}
+                            <h3 className="box-title">Clear Course Information</h3>
+                            <p className="box-text">Each course sets out what you will learn and when it opens, so you know exactly what you are signing up for.</p>
                         </div>
                         <div className="why-card10 th_fade_anim">
                             <div className="box-icon">
                                 <img src="/assets/img/icon/why-card-icon10-2.svg" alt="img" />
                             </div>
-                            <h3 className="box-title">Certified Trainers</h3>
-                            <p className="box-text">Learn from trainers with real international experience, not just theory.</p>
+                            <h3 className="box-title">Practical Training</h3>
+                            <p className="box-text">Lessons focus on skills you can use, not just theory.</p>
                         </div>
                         <div className="why-card10 th_fade_anim">
                             <div className="box-icon">
@@ -401,8 +402,8 @@ export default async function Home() {
                             <div className="box-icon">
                                 <img src="/assets/img/icon/why-card-icon10-4.svg" alt="img" />
                             </div>
-                            <h3 className="box-title">Support That Doesn&apos;t Disappear</h3>
-                            <p className="box-text">Real help before, during, and after certification.</p>
+                            <h3 className="box-title">Support When You Need It</h3>
+                            <p className="box-text">Contact our team with questions before and during your course.</p>
                         </div>
                     </div>
                 </div>

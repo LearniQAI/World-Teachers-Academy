@@ -1114,8 +1114,8 @@ const costaRica: Country = {
         blocks: [
           cards(
             { title: "The TEFL Academy's Resources", text: "Costa Rica-specific guidance, with South Africa listed among eligible nationalities." },
-            { title: "International TEFL Academy", text: "A guaranteed job placement programme for certified graduates." },
-            { title: "myTEFL Internship Programme", text: "Combines certification with a guaranteed 6-12 month job placement." },
+            { title: "International TEFL Academy", text: "Advertises job placement support for its graduates — check the provider's current terms directly." },
+            { title: "myTEFL Internship Programme", text: "Combines certification with a 6-12 month placement programme — check the provider's current terms directly." },
             { title: "Go Overseas & TEFL.org", text: "General job boards listing current openings across San José and tourist-hub regions." }
           ),
         ],
@@ -2528,11 +2528,11 @@ const saudiArabia: Country = {
         ],
       },
       {
-        heading: "Verified Sourcing & Recruitment Channels",
+        heading: "Sourcing & Recruitment Channels",
         blocks: [
           cards(
             { title: "Search Associates", text: "Elite international school hiring fairs" },
-            { title: "TEFL Org Jobs", text: "Verified KSA academy & university positions" },
+            { title: "TEFL Org Jobs", text: "KSA academy & university positions" },
             { title: "Go Overseas", text: "Alumni reviews & vetted provider listings" },
             { title: "Qiwa / MoFA", text: "Official Saudi government visa portals" }
           ),
@@ -2771,7 +2771,7 @@ const spain: Country = {
         ],
       },
       {
-        heading: "Verified Sourcing Portals",
+        heading: "Sourcing Portals",
         blocks: [
           cards(
             { title: "Ministry Portal", text: "educacionfpydeportes.gob.es" },
@@ -2907,7 +2907,7 @@ const centralEurope: Country = {
   ],
   closingEquation: {
     heading: "Your Central European Classroom is Waiting",
-    content: "Access structured dossiers, verified school directories, and visa application kits.",
+    content: "Use our country guide to understand the paperwork, research schools and plan your visa application.",
   },
   // Covers two countries, so the Job Portal link isn't pre-filtered to one of them.
   jobPortalCTA: {
@@ -3014,7 +3014,7 @@ const southKorea: Country = {
               title: "Hagwon Job Boards",
               badge: "STEP 02",
               tone: "info",
-              text: "Explore trusted boards like Dave's ESL Café or partner with verified recruiters to secure continuous private academy interviews.",
+              text: "Explore trusted boards like Dave's ESL Café or work with reputable recruiters to secure continuous private academy interviews.",
             },
             {
               title: "Rigorous Vetting",
@@ -3162,7 +3162,7 @@ const taiwan: Country = {
             L("Tealit.com", "Dedicated Taiwan ESL classifieds, contracts, and housing."),
             L("104 Job Bank (104.com.tw)", "Island-wide direct recruitment platform."),
             L("TFETP Portal", "Official government public school application system."),
-            L("Go Overseas & Dave's ESL Cafe", "Verified school reviews and postings.")
+            L("Go Overseas & Dave's ESL Cafe", "School reviews and job postings.")
           ),
         ],
       },
@@ -3178,7 +3178,7 @@ const taiwan: Country = {
   closingEquation: {
     heading: "Begin Your Journey to Taiwan with World Teachers Academy",
     content:
-      "Get accredited, connect with verified school sponsors across Taipei, Taichung, and Kaohsiung, and secure your Alien Resident Certificate with ease.",
+      "Prepare with World Teachers Academy: build your qualifications, research schools carefully and follow the official Alien Resident Certificate process.",
   },
   jobPortalCTA: cta("Taiwan", "TW"),
 };
@@ -3293,7 +3293,7 @@ const thailand: Country = {
         blocks: [
           list(
             L("Direct School Networks", "Public schools (Anuban / Mattayom) and private bilingual academies."),
-            L("Verified TEFL Boards", "TEFL.org, Go Overseas, and Ajarn.com (Thailand's leading specialized ESL portal)."),
+            L("TEFL Job Boards", "TEFL.org, Go Overseas, and Ajarn.com (Thailand's leading specialized ESL portal)."),
             L("Prerequisites", "Bachelor's Degree + 120-hour TEFL certificate + Police Clearance for Non-B Visa.")
           ),
         ],
@@ -3310,7 +3310,7 @@ const thailand: Country = {
   closingEquation: {
     heading: "Begin Your Teaching Adventure with World Teachers Academy",
     content:
-      "Obtain your TEFL certification, master cultural nuances, and secure verified school placements across Bangkok, Chiang Mai, and coastal provinces.",
+      "Build your TEFL skills, learn the cultural essentials and research schools carefully before you accept an offer.",
   },
   jobPortalCTA: cta("Thailand", "TH"),
 };
@@ -3430,7 +3430,7 @@ const vietnam: Country = {
   closingEquation: {
     heading: "Teach in Vietnam with World Teachers Academy",
     content:
-      "Master TEFL certification, navigate work permit document legalisation, and connect with reputable public and international school partners in Hanoi and Ho Chi Minh City.",
+      "Master TEFL certification, navigate work permit document legalisation, and research reputable public and international schools in Hanoi and Ho Chi Minh City.",
   },
   jobPortalCTA: cta("Vietnam", "VN"),
 };

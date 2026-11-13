@@ -119,6 +119,15 @@ so there is no verified accreditation information to preserve.
 | 9 | Country page: Vietnam | "…connect with reputable public and international school partners…" | "…and research reputable public and international schools in Hanoi and Ho Chi Minh City." |
 | 10 | Country page: Central Europe | "Access structured dossiers, verified school directories, and visa application kits." | "Use our country guide to understand the paperwork, research schools and plan your visa application." |
 
+**Status (13 Nov 2026, approved and applied on the Preview):** items 2–5 and
+7–10 use the proposed wording; item 6 was done in B6. Item 1 uses interim
+wording ("Clear Course Information — Each course sets out what you will learn
+and when it opens…") because the proposed text promised certificate details
+that are not yet confirmed in the course platform. Also softened: country-page
+descriptions of third-party resources as "verified" (Taiwan, Thailand, Saudi
+Arabia, Spain, South Korea) and two "guaranteed placement" provider
+descriptions (Costa Rica). Resources advice to check accreditation is kept.
+
 Note: several Resources articles (correctly) advise readers to choose an
 **accredited** 120-hour+ TEFL course. If WTA's TEFL courses are accredited,
 we should say by whom on the course cards; if not, that advice may lead

@@ -239,7 +239,7 @@
   pointer-events: none;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0.25) 28%, rgba(255, 255, 255, 0) 48%);
 }
-/* "Support That Doesn't Disappear" card is wide (spans 2 columns) and its
+/* "Support When You Need It" card is wide (spans 2 columns) and its
    text sits bottom-left — the vertical-only fade above doesn't reach that
    corner, so the text was landing directly on the girl's face. Push the
    photo's focal point further right (out from under the text) and layer in
@@ -263,7 +263,7 @@
   margin-left: -28px;
 }
 
-/* "Recognized Certification" card: keep the icon directly above the
+/* "Clear Course Information" card: keep the icon directly above the
    title/text as one group, positioned above center in the tall card,
    shifted slightly left. */
 .why-wrap10 .why-card10:nth-child(1) {
