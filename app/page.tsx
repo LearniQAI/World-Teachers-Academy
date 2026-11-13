@@ -1,6 +1,7 @@
 import type React from "react";
 import VideoTestimonials from "@/components/home/VideoTestimonials";
 import TextTestimonials from "@/components/home/TextTestimonials";
+import { SHOW_UNVERIFIED_TESTIMONIALS } from "@/lib/site";
 import HeroSearchForm from "@/components/home/HeroSearchForm";
 import { realCourses } from "@/lib/courses-catalog";
 import CourseCard from "@/components/courses/CourseCard";
@@ -633,6 +634,8 @@ export default async function Home() {
             {/*==============================
 Video Testimonials Area
 ==============================*/}
+            {/* Hidden until verified (B2): see SHOW_UNVERIFIED_TESTIMONIALS in lib/site.ts */}
+            {SHOW_UNVERIFIED_TESTIMONIALS && (
             <section className="space overflow-hidden" id="video-testi-sec">
                 <div className="container">
                     <div className="title-area text-center">
@@ -642,16 +645,19 @@ Video Testimonials Area
                     <VideoTestimonials />
                 </div>
             </section>
+            )}
 
             <section className="testi-area-1 space overflow-hidden" id="testi-sec">
                 <div className="testi-bg-shape8-1 shape-mockup th_fade_anim d-xxl-block d-none" data-speed="0.9" data-left="6%" data-top="7%">
                 </div>
                 <div className="container">
                     <div className="row gy-40 gx-80">
+                        {SHOW_UNVERIFIED_TESTIMONIALS && (
                         <div className="col-xl-6">
                             <TextTestimonials />
                         </div>
-                        <div className="col-xl-6">
+                        )}
+                        <div className={SHOW_UNVERIFIED_TESTIMONIALS ? "col-xl-6" : "col-xl-8 col-lg-10 mx-auto"}>
                             
                             <div className="contact-form contact-form-4 th_fade_anim" id="contact-sec">
                                 {/* B1 (13 Nov 2026): the template form posted to mail.php, which does not
@@ -883,11 +889,11 @@ FAQ Area
 
                                     <div className="accordion-card style2 th_fade_anim">
                                         <div className="accordion-header" id="collapse-item-3">
-                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-3" aria-expanded="false" aria-controls="collapse-3">Can I find a job through World Teachers Academy after I'm certified?</button>
+                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-3" aria-expanded="false" aria-controls="collapse-3">Can I find a job through World Teachers Academy after I&apos;m certified?</button>
                                         </div>
                                         <div id="collapse-3" className="accordion-collapse collapse " data-bs-parent="#faqAccordion">
                                             <div className="accordion-body">
-                                                <p className="faq-text">Yes — our Job Portal lists verified international positions you can apply to directly on the employer's own website.</p>
+                                                <p className="faq-text">Yes — our Job Portal lists verified international positions you can apply to directly on the employer&apos;s own website.</p>
                                             </div>
                                         </div>
                                     </div>
@@ -912,7 +918,7 @@ FAQ Area
                                         </div>
                                         <div id="collapse-5" className="accordion-collapse collapse " data-bs-parent="#faqAccordion">
                                             <div className="accordion-body">
-                                                <p className="faq-text">This depends on the program — check each course's details page for visa/relocation support information.</p>
+                                                <p className="faq-text">This depends on the program — check each course&apos;s details page for visa/relocation support information.</p>
                                             </div>
                                         </div>
                                     </div>

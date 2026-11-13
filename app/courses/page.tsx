@@ -1,4 +1,4 @@
-import { START_TRAINING_URL } from "@/lib/site";
+import { START_TRAINING_URL, SHOW_UNVERIFIED_TESTIMONIALS } from "@/lib/site";
 import { searchCourses } from "@/lib/courses-catalog";
 import CourseSearchForm from "@/components/courses/CourseSearchForm";
 import CourseCard from "@/components/courses/CourseCard";
@@ -84,6 +84,8 @@ Cta Area
           {/*==============================
 Testimonial Area
 ==============================*/}
+          {/* Hidden until verified (B2): see SHOW_UNVERIFIED_TESTIMONIALS in lib/site.ts */}
+          {SHOW_UNVERIFIED_TESTIMONIALS && (
           <section className="space overflow-hidden" id="testi-sec">
             <div className="container">
               <div className="row justify-content-center">
@@ -93,6 +95,7 @@ Testimonial Area
               </div>
             </div>
           </section>
+          )}
 
           {/*==============================
 Cta Area
