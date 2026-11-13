@@ -45,7 +45,7 @@ export default function CourseCard({
             }
           />
         </MaybeLink>
-        <span className="box-price wta-price">Free</span>
+        {course.showFreeLabel !== false && <span className="box-price wta-price">Free</span>}
       </div>
 
       <span className={`wta-status ${isOpen ? "wta-status--open" : "wta-status--soon"}`}>

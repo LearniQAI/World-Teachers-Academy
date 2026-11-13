@@ -918,7 +918,7 @@ const CATEGORY_CARDS: { title: string; text: string; href: string | null; icon: 
   { title: "Career Readiness", text: "Prepare your CV, interviews and professional skills for global opportunities.", href: "/resources", icon: "briefcase", theme: "career" },
   { title: "Online Teaching & Tutoring", text: "Learn to teach and tutor students from anywhere.", href: "/courses?q=Online", icon: "laptop", theme: "teaching" },
   { title: "International Job Search", text: "Discover international vacancies and apply directly to employers.", href: "/job-portal", icon: "search", theme: "abroad" },
-  { title: "Digital Skills & Tools", text: "Develop practical digital skills for today\u2019s global workplace.", href: null, icon: "code", theme: "career" },
+  { title: "Digital Skills & Tools", text: "Develop practical digital skills for today\u2019s global workplace.", href: "/courses?q=Coding", icon: "code", theme: "career" },
 ];
 
 type IconName = "language" | "globe" | "briefcase" | "laptop" | "search" | "code";
