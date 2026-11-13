@@ -857,71 +857,23 @@ FAQ Area
                         <div className="col-xl-6">
                             <div className="faq-wrap1">
                                 <div className="title-area">
-                                    <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Faq’s</span>
-                                    <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Frequently Asked have any questions?</span></h2>
+                                    <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="" />FAQs</span>
+                                    <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Frequently Asked Questions</span></h2>
                                 </div>
                                 <div className="accordion" id="faqAccordion">
-
-
-                                    <div className="accordion-card style2 th_fade_anim">
-                                        <div className="accordion-header" id="collapse-item-1">
-                                            <button className="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapse-1" aria-expanded="true" aria-controls="collapse-1">Do I need work experience to get certified?</button>
+                                    {/* Owner-approved wording, 13 Nov 2026 (B6). Keep in step with /faqs. */}
+                                    {HOME_FAQS.map((item, i) => (
+                                    <div className="accordion-card style2 th_fade_anim" key={item.q}>
+                                        <div className="accordion-header" id={`collapse-item-${i + 1}`}>
+                                            <button className={`accordion-button${i === 0 ? "" : " collapsed"}`} type="button" data-bs-toggle="collapse" data-bs-target={`#collapse-${i + 1}`} aria-expanded={i === 0} aria-controls={`collapse-${i + 1}`}>{item.q}</button>
                                         </div>
-                                        <div id="collapse-1" className="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                                        <div id={`collapse-${i + 1}`} className={`accordion-collapse collapse${i === 0 ? " show" : ""}`} data-bs-parent="#faqAccordion">
                                             <div className="accordion-body">
-                                                <p className="faq-text">No — our foundational certifications are designed for both newcomers and experienced professionals.</p>
+                                                <p className="faq-text">{item.a}</p>
                                             </div>
                                         </div>
                                     </div>
-
-
-                                    <div className="accordion-card style2 th_fade_anim">
-                                        <div className="accordion-header" id="collapse-item-2">
-                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-2" aria-expanded="false" aria-controls="collapse-2">Are these certifications recognized internationally?</button>
-                                        </div>
-                                        <div id="collapse-2" className="accordion-collapse collapse " data-bs-parent="#faqAccordion">
-                                            <div className="accordion-body">
-                                                <p className="faq-text">Yes, our certification programs follow internationally recognized standards accepted by employers and institutions worldwide.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div className="accordion-card style2 th_fade_anim">
-                                        <div className="accordion-header" id="collapse-item-3">
-                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-3" aria-expanded="false" aria-controls="collapse-3">Can I find a job through World Teachers Academy after I&apos;m certified?</button>
-                                        </div>
-                                        <div id="collapse-3" className="accordion-collapse collapse " data-bs-parent="#faqAccordion">
-                                            <div className="accordion-body">
-                                                <p className="faq-text">Yes — our Job Portal lists verified international positions you can apply to directly on the employer&apos;s own website.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div className="accordion-card style2 th_fade_anim">
-                                        <div className="accordion-header" id="collapse-item-4">
-                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-4" aria-expanded="false" aria-controls="collapse-4">How long does certification take?</button>
-                                        </div>
-                                        <div id="collapse-4" className="accordion-collapse collapse " data-bs-parent="#faqAccordion">
-                                            <div className="accordion-body">
-                                                <p className="faq-text">This depends on the course — most programs range from a few days of intensive study to several weeks of self-paced learning.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    {/* TODO: confirm whether visa/relocation support is actually offered before launch — remove this FAQ entirely if not, per user's own flag that false claims here are reputationally risky */}
-                                    <div className="accordion-card style2 th_fade_anim">
-                                        <div className="accordion-header" id="collapse-item-5">
-                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-5" aria-expanded="false" aria-controls="collapse-5">Do you help with visa or relocation support for working abroad?</button>
-                                        </div>
-                                        <div id="collapse-5" className="accordion-collapse collapse " data-bs-parent="#faqAccordion">
-                                            <div className="accordion-body">
-                                                <p className="faq-text">This depends on the program — check each course&apos;s details page for visa/relocation support information.</p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>
@@ -973,3 +925,32 @@ function CategoryArrow() {
     </svg>
   );
 }
+
+// Homepage FAQ — owner-approved wording (13 Nov 2026, B6). No certificate
+// promises until the completion and certificate rules are confirmed.
+const HOME_FAQS: { q: string; a: string }[] = [
+  {
+    q: "Do I need work experience to join a course?",
+    a: "No. You can join our courses without previous work experience. Each course description explains who it is designed for, so check it before you enrol.",
+  },
+  {
+    q: "Will my qualification be recognised abroad?",
+    a: "Recognition of qualifications varies by country and by employer. Our Country Guides explain what each destination typically asks for, so check those requirements before you apply.",
+  },
+  {
+    q: "How long are the courses?",
+    a: "Our programmes range from 120 to 520 study hours: Professional Online Teaching & Tutoring (120 hours), TEFL Certificate (130), Diploma (320), Advanced Diploma (395) and TEFL Comprehensive (520). How long you take depends on how many hours a week you study. Study hours for Coding & Software Development, Business English and Supply Chain Management will be confirmed before those courses launch.",
+  },
+  {
+    q: "Are the courses free?",
+    a: "Our launch courses are free. Pricing for Coding & Software Development and Business English Communication & Professional Skills will be confirmed before they launch.",
+  },
+  {
+    q: "Do you arrange visas, work permits or relocation?",
+    a: "World Teachers Academy provides educational resources and career guidance. We do not arrange or guarantee visas, work permits, employment or relocation.",
+  },
+  {
+    q: "Will you help me find a job?",
+    a: "We provide Country Guides and career resources to help you explore international employment opportunities. Our updated Job Portal is being developed to make discovering opportunities easier. We do not guarantee employment or placement.",
+  },
+];

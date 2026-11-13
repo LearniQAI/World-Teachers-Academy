@@ -11,13 +11,18 @@ const faqs = [
     q: "Do I need previous teaching experience?",
     a: "No — our programmes are designed for both new and experienced educators.",
   },
+  // The next three match the owner-approved homepage FAQ (13 Nov 2026, B6).
   {
-    q: "How does the Job Portal work?",
-    a: "The Job Portal gathers teaching vacancies from public job listings. To apply, you share your name and email, and you're then taken to the original posting to apply directly with the employer. We don't guarantee placement, so check each employer and offer carefully — our Country Guides explain the warning signs.",
+    q: "Will you help me find a job?",
+    a: "We provide Country Guides and career resources to help you explore international employment opportunities. Our updated Job Portal is being developed to make discovering opportunities easier. We do not guarantee employment or placement.",
   },
   {
-    q: "Will my certificate be recognised abroad?",
-    a: "Recognition of teaching qualifications varies by country and by employer. Our Country Guides explain what each destination typically asks for, so check those requirements before you apply.",
+    q: "Will my qualification be recognised abroad?",
+    a: "Recognition of qualifications varies by country and by employer. Our Country Guides explain what each destination typically asks for, so check those requirements before you apply.",
+  },
+  {
+    q: "Do you arrange visas, work permits or relocation?",
+    a: "World Teachers Academy provides educational resources and career guidance. We do not arrange or guarantee visas, work permits, employment or relocation.",
   },
   {
     q: "How do I contact support?",
