@@ -40,6 +40,11 @@ export interface CourseCatalogEntry {
    * pricing is not confirmed. Defaults to showing it.
    */
   showFreeLabel?: boolean;
+  /**
+   * Optional wording shown when the countdown reaches zero, replacing the
+   * default "Launch update pending". Enrolment never opens automatically.
+   */
+  launchPendingLabel?: string;
   status: CourseStatus;
   /**
    * Planned launch time, ISO 8601 with +02:00 offset (Africa/Johannesburg).
@@ -93,17 +98,19 @@ export const realCourses: CourseCatalogEntry[] = [
     summary: "Your first step to teaching English in classrooms at home and abroad.",
   },
   {
-    // Added 13 Nov 2026 at the owner's request. Not in the LMS yet: no launch
-    // date, no profile link and no enrolment button until the owner provides
-    // them. Pricing not confirmed, so the "Free" label is hidden.
+    // Added 13 Nov 2026 at the owner's request. Scheduled launch 28 Nov 2026,
+    // 09:00 SAST (15 days, same launch hour as the other courses). No profile
+    // link and no enrolment button until the owner approves opening
+    // registration. Pricing not confirmed, so the "Free" label is hidden.
     slug: "coding-software-development",
     title: "Coding & Software Development — From Beginner to Career-Ready",
     image: "/images/coding-software-development.webp",
     imageSrcSet: "/images/coding-software-development-752.webp 752w, /images/coding-software-development.webp 1504w",
     imageAlt: "Software developer smiling at his laptop in a modern coding workspace with code on two monitors",
     showFreeLabel: false,
+    launchPendingLabel: "Launch pending confirmation",
     status: "coming_soon",
-    launchAt: null,
+    launchAt: "2026-11-28T09:00:00+02:00",
     profileUrl: null,
     summary:
       "Learn to code, build websites and develop practical programming skills for today\u2019s global digital workplace.",

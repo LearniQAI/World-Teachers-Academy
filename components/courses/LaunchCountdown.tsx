@@ -31,10 +31,13 @@ function split(msLeft: number): number[] {
 export default function LaunchCountdown({
   launchAt,
   dateLabel,
+  pendingLabel,
 }: {
   launchAt: string;
   /** Pre-formatted launch date, e.g. "17 November 2026". */
   dateLabel: string;
+  /** Replaces "Launch update pending" when the countdown has ended. */
+  pendingLabel?: string;
 }) {
   const target = Date.parse(launchAt);
   const [now, setNow] = useState<number | null>(null);
@@ -48,8 +51,10 @@ export default function LaunchCountdown({
   if (now !== null && now >= target) {
     return (
       <div className="wta-countdown wta-countdown--pending">
-        <p className="wta-countdown__date">Launch update pending</p>
-        <p className="wta-countdown__note">We&apos;re completing final checks. Check back soon.</p>
+        <p className="wta-countdown__date">{pendingLabel ?? "Launch update pending"}</p>
+        <p className="wta-countdown__note">
+          {pendingLabel ? "Enrolment opens once the launch is confirmed. Check back soon." : <>We&apos;re completing final checks. Check back soon.</>}
+        </p>
       </div>
     );
   }

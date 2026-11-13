@@ -58,7 +58,7 @@ export default function CourseCard({
       <p className="wta-course-summary">{course.summary}</p>
 
       {!isOpen && course.launchAt && (
-        <LaunchCountdown launchAt={course.launchAt} dateLabel={formatLaunchDate(course.launchAt)} />
+        <LaunchCountdown launchAt={course.launchAt} dateLabel={formatLaunchDate(course.launchAt)} pendingLabel={course.launchPendingLabel} />
       )}
       {!isOpen && !course.launchAt && (
         <div className="wta-countdown wta-countdown--tba">
