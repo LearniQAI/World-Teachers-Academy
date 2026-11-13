@@ -85,7 +85,7 @@ function cta(name: string): Country["jobPortalCTA"] {
   return {
     heading: `Ready to teach in ${name}?`,
     text: "Use this guide to prepare, then start with our free courses. Our updated Job Portal is being developed.",
-    buttonLabel: "START WITH OUR FREE COURSES",
+    buttonLabel: "VIEW FREE COURSES",
     href: "/courses",
   };
 }
