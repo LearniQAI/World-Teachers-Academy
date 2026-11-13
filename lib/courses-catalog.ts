@@ -138,7 +138,11 @@ export const realCourses: CourseCatalogEntry[] = [
   {
     slug: "advanced-diploma-395-hour",
     title: "Advanced Diploma — 395 Hour",
-    image: "/assets/adv-diploma%20395%20hours.jpeg",
+    // Owner-generated photo (13 Nov 2026), replacing the "WORL TEACHERS" banner.
+    // Master PNG at /images/tefl-advanced-diploma-395.png.
+    image: "/images/tefl-advanced-diploma-395.webp",
+    imageSrcSet: "/images/tefl-advanced-diploma-395-752.webp 752w, /images/tefl-advanced-diploma-395.webp 1504w",
+    imageAlt: "Experienced North African educator mentoring two teachers in a modern international teacher-training centre",
     status: "coming_soon",
     launchAt: "2026-11-27T09:00:00+02:00",
     profileUrl: null,
