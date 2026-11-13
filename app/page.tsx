@@ -74,10 +74,10 @@ export default async function Home() {
                                 <div className="counter-card"><div className="media-body"><h2 className="box-number">Global</h2><p className="box-text">Country Guides</p></div></div>
                             </div>
                             <div className="col-6 col-md-3">
-                                <div className="counter-card"><div className="media-body"><h2 className="box-number">Verified</h2><p className="box-text">Job Listings</p></div></div>
+                                <div className="counter-card"><div className="media-body"><h2 className="box-number">8</h2><p className="box-text">Programmes</p></div></div>
                             </div>
                             <div className="col-6 col-md-3">
-                                <div className="counter-card"><div className="media-body"><h2 className="box-number">Direct</h2><p className="box-text">Applications</p></div></div>
+                                <div className="counter-card"><div className="media-body"><h2 className="box-number">Practical</h2><p className="box-text">Career Skills</p></div></div>
                             </div>
                         </div>
                     </div>
@@ -178,7 +178,7 @@ export default async function Home() {
                                     <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />More About Us</span>
                                     <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Everything You Need to Build a Global Career</span></h2>
                                     <p className="th_fade_anim">World Teachers Academy was built for one purpose: helping people get certified, stay current, and find international roles that genuinely fit their skills — without juggling five different websites to do it.</p>
-                                    <p className="th_fade_anim">From practical certification courses to a live directory of verified jobs across multiple countries, we bring the training and the opportunity together in one place.</p>
+                                    <p className="th_fade_anim">From practical certification courses to free Country Guides, we bring training and international career resources together in one place.</p>
                                 </div>
                                 <div className="about-info-card style2 th_fade_anim">
                                     <div className="box-icon">
@@ -232,8 +232,8 @@ export default async function Home() {
                                     <img src="/assets/img/icon/about-card-icon11-3.svg" alt="img" />
                                 </div>
                                 <div className="box-details">
-                                    <h3 className="box-title"><span className="text-theme">Verified</span> Job Listings</h3>
-                                    <p className="box-text">Browse verified international vacancies and apply directly on the employer&apos;s own website.</p>
+                                    <h3 className="box-title"><span className="text-theme">Career</span> Resources</h3>
+                                    <p className="box-text">Guides to help you explore international opportunities. Our updated Job Portal is being developed.</p>
                                 </div>
                             </div>
                         </div>
@@ -319,8 +319,8 @@ export default async function Home() {
                         <div className="divider"></div>
                         <div className="counter-card">
                             <div className="media-body">
-                                <h2 className="box-number text-white">Direct</h2>
-                                <p className="box-text">Applications to Employers</p>
+                                <h2 className="box-number text-white">Practical</h2>
+                                <p className="box-text">Skills for Work</p>
                             </div>
                         </div>
                         <div className="divider"></div>
@@ -394,8 +394,8 @@ export default async function Home() {
                             <div className="box-icon">
                                 <img src="/assets/img/icon/why-card-icon10-3.svg" alt="img" />
                             </div>
-                            <h3 className="box-title">Direct Job Access</h3>
-                            <p className="box-text">Finish your certification and go straight to real job listings — no separate site, no waiting.</p>
+                            <h3 className="box-title">Job Search Guidance</h3>
+                            <p className="box-text">Our guides explain how to search and apply for roles abroad safely. Our updated Job Portal is being developed.</p>
                         </div>
                         <div className="why-card10 th_fade_anim">
                             <div className="why-card-bg"><img src="/assets/img/normal/support-card-image.jpg" alt="Supported student" /></div>
@@ -896,7 +896,7 @@ const CATEGORY_CARDS: { title: string; text: string; href: string | null; icon: 
   { title: "Working Abroad", text: "Explore countries, work requirements and life overseas.", href: "/countries", icon: "globe", theme: "abroad" },
   { title: "Career Readiness", text: "Prepare your CV, interviews and professional skills for global opportunities.", href: "/resources", icon: "briefcase", theme: "career" },
   { title: "Online Teaching & Tutoring", text: "Learn to teach and tutor students from anywhere.", href: "/courses?q=Online", icon: "laptop", theme: "teaching" },
-  { title: "International Job Search", text: "Discover international vacancies and apply directly to employers.", href: "/job-portal", icon: "search", theme: "abroad" },
+  { title: "International Job Search", text: "Learn how to search and apply for roles abroad. Our updated Job Portal is being developed.", href: "/resources", icon: "search", theme: "abroad" },
   { title: "Digital Skills & Tools", text: "Develop practical digital skills for today\u2019s global workplace.", href: "/courses?q=Coding", icon: "code", theme: "career" },
 ];
 

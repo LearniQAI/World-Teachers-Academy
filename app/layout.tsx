@@ -14,7 +14,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "World Teachers Academy — Free Training for International Careers",
   description:
-    "Free, practical training, country guides and verified job listings to help you build skills and prepare for international careers, including teaching.",
+    "Free, practical training, country guides and career resources to help you build skills and prepare for international careers, including teaching.",
   icons: {
     icon: [
       { url: "/assets/favicons/favicon.svg", type: "image/svg+xml" },

@@ -148,6 +148,53 @@ visitors to question our own courses. This needs your decision.
 | Header, mobile menu, footer | "Job Portal" → /job-portal (live listing) | Either remove the link, or label it "Job Portal (Coming Soon)" pointing to a short coming-soon page. Your choice. |
 | /faqs page | How does the Job Portal work? | Is the Job Portal open? — Not yet. We're preparing it and will announce it when it opens. |
 
+### Production Job Portal findings (read-only, 13 Nov 2026)
+
+Checked with public GET requests to worldteachers.academy and the `main`
+code only. Nothing was changed; no SQL was run against production.
+
+- **Sources:** Adzuna API (10 markets: ZA, GB, US, CA, AU, SG, IN, DE, FR, NL,
+  keyword search) and Reed API (UK). Ingested by the `ingest-jobs` Edge
+  Function, scheduled daily at 03:00 UTC by pg_cron (last run 13 Nov, 03:01 UTC).
+- **Listings:** 1,063 active (GB 613, the other nine markets 50 each). Not
+  checked by people; no "verified" step exists in production. Some active
+  listings are very old (posted dates back to April 2017).
+- **Apply links:** go to the Adzuna or Reed advert page (adzuna.co.uk,
+  adzuna.com.au, reed.co.uk …), not to the employer's own site. The Apply
+  button first asks for the visitor's name and email.
+- **Licensing:** no written Adzuna licence or Reed agreement found in the
+  repository. Adzuna's published API terms require an "Adzuna" label linked to
+  Adzuna on every displayed advert, and require written agreement or a
+  licence for revenue-generating use or lead generation. The production page
+  shows no Adzuna or Reed attribution, and collecting emails before the apply
+  link may count as lead generation. Reed's developer page does not state
+  display terms. **Status: unresolved — owner to confirm with Adzuna/Reed.**
+
+### Applied on the Preview (13 Nov 2026)
+
+Only wording that the findings support. Where the earlier proposal said "Job
+Portal coming soon", the approved FAQ phrase "Our updated Job Portal is being
+developed" is used instead, because a portal is live in production today.
+
+- Hero stats: "8 / Programmes", "Practical / Career Skills".
+- "Everything You Need…" paragraph: "From practical certification courses to
+  free Country Guides, we bring training and international career resources
+  together in one place."
+- Small card: "Career Resources — Guides to help you explore international
+  opportunities. Our updated Job Portal is being developed."
+- Why card: "Job Search Guidance — Our guides explain how to search and apply
+  for roles abroad safely. Our updated Job Portal is being developed."
+- Blue band: "Practical / Skills for Work".
+- Category card: "International Job Search — Learn how to search and apply for
+  roles abroad. Our updated Job Portal is being developed." → /resources.
+- About page "Job Portal" item: "Teaching vacancies from third-party job
+  sites, with links to the original advert. Our updated Job Portal is being
+  developed."
+- Site description (search results): "verified job listings" → "career
+  resources".
+- Header, mobile menu and footer "Job Portal" links: unchanged (no navigation
+  changes). /faqs already uses the approved job answer (B6).
+
 Note: production (`main`) currently shows the job portal (menu link and a
 working /job-portal page). Whatever you decide here changes production at
 release.

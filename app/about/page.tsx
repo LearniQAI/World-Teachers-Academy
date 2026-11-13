@@ -30,7 +30,7 @@ const whatWeDo = [
   },
   {
     title: "Job Portal",
-    text: "Teaching vacancies gathered from public job listings in many countries, with links to apply directly with the employer.",
+    text: "Teaching vacancies from third-party job sites, with links to the original advert. Our updated Job Portal is being developed.",
   },
   {
     title: "Country Guides",
