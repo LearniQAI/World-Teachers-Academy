@@ -16,11 +16,11 @@ rows.forEach((r: Record<string, unknown>, i) => {
 export const reports: unknown[] = [];
 const relevant = rows.filter((r) => isRelevantTeachingJob(r.title as string));
 const realFetch = window.fetch;
-window.fetch = (async function (input: RequestInfo | URL) {
+window.fetch = (async function (input: RequestInfo | URL, init?: RequestInit) {
   const url = new URL(String(input), location.href);
   await new Promise((r) => setTimeout(r, 120));
   if (url.pathname === "/api/jobs/report") {
-    const body = JSON.parse(String((arguments[1] as RequestInit | undefined)?.body ?? "{}"));
+    const body = JSON.parse(String(init?.body ?? "{}"));
     reports.push(body); (window as unknown as { __reports: unknown[] }).__reports = reports;
     return new Response(JSON.stringify({ status: "recorded" }));
   }

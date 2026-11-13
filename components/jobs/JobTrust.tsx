@@ -156,7 +156,7 @@ export function ReportJob({ jobId }: { jobId: string }) {
   if (state === "sent") {
     return (
       <p className="jt-report-done" role="status">
-        <i className="far fa-check" aria-hidden="true"></i> Report sent. We'll check this job again with its source.
+        <i className="far fa-check" aria-hidden="true"></i> Report sent. We&apos;ll check this job again with its source.
       </p>
     );
   }
@@ -169,7 +169,7 @@ export function ReportJob({ jobId }: { jobId: string }) {
   }
   return (
     <form className="jt-report" onSubmit={submit} aria-labelledby={`${id}-h`}>
-      <p id={`${id}-h`} className="jt-report__title">What's wrong with this listing?</p>
+      <p id={`${id}-h`} className="jt-report__title">What&apos;s wrong with this listing?</p>
       <fieldset>
         <legend className="visually-hidden">Reason</legend>
         {REASONS.map((r) => (
@@ -180,7 +180,7 @@ export function ReportJob({ jobId }: { jobId: string }) {
           </label>
         ))}
       </fieldset>
-      <label htmlFor={`${id}-note`} className="jt-small">Anything else? (optional — please don't include personal details)</label>
+      <label htmlFor={`${id}-note`} className="jt-small">Anything else? (optional — please don&apos;t include personal details)</label>
       <textarea id={`${id}-note`} maxLength={500} rows={2} value={note} onChange={(e) => setNote(e.target.value)} />
       {message && <p className="jt-error" role="alert">{message}</p>}
       <div className="jt-report__actions">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 // Live countdown to a fixed launch timestamp.
 //
@@ -18,6 +18,42 @@ const UNITS = [
   { key: "m", label: "Minutes", ms: 60_000 },
   { key: "s", label: "Seconds", ms: 1_000 },
 ] as const;
+
+// One shared 1-second ticker for every countdown on the page. The snapshot is
+// the current time rounded down to the second, so React re-renders once per
+// second and the server/hydration snapshot (null) never mismatches.
+const clockListeners = new Set<() => void>();
+let clockTimer: number | undefined;
+let clockNow = 0;
+
+function tick() {
+  clockNow = Math.floor(Date.now() / 1000) * 1000;
+  clockListeners.forEach((l) => l());
+}
+
+function subscribeToClock(listener: () => void) {
+  clockListeners.add(listener);
+  if (clockTimer === undefined) {
+    tick();
+    clockTimer = window.setInterval(tick, 1000);
+  }
+  return () => {
+    clockListeners.delete(listener);
+    if (clockListeners.size === 0 && clockTimer !== undefined) {
+      window.clearInterval(clockTimer);
+      clockTimer = undefined;
+    }
+  };
+}
+
+function getClockSnapshot(): number | null {
+  if (clockNow === 0) clockNow = Math.floor(Date.now() / 1000) * 1000;
+  return clockNow;
+}
+
+function getServerClockSnapshot(): number | null {
+  return null;
+}
 
 function split(msLeft: number): number[] {
   let rest = Math.max(0, msLeft);
@@ -40,13 +76,9 @@ export default function LaunchCountdown({
   pendingLabel?: string;
 }) {
   const target = Date.parse(launchAt);
-  const [now, setNow] = useState<number | null>(null);
-
-  useEffect(() => {
-    setNow(Date.now());
-    const id = window.setInterval(() => setNow(Date.now()), 1000);
-    return () => window.clearInterval(id);
-  }, []);
+  // null on the server and during hydration (renders "--"), then the device's
+  // current time, updated every second by one shared ticker.
+  const now = useSyncExternalStore(subscribeToClock, getClockSnapshot, getServerClockSnapshot);
 
   if (now !== null && now >= target) {
     return (

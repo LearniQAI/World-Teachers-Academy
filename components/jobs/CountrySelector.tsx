@@ -56,19 +56,18 @@ export default function CountrySelector({ value, onChange, withJobs, withoutJobs
       ? allItem
       : [...withJobs, ...withoutJobs].find((o) => o.code === value) ?? { code: value, name: value, count: 0 };
 
-  // Open: focus the search box and highlight the current choice.
-  useEffect(() => {
-    if (!open) return;
+  // Open: clear the search and highlight the current choice (done in the
+  // event that opens the panel, not in an effect), then focus the search box.
+  function openPanel() {
+    const fullList = [allItem, ...withJobs, ...withoutJobs];
+    const i = fullList.findIndex((it) => it.code === value);
     setQuery("");
-    inputRef.current?.focus();
-  }, [open]);
-  useEffect(() => {
-    if (!open) return;
-    const i = items.findIndex((it) => it.code === value);
     setActive(i >= 0 ? i : 0);
-    // only when opening or when the list changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, items.length]);
+    setOpen(true);
+  }
+  useEffect(() => {
+    if (open) inputRef.current?.focus();
+  }, [open]);
 
   // Close on outside click.
   useEffect(() => {
@@ -158,11 +157,11 @@ export default function CountrySelector({ value, onChange, withJobs, withoutJobs
         aria-expanded={open}
         aria-controls={open ? `${listId}-panel` : undefined}
         aria-label={`Country: ${selected.name}${value === "all" ? "" : `, ${countLabel(selected)}`}`}
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => (open ? setOpen(false) : openPanel())}
         onKeyDown={(e) => {
           if ((e.key === "ArrowDown" || e.key === "ArrowUp") && !open) {
             e.preventDefault();
-            setOpen(true);
+            openPanel();
           }
         }}
       >

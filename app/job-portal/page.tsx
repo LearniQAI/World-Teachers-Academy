@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { getDescriptionSnippet } from "@/lib/html-text";
 import CountryFlag from "@/components/layout/CountryFlag";
 import CountrySelector, { type CountryOption } from "@/components/jobs/CountrySelector";
@@ -108,7 +108,9 @@ export default function JobPortal() {
   // One-time verification: null = not known yet.
   const [verified, setVerified] = useState<boolean | null>(null);
   const [verifyFor, setVerifyFor] = useState<Job | null>(null);
-  const [pendingJobId, setPendingJobId] = useState<string | null>(null);
+  // The vacancy to reopen once the post-verification reload returns (a ref, not
+  // state: it is only read inside the fetch callback, never rendered).
+  const pendingJobIdRef = useRef<string | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
@@ -128,6 +130,9 @@ export default function JobPortal() {
   // of a Suspense boundary.
   useEffect(() => {
     const code = new URLSearchParams(window.location.search).get("country");
+    // Syncing from an external source (the URL) once after hydration. Reading it
+    // during render would make the server and browser HTML differ.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (code && /^[A-Za-z]{2}$/.test(code)) setCountry(code.toUpperCase());
   }, []);
 
@@ -177,8 +182,18 @@ export default function JobPortal() {
       fetch(`/api/jobs?${params.toString()}`, { signal: controller.signal })
         .then((res) => res.json())
         .then((data) => {
-          setJobs(data.jobs ?? []);
+          const list: Job[] = data.jobs ?? [];
+          setJobs(list);
           if (typeof data.verified === "boolean") setVerified(data.verified);
+          // After verifying, reopen the vacancy the visitor chose, now with its link.
+          const pendingId = pendingJobIdRef.current;
+          if (pendingId) {
+            const j = list.find((x) => x.id === pendingId);
+            if (j && !j.locked) {
+              setApplyJob(j);
+              pendingJobIdRef.current = null;
+            }
+          }
           setTotalPages(typeof data.total_pages === "number" ? data.total_pages : 1);
           setTotalResults(typeof data.total === "number" ? data.total : (data.jobs ?? []).length);
         })
@@ -194,15 +209,6 @@ export default function JobPortal() {
     };
   }, [country, employmentType, keyword, page, reloadKey]);
 
-  // After verifying, reopen the vacancy the visitor chose, now with its link.
-  useEffect(() => {
-    if (!pendingJobId) return;
-    const j = jobs.find((x) => x.id === pendingJobId);
-    if (j && !j.locked) {
-      setApplyJob(j);
-      setPendingJobId(null);
-    }
-  }, [jobs, pendingJobId]);
 
   function openJob(job: Job) {
     if (job.locked && !verified) setVerifyFor(job);
@@ -212,7 +218,7 @@ export default function JobPortal() {
   function handleVerified(jobId: string) {
     setVerified(true);
     setVerifyFor(null);
-    setPendingJobId(jobId);
+    pendingJobIdRef.current = jobId;
     setReloadKey((k) => k + 1);
   }
 
