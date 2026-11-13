@@ -546,3 +546,21 @@
   .wta-why-learners .why-wrap10 .why-card10:nth-child(4) .box-title,
   .wta-why-learners .why-wrap10 .why-card10:nth-child(4) .box-text { max-width: none; }
 }
+
+/* Tablets (768-1199px): the template hides the card photos below 1200px.
+   Show them on cards 1 and 4 at 44% of the card width, with the text
+   limited to 56%, so the photo never sits under the text. Phones (<768px)
+   keep the text-only cards. Desktop is unchanged. */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .wta-why-learners .why-wrap10 .why-card10:nth-child(1) .why-card-bg,
+  .wta-why-learners .why-wrap10 .why-card10:nth-child(4) .why-card-bg {
+    display: flex;
+    width: 44%;
+  }
+  .wta-why-learners .why-wrap10 .why-card10:nth-child(1) .box-title,
+  .wta-why-learners .why-wrap10 .why-card10:nth-child(1) .box-text,
+  .wta-why-learners .why-wrap10 .why-card10:nth-child(4) .box-title,
+  .wta-why-learners .why-wrap10 .why-card10:nth-child(4) .box-text {
+    max-width: 56%;
+  }
+}
