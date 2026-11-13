@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { adzunaHomeUrl } from "@/lib/job-attribution";
 import { getDescriptionSnippet } from "@/lib/html-text";
 
 export interface Job {
@@ -16,6 +17,8 @@ export interface Job {
   currency: string | null;
   apply_url: string;
   posted_at: string | null;
+  /** Where the advert comes from: "adzuna" or "reed" (from the jobs API). */
+  source?: string;
 }
 
 const COUNTRY_NAMES: Record<string, string> = {
@@ -481,6 +484,55 @@ function FilterControls({
   );
 }
 
+// Source attribution shown on every advert (compliance, 13 Nov 2026).
+// Adzuna's API terms: label each displayed advert with "Adzuna", at least
+// 116 x 23 px, linked to adzuna.co.uk or the relevant local Adzuna site. The
+// local site is taken from the advert's own Adzuna link. Reed publishes no
+// display terms; we credit it the same way until Reed confirms its requirements.
+function SourceAttribution({ job }: { job: Job }) {
+  if (job.source === "adzuna") {
+    return (
+      <a
+        href={adzunaHomeUrl(job.apply_url)}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Job advert from Adzuna (opens the Adzuna website)"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minWidth: "116px",
+          minHeight: "23px",
+          padding: "2px 8px",
+          border: `1px solid ${BORDER}`,
+          borderRadius: "4px",
+          fontSize: "12px",
+          color: INK_NAVY,
+          textDecoration: "none",
+          background: "#fff",
+          whiteSpace: "nowrap",
+        }}
+      >
+        Jobs by&nbsp;<strong>Adzuna</strong>
+      </a>
+    );
+  }
+  if (job.source === "reed") {
+    return (
+      <a
+        href="https://www.reed.co.uk"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Job advert from reed.co.uk (opens the Reed website)"
+        style={{ fontSize: "12px", color: PAPER_DIM, textDecoration: "underline", whiteSpace: "nowrap" }}
+      >
+        Source: reed.co.uk
+      </a>
+    );
+  }
+  return null;
+}
+
 function JobRow({ job, onApply }: { job: Job; onApply: () => void }) {
   const salary = formatSalary(job);
   const posted = formatRelativeDate(job.posted_at);
@@ -511,6 +563,7 @@ function JobRow({ job, onApply }: { job: Job; onApply: () => void }) {
             {COUNTRY_NAMES[job.country] ?? job.country}
           </span>
           {posted && <span>{posted}</span>}
+          <SourceAttribution job={job} />
         </div>
         {snippet && (
           <p style={{ fontSize: "13px", color: PAPER_DIM, margin: "6px 0 0", lineHeight: 1.4 }}>
@@ -962,6 +1015,9 @@ function ApplyModal({ job, onClose }: { job: Job; onClose: () => void }) {
                 {job.company_name ?? "Confidential Employer"} &mdash; {job.city ? `${job.city}, ` : ""}
                 {COUNTRY_NAMES[job.country] ?? job.country}
               </p>
+              <p style={{ margin: "-12px 0 18px" }}>
+                <SourceAttribution job={job} />
+              </p>
 
               <div
                 style={{
@@ -978,7 +1034,9 @@ function ApplyModal({ job, onClose }: { job: Job; onClose: () => void }) {
               >
                 <i className="far fa-envelope" style={{ color: INDIGO, fontSize: "14px", marginTop: "2px" }}></i>
                 <p style={{ margin: 0, fontSize: "13px", fontWeight: 700, color: INK_NAVY, lineHeight: 1.5 }}>
-                  Please provide your working email address so employers can contact you about this role.
+                  We&apos;ll email you a 6-digit code to confirm your address. Then we&apos;ll take you to the
+                  original advert, where you apply directly with the advertiser. We don&apos;t send your details
+                  to employers.
                 </p>
               </div>
 
@@ -1069,7 +1127,11 @@ function ApplyModal({ job, onClose }: { job: Job; onClose: () => void }) {
                   {consent && <i className="far fa-check" style={{ color: "#fff", fontSize: "10px" }}></i>}
                 </span>
                 <span style={{ fontSize: "13px", color: PAPER_DIM, lineHeight: 1.5 }}>
-                  I agree to be contacted about this and similar teaching opportunities.
+                  I agree to be contacted about this and similar teaching opportunities. See our{" "}
+                  <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: INDIGO }}>
+                    Privacy Policy
+                  </a>
+                  .
                 </span>
               </label>
 
