@@ -67,7 +67,7 @@ Cta Area
               <div className="row gy-40 justify-content-between align-items-center">
                 <div className="col-xxl-6 col-xl-7 col-lg-7">
                   <div className="title-area mb-0 text-lg-start text-center">
-                    <h2 className="sec-title text-white">Every course is <span className="fw-normal">free.</span></h2>
+                    <h2 className="sec-title text-white">Explore Free Courses &amp; <span className="fw-normal">Upcoming Programmes</span></h2>
                     <p className="text-white mb-0 mt-30">Start the Professional Online Teaching &amp; Tutoring Certification today. The other programmes open on the dates shown above.</p>
                   </div>
                 </div>

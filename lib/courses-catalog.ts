@@ -1,7 +1,8 @@
 // World Teachers Academy course catalog and release schedule — the ONE place
 // that decides what each course card shows.
 //
-// Every course is free at this stage. A card shows one of three states:
+// Launch courses are free; Coding & Software Development hides its "Free"
+// label until pricing is confirmed. A card shows one of three states:
 //   - status "open"                          → "Free — Enrolment Open"
 //   - status "coming_soon", launch ahead      → "Coming Soon" + live countdown
 //   - status "coming_soon", launch has passed → "Launch Update Pending"

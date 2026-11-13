@@ -206,7 +206,7 @@ export default async function Home() {
                                 </div>
                                 <div className="box-details">
                                     <h3 className="box-title"><span className="text-theme">Free</span> Online Training</h3>
-                                    <p className="box-text">Every course is free while we launch, so you can start building skills today.</p>
+                                    <p className="box-text">Our launch courses are free, with more exciting programmes coming soon.</p>
                                 </div>
                             </div>
                         </div>
@@ -254,7 +254,7 @@ export default async function Home() {
                                 <span className="sub-title text-theme th_fade_anim"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />Our Courses</span>
                                 <h2 className="sec-title th_fade_anim"><span className="th-text-perspective">Our Featured Courses</span></h2>
                                 {/* Cards: components/courses/CourseCard.tsx (no prices, lesson or student
-                                    counts, or ratings — every course is free). */}
+                                    counts, or ratings; "Free" label per course, see showFreeLabel). */}
                             </div>
                         </div>
                     </div>
