@@ -1,6 +1,15 @@
 import { Resend } from "resend";
 
-export const resend = new Resend(process.env.RESEND_API_KEY);
+// Created on first use, not at import time. Builds without a key (CI and the
+// protected Previews) would otherwise crash, because the SDK throws when it is
+// constructed without one. Production sets RESEND_API_KEY, so it behaves as
+// before. Without a key, sending fails with a clear error and nothing is sent.
+let client: Resend | null = null;
+function getResend(): Resend {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) throw new Error("Email sending is not configured: RESEND_API_KEY is missing.");
+  return (client ??= new Resend(key));
+}
 
 const INK_NAVY = "#0F172A";
 const SIGNAL_INDIGO = "#4F46E5";
@@ -20,7 +29,7 @@ export async function sendOtpEmail(email: string, code: string) {
   // send looks identical to a successful one to every caller: the OTP row
   // still gets inserted, request-code still returns 200, and the apply modal
   // advances to "enter your code" even though no email was ever delivered.
-  const { error } = await resend.emails.send({
+  const { error } = await getResend().emails.send({
     from: FROM_EMAIL,
     to: email,
     subject: `Your verification code is ${code}`,

@@ -1,4 +1,5 @@
 import PageHero from "@/components/layout/PageHero";
+import { START_TRAINING_URL } from "@/lib/site";
 
 const RIGHT_ARROW = (
   <svg className="ms-2" width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -24,16 +25,16 @@ const CHECK_ICON = (
 
 const whatWeDo = [
   {
-    title: "Certification Programs",
-    text: "TEFL, TESOL, and specialized teaching certifications built around real classroom needs, not generic online-course filler.",
+    title: "Practical Teacher Training",
+    text: "Online teaching, TEFL and specialist programmes built around real classroom situations, not generic online-course filler. Every programme is currently free.",
   },
   {
     title: "Job Portal",
-    text: "Verified teaching positions across multiple countries, updated regularly, with direct application links.",
+    text: "Teaching vacancies from third-party job sites, with links to the original advert. Our updated Job Portal is being developed.",
   },
   {
     title: "Country Guides",
-    text: "Honest, detailed guides on what teaching abroad actually looks like — culture, visas, and daily life — for the destinations our teachers actually go to.",
+    text: "Honest, detailed guides on what teaching abroad actually looks like — culture, visas, and daily life — for popular teaching destinations.",
   },
 ];
 
@@ -42,8 +43,8 @@ export default function About() {
     <>
       <PageHero
         eyebrow="About Us"
-        title="Built by People Who've Actually Taught"
-        subhead="World Teachers Academy exists for one reason: helping educators get certified, stay current, and find teaching work that genuinely fits their skills — without juggling five different websites to build a career."
+        title="Practical Training for International Careers"
+        subhead="World Teachers Academy helps aspiring and experienced educators build practical teaching skills, professional confidence and career readiness — and prepare for teaching opportunities around the world."
         crumb="About Us"
       />
 
@@ -56,7 +57,7 @@ Our Story
             <div className="col-xl-8 col-lg-10">
               <div className="title-area text-center mb-30">
                 <span className="sub-title text-theme th_fade_anim">
-                  <img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />
+                  <img src="/assets/img/icon/subtitle-icon1-6.svg" alt="" />
                   Our Story
                 </span>
                 <h2 className="sec-title th_fade_anim">
@@ -65,11 +66,10 @@ Our Story
               </div>
               <p style={{ fontSize: "18px", color: "#374151", lineHeight: 1.7, textAlign: "center" }}>
                 Most teaching-certification platforms stop at the certificate. We didn&apos;t think that was good
-                enough. Getting certified is only half the job — the other half is actually finding real teaching
-                work once you have it. So we built both pieces into one place: real certification programs, taught
-                by people who&apos;ve stood in front of a classroom, and a live directory of verified teaching jobs
-                across multiple countries, so the path from &lsquo;certified&rsquo; to &lsquo;employed&rsquo;
-                doesn&apos;t require starting over on a different site.
+                enough. A certificate on its own doesn&apos;t prepare you for a real classroom, an interview or life
+                in a new country. So we bring the pieces together in one place: practical, skills-based training,
+                honest country guides, and access to teaching opportunities. We don&apos;t promise jobs — we help you become the teacher schools are looking
+                for, and prepare you to take your next step with confidence.
               </p>
             </div>
           </div>
@@ -83,7 +83,7 @@ What We Do
         <div className="container space-top">
           <div className="title-area text-center mb-50">
             <span className="sub-title text-theme th_fade_anim">
-              <img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />
+              <img src="/assets/img/icon/subtitle-icon1-6.svg" alt="" />
               What We Do
             </span>
             <h2 className="sec-title th_fade_anim">
@@ -115,19 +115,18 @@ Our Approach
             <div className="col-xl-8 col-lg-10">
               <div className="title-area text-center mb-30">
                 <span className="sub-title text-theme th_fade_anim">
-                  <img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />
+                  <img src="/assets/img/icon/subtitle-icon1-6.svg" alt="" />
                   Our Approach
                 </span>
                 <h2 className="sec-title th_fade_anim">
-                  <span className="th-text-perspective">Built By Educators, Not Just Marketers</span>
+                  <span className="th-text-perspective">Built Around Real-World Skills</span>
                 </h2>
               </div>
               <p style={{ fontSize: "18px", color: "#374151", lineHeight: 1.7, textAlign: "center" }}>
-                Every certification program is shaped by people who&apos;ve actually taught — not just written
-                about teaching. We&apos;d rather tell you the honest, sometimes complicated reality of teaching
-                abroad (visa realities, cost-of-living tradeoffs, cultural adjustment) than oversell an easy
-                fantasy. That&apos;s the same standard behind our Country Guides, our courses, and every job
-                listing we surface.
+                Every programme is built around practical skills you can use in a classroom, an interview or a
+                new country. We&apos;d rather tell you the honest, sometimes complicated reality of working
+                abroad (visa realities, cost-of-living trade-offs, cultural adjustment) than oversell an easy
+                fantasy. That&apos;s the same standard behind our Country Guides and our courses.
               </p>
             </div>
           </div>
@@ -144,17 +143,18 @@ Cta Area
               <div className="title-area mb-0 text-lg-start text-center">
                 <h2 className="sec-title text-white">Ready to start?</h2>
                 <p className="text-white mb-0 mt-30">
-                  Browse a certification that fits your goals, or see what teaching positions are open right now.
+                  Start our free Professional Online Teaching &amp; Tutoring Certification today, or explore what
+                  teaching looks like in the countries you&apos;re considering.
                 </p>
               </div>
             </div>
             <div className="col-lg-auto">
               <div className="btn-wrap justify-content-center flex-wrap">
-                <a href="/courses" className="th-btn style5">
-                  BROWSE COURSES{RIGHT_ARROW}
+                <a href={START_TRAINING_URL} className="th-btn style5">
+                  START FREE TRAINING{RIGHT_ARROW}
                 </a>
-                <a href="/job-portal" className="th-btn style2">
-                  BROWSE JOBS{RIGHT_ARROW}
+                <a href="/countries" className="th-btn style2">
+                  EXPLORE COUNTRY GUIDES{RIGHT_ARROW}
                 </a>
               </div>
             </div>

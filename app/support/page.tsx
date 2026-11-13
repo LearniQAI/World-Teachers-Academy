@@ -1,9 +1,10 @@
 import PageHero from "@/components/layout/PageHero";
 
-// TODO: confirm the real support inbox and typical response time with the
-// business before publishing — both are placeholders below.
-const SUPPORT_EMAIL = "hello@worldteachers.academy";
-const RESPONSE_TIME = "[Typical response time TBD — e.g. \"within 1-2 business days\"]";
+import SupportEmailForm from "@/components/support/SupportEmailForm";
+import { CONTACT_EMAIL, START_TRAINING_URL } from "@/lib/site";
+
+// Wording proposed for the owner's approval. No response-time promise is made.
+const SUPPORT_EMAIL = CONTACT_EMAIL;
 
 const SEND_ICON = (
   <svg className="ms-2" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -24,10 +25,12 @@ const SEND_ICON = (
   </svg>
 );
 
+// Quick answers before emailing.
 const topics = [
-  { q: "Questions about a course?", href: "/courses" },
-  { q: "Questions about a job listing?", href: "/job-portal" },
-  { q: "General questions?", href: "/faqs" },
+  { q: "Start the free Online Teaching course", href: START_TRAINING_URL },
+  { q: "See when upcoming courses open", href: "/courses" },
+  { q: "How the Job Portal works", href: "/faqs" },
+  { q: "Teaching abroad: country guides", href: "/countries" },
 ];
 
 export default function Support() {
@@ -35,8 +38,8 @@ export default function Support() {
     <>
       <PageHero
         eyebrow="Support"
-        title="Need Help? We're Here."
-        subhead="Whether you have a question about a course, an application, or something on the site isn't working right, here's how to reach us."
+        title="How Can We Help?"
+        subhead="Questions about a course, your learning account, the Job Portal, or something on the site that isn't working? Email our team and we'll reply by email."
         crumb="Support"
       />
 
@@ -69,12 +72,12 @@ export default function Support() {
                     </svg>
                   </div>
                   <div className="box-details">
-                    <p className="box-text">Response Time</p>
-                    <p className="box-text">{RESPONSE_TIME}</p>
+                    <p className="box-text">How we reply</p>
+                    <p className="box-text">By email, to the address you write from. For course questions, please include the course name and the email you enrolled with.</p>
                   </div>
                 </div>
 
-                <h3 className="widget_title mt-40">Common Topics</h3>
+                <h3 className="widget_title mt-40">Quick Answers</h3>
                 <div className="menu-all-pages-container">
                   <ul className="menu">
                     {topics.map((t) => (
@@ -87,52 +90,10 @@ export default function Support() {
               </div>
             </div>
 
-            {/* Contact form — same handler/markup as the homepage's Get In Touch form */}
+            {/* Message form: opens the visitor's email app (no server storage) */}
             <div className="col-xl-8">
               <div className="contact-form contact-form-4 th_fade_anim" id="contact-sec">
-                {/* TODO: wire to actual form handler — same TODO as the homepage's Get In Touch form, which posts to the same placeholder handler */}
-                <form action="mail.php" method="POST" className="contact-form ajax-contact">
-                  <div className="title-area">
-                    <span className="sub-title text-theme">
-                      <img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />
-                      Send a Message
-                    </span>
-                    <h2 className="sec-title">
-                      <span className="th-text-perspective">Tell Us What You Need</span>
-                    </h2>
-                  </div>
-                  <div className="row">
-                    <div className="col-md-6 form-group style-border3">
-                      <input type="text" placeholder="Your Name" className="form-control" name="name" />
-                      <i className="fal fa-user"></i>
-                    </div>
-                    <div className="col-md-6 form-group style-border3">
-                      <input type="email" placeholder="Your Email" className="form-control" name="email" />
-                      <i className="fal fa-envelope"></i>
-                    </div>
-                    <div className="col-12 form-group style-border3">
-                      <select name="subject" id="subject" className="form-select" defaultValue="">
-                        <option value="" disabled hidden>What&apos;s this about?</option>
-                        <option value="Course question">Course question</option>
-                        <option value="Job Portal question">Job Portal question</option>
-                        <option value="Technical issue">Technical issue</option>
-                        <option value="Other">Other</option>
-                      </select>
-                      <i className="fal fa-chevron-down"></i>
-                    </div>
-                    <div className="col-12 form-group style-border3">
-                      <textarea name="message" id="message" cols={30} rows={5} className="form-control" placeholder="Write your message...."></textarea>
-                      <i className="fal fa-pencil"></i>
-                    </div>
-                    <div className="form-btn mt-15 col-12">
-                      <button className="th-btn">
-                        SEND MESSAGE
-                        {SEND_ICON}
-                      </button>
-                    </div>
-                  </div>
-                  <p className="form-messages mb-0 mt-3"></p>
-                </form>
+                <SupportEmailForm email={SUPPORT_EMAIL} sendIcon={SEND_ICON} />
               </div>
             </div>
           </div>

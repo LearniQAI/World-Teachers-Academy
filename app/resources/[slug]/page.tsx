@@ -209,7 +209,7 @@ export default async function ResourceDetails({
           <div className="row">
             <div className="col-lg-7">
               <div className="breadcumb-content">
-                <span className="sub-title text-theme"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="img" />{resource.category}</span>
+                <span className="sub-title text-theme"><img src="/assets/img/icon/subtitle-icon1-6.svg" alt="" />{resource.category}</span>
                 <h1 className="breadcumb-title">{resource.title}</h1>
                 <ul className="breadcumb-menu">
                   <li><a href="/">Home</a></li>

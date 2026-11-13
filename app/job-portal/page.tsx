@@ -131,6 +131,10 @@ export default function JobPortal() {
   // of a Suspense boundary.
   useEffect(() => {
     const code = new URLSearchParams(window.location.search).get("country");
+    // Owner-approved lint exception (13 Nov 2026, B5 option A): existing
+    // production behaviour, kept unchanged. The URL is only readable in the
+    // browser after mount, so this one-time sync runs in an effect.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (code && /^[A-Za-z]{2}$/.test(code)) setCountry(code.toUpperCase());
   }, []);
 
