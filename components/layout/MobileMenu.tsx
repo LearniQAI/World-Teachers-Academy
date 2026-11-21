@@ -1,4 +1,4 @@
-import { CONTACT_EMAIL, START_TRAINING_URL } from "@/lib/site";
+import { CONTACT_EMAIL, START_TRAINING_URL, VERIFY_CERTIFICATE_URL } from "@/lib/site";
 import SocialLinks from "@/components/layout/SocialLinks";
 import { Fragment } from "react";
 import CountryFlag from "./CountryFlag";
@@ -51,6 +51,7 @@ export default function MobileMenu() {
                         </li>
                         <li><a href="/job-portal">Job Portal</a></li>
                         <li><a href="/blog">Blog</a></li>
+                        <li><a href={VERIFY_CERTIFICATE_URL} target="_blank" rel="noopener noreferrer">Verify <i className="fa-regular fa-arrow-up-right-from-square" aria-hidden="true" style={{ fontSize: "0.75em", marginLeft: 4 }}></i><span className="visually-hidden"> (opens in a new tab)</span></a></li>
                     </ul>
                 </div>
 

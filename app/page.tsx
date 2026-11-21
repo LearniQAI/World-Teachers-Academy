@@ -1,7 +1,7 @@
 import type React from "react";
 import VideoTestimonials from "@/components/home/VideoTestimonials";
 import TextTestimonials from "@/components/home/TextTestimonials";
-import { SHOW_UNVERIFIED_TESTIMONIALS } from "@/lib/site";
+import { SHOW_UNVERIFIED_TESTIMONIALS, SHOW_VIDEO_TESTIMONIALS } from "@/lib/site";
 import HeroSearchForm from "@/components/home/HeroSearchForm";
 import { realCourses } from "@/lib/courses-catalog";
 import CourseCard from "@/components/courses/CourseCard";
@@ -638,8 +638,8 @@ export default async function Home() {
             {/*==============================
 Video Testimonials Area
 ==============================*/}
-            {/* Hidden until verified (B2): see SHOW_UNVERIFIED_TESTIMONIALS in lib/site.ts */}
-            {SHOW_UNVERIFIED_TESTIMONIALS && (
+            {/* Owner-approved student videos (21 Nov 2026): see SHOW_VIDEO_TESTIMONIALS in lib/site.ts */}
+            {SHOW_VIDEO_TESTIMONIALS && (
             <section className="space overflow-hidden" id="video-testi-sec">
                 <div className="container">
                     <div className="title-area text-center">

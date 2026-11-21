@@ -1,86 +1,49 @@
-"use client";
-
-import { useState } from "react";
-
 interface Testimonial {
   videoId: string;
-  caption: string;
 }
 
-// TODO: replace with real student name + course/certification once
-// confirmed — do not reuse the old "TEFL Graduate / Certified 2026" style
-// captions, they were placeholder content not tied to these actual videos
+// Owner-approved student testimonial Shorts (21 Nov 2026), in this order.
+// No names or captions: the owner asked for the videos only.
+// Thumbnails are stored in public/images/testimonials/<videoId>.webp so they
+// show even where YouTube images are blocked. If a video's thumbnail changes
+// on YouTube, replace its file there.
+// Clicking a card opens the original Short on YouTube in a new tab.
 const TESTIMONIALS: Testimonial[] = [
-  { videoId: "eIfd4NEZyNg", caption: "Student Testimonial 1" },
-  { videoId: "Yi9lpwk1dxg", caption: "Student Testimonial 2" },
-  { videoId: "-gMCdjqscSc", caption: "Student Testimonial 3" },
-  { videoId: "M59LuXqw8UY", caption: "Student Testimonial 4" },
+  { videoId: "Pbi5eriOQyc" },
+  { videoId: "gW-_6vDub74" },
+  { videoId: "EdgkvHHwwPk" },
+  { videoId: "WGoJDenQzgw" },
 ];
 
 export default function VideoTestimonials() {
   return (
-    <div className="video-testi-grid">
-      {TESTIMONIALS.map((t) => (
-        <VideoTestimonialTile key={t.videoId} {...t} />
-      ))}
-    </div>
-  );
-}
-
-function VideoTestimonialTile({ videoId, caption }: Testimonial) {
-  const [playing, setPlaying] = useState(false);
-
-  return (
-    <div className="video-testi-card th_fade_anim">
-      {playing ? (
-        <iframe
-          src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
-          title={caption}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: 0 }}
-        />
-      ) : (
-        <>
-          {/* hqdefault.jpg comes back landscape/letterboxed even for vertical
-              Shorts — position:absolute + inset:0 + object-fit:cover takes it
-              fully out of flow and crops it to fill this portrait tile,
-              instead of sizing the tile to the image's own aspect ratio. */}
-          <img
-            src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
-            alt={caption}
-            style={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
-          <button
-            type="button"
-            className="play-btn"
-            aria-label={`Play ${caption}`}
-            onClick={() => setPlaying(true)}
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              background: "none",
-              border: "none",
-              padding: 0,
-              cursor: "pointer",
-              zIndex: 2,
-            }}
+    <ul className="video-testi-grid">
+      {TESTIMONIALS.map((t, i) => (
+        <li key={t.videoId} className="video-testi-card th_fade_anim">
+          <a
+            className="video-testi-link"
+            href={`https://www.youtube.com/shorts/${t.videoId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Watch student testimonial ${i + 1} on YouTube (opens in a new tab)`}
           >
-            <i className="fas fa-solid fa-play"></i>
-          </button>
-          <div className="video-testi-caption" style={{ zIndex: 1 }}>
-            <h4 className="box-name">{caption}</h4>
-          </div>
-        </>
-      )}
-    </div>
+            <img
+              src={`/images/testimonials/${t.videoId}.webp`}
+              alt=""
+              width={356}
+              height={632}
+              loading="lazy"
+              decoding="async"
+            />
+            <span className="video-testi-label">Watch on YouTube</span>
+            <span className="video-testi-play" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z" />
+              </svg>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
   );
 }

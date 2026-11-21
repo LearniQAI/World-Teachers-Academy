@@ -6,11 +6,20 @@ import { realCourses } from "@/lib/courses-catalog";
 export const START_TRAINING_URL =
   realCourses.find((c) => c.status === "open" && c.profileUrl)?.profileUrl ?? "/#courses";
 
+/** Certificate verification page, linked as "Verify" in the header and mobile menu. */
+export const VERIFY_CERTIFICATE_URL = "https://www.leadsmind.io/certificates/verify";
+
 /**
- * B2 (13 Nov 2026): the four video testimonials and six named quotes have not
+ * Student video testimonials on the home page: four YouTube Shorts supplied
+ * and approved by the owner on 21 Nov 2026 (videos only, no names).
+ */
+export const SHOW_VIDEO_TESTIMONIALS: boolean = true;
+
+/**
+ * B2 (13 Nov 2026): the six named text quotes have not
  * been verified (identity, course taken, written permission). They stay hidden
  * until the owner confirms each one. The content is kept, not deleted:
- * components/home/VideoTestimonials.tsx and components/home/TextTestimonials.tsx.
+ * components/home/TextTestimonials.tsx.
  */
 export const SHOW_UNVERIFIED_TESTIMONIALS: boolean = false;
 

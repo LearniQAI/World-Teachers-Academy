@@ -72,56 +72,108 @@
    built from the theme's existing .play-btn (centered play button) and
    .img-cover conventions used elsewhere, so it matches the rest of the
    site's visual language instead of introducing a new style.
-   4 real YouTube Shorts in a 2x2 grid, so the ratio is a true 9:16 (Shorts'
-   actual shape) rather than the previous generic 4:5 placeholder ratio. */
+   4 real YouTube Shorts, four across on desktop (true 9:16, Shorts' shape);
+   each card links to the original Short on YouTube. */
 .video-testi-grid {
+  list-style: none;
+  padding: 0;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-  max-width: 700px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  max-width: 1180px;
   margin: 0 auto;
+}
+@media (max-width: 991px) {
+  .video-testi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 @media (max-width: 575px) {
   .video-testi-grid {
-    grid-template-columns: 1fr;
+    grid-auto-flow: column;
+    grid-auto-columns: 74%;
+    grid-template-columns: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 8px;
+  }
+  .video-testi-card {
+    scroll-snap-align: start;
   }
 }
 .video-testi-card {
   position: relative;
-  border-radius: 16px;
+  margin: 0;
+  border-radius: 20px;
   overflow: hidden;
   aspect-ratio: 9 / 16;
+  background: #0f172a;
+  box-shadow: 0 24px 50px -30px rgba(15, 23, 42, 0.55);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.video-testi-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 30px 60px -30px rgba(15, 23, 42, 0.7);
+}
+.video-testi-link {
+  position: absolute;
+  inset: 0;
+  display: block;
+  color: #fff;
+}
+.video-testi-link:focus-visible {
+  outline: 3px solid var(--theme-color2);
+  outline-offset: -3px;
 }
 .video-testi-card img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.4s ease;
 }
-.video-testi-card .play-btn {
+.video-testi-link:hover img {
+  transform: scale(1.04);
+}
+.video-testi-link::after {
+  content: "";
   position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  inset: 0;
+  background: linear-gradient(to top, rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0) 45%);
+  pointer-events: none;
 }
-.video-testi-card .video-testi-caption {
+.video-testi-label {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 20px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
-  color: var(--white-color);
-  text-align: left;
+  z-index: 1;
+  left: 18px;
+  bottom: 30px;
+  font-weight: 700;
+  font-size: 15px;
+  color: #fff;
 }
-.video-testi-card .video-testi-caption .box-name {
-  color: var(--white-color);
-  font-size: 18px;
-  margin-bottom: 2px;
+.video-testi-play {
+  position: absolute;
+  z-index: 1;
+  right: 14px;
+  bottom: 14px;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--theme-color2);
+  color: #0f172a;
+  box-shadow: 0 0 0 7px rgba(249, 115, 22, 0.25);
+  transition: transform 0.2s ease;
 }
-.video-testi-card .video-testi-caption .box-desig {
-  color: var(--white-color);
-  opacity: 0.85;
-  font-size: 14px;
+.video-testi-play svg {
+  width: 22px;
+  height: 22px;
+  margin-left: 3px;
+}
+.video-testi-link:hover .video-testi-play {
+  transform: scale(1.08);
 }
 
 /* The preloader's "text fill" animation overlays two copies of the same

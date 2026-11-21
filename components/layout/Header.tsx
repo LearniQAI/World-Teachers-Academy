@@ -1,4 +1,4 @@
-import { START_TRAINING_URL } from "@/lib/site";
+import { START_TRAINING_URL, VERIFY_CERTIFICATE_URL } from "@/lib/site";
 import { countriesByRegion } from "@/lib/countries-data";
 import CountryFlag from "./CountryFlag";
 
@@ -40,6 +40,7 @@ export default function Header() {
                                     </li>
                                     <li><a href="/job-portal">Job Portal</a></li>
                                     <li><a href="/blog">Blog</a></li>
+                                    <li><a href={VERIFY_CERTIFICATE_URL} target="_blank" rel="noopener noreferrer">Verify <i className="fa-regular fa-arrow-up-right-from-square" aria-hidden="true" style={{ fontSize: "0.75em", marginLeft: 4 }}></i><span className="visually-hidden"> (opens in a new tab)</span></a></li>
                                 </ul>
                             </nav>
                             <button type="button" className="th-menu-toggle d-block d-lg-none"><i className="fal fa-bars"></i></button>
