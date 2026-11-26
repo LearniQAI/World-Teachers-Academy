@@ -330,8 +330,20 @@ test("wiring: only verified applicants are queued (after the code matched and th
   assert.match(verifySrc, /after\(async \(\) => \{[\s\S]*runLeadsMindOutbox/);
 });
 
-test("wiring: retry endpoint refuses calls unless CRON_SECRET is configured and matches", () => {
-  assert.match(cronSrc, /if \(!process\.env\.CRON_SECRET\)[\s\S]*status: 503/);
-  assert.match(cronSrc, /timingSafeEqual/);
-  assert.match(cronSrc, /status: 401/);
+test("wiring: retry and admin endpoints fail closed and compare secrets in constant time", async () => {
+  assert.match(cronSrc, /checkBearer\(request\.headers\.get\("authorization"\), process\.env\.CRON_SECRET\)/);
+  assert.match(cronSrc, /"unconfigured"\) return NextResponse\.json\(\{ error: "Not configured" \}, \{ status: 503 \}/);
+  const adminSrc = readFileSync(new URL("../../app/api/admin/leadsmind-outbox/route.ts", import.meta.url), "utf8");
+  assert.match(adminSrc, /checkBearer\(request\.headers\.get\("authorization"\), process\.env\.LEADSMIND_ADMIN_SECRET\)/);
+  assert.equal(/\b(name|email)\b/.test(adminSrc.match(/\.select\("([^"]+)"\)/)?.[1] ?? "x"), false, "admin list selects no name/email");
+  const { checkBearer } = await import("../../lib/admin-auth.ts");
+  assert.equal(checkBearer("Bearer s3cret", undefined), "unconfigured");
+  assert.equal(checkBearer(null, "s3cret"), "unauthorized");
+  assert.equal(checkBearer("Bearer wrong", "s3cret"), "unauthorized");
+  assert.equal(checkBearer("Bearer s3cret", "s3cret"), "ok");
+});
+
+test("schedule: vercel.json runs the retry job every 10 minutes", () => {
+  const vercel = JSON.parse(readFileSync(new URL("../../vercel.json", import.meta.url), "utf8"));
+  assert.deepEqual(vercel.crons, [{ path: "/api/cron/leadsmind-retry", schedule: "*/10 * * * *" }]);
 });

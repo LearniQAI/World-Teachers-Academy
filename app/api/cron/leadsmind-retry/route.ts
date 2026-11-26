@@ -1,32 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
-import crypto from "crypto";
+import { supabaseServiceRole } from "@/lib/supabase";
+import { checkBearer } from "@/lib/admin-auth";
 import { enqueueMissingLeads, runLeadsMindOutbox } from "@/lib/leadsmind-store";
 
 // Retries LeadsMind deliveries that failed (see lib/leadsmind.ts).
-// Called on a schedule (pg_cron or Vercel Cron — docs/leadsmind-sync.md) with
-//   Authorization: Bearer <CRON_SECRET>
-// Without CRON_SECRET configured the route refuses every call.
+// Scheduled every 10 minutes by vercel.json (Vercel Cron, production only).
+// Vercel sends `Authorization: Bearer <CRON_SECRET>` automatically when the
+// project has CRON_SECRET set. Without CRON_SECRET the route refuses every call.
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
-function authorised(request: NextRequest): boolean {
-  const secret = process.env.CRON_SECRET;
-  if (!secret) return false;
-  const given = request.headers.get("authorization") ?? "";
-  const expected = `Bearer ${secret}`;
-  const a = Buffer.from(given);
-  const b = Buffer.from(expected);
-  return a.length === b.length && crypto.timingSafeEqual(a, b);
-}
-
 async function handle(request: NextRequest) {
-  if (!process.env.CRON_SECRET) {
-    return NextResponse.json({ error: "Not configured" }, { status: 503 });
-  }
-  if (!authorised(request)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = checkBearer(request.headers.get("authorization"), process.env.CRON_SECRET);
+  if (auth === "unconfigured") return NextResponse.json({ error: "Not configured" }, { status: 503 });
+  if (auth === "unauthorized") return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   // Safety net for leads whose outbox insert failed. Off unless
   // LEADSMIND_SYNC_START (ISO date) is set; never reaches further back than it.
@@ -43,9 +31,25 @@ async function handle(request: NextRequest) {
 
   // 5 per run matches LeadsMind's per-IP limit of 5 submissions a minute.
   const summary = await runLeadsMindOutbox({ limit: 5 });
-  console.info(`[leadsmind-retry] backfilled=${backfilled} claimed=${summary.claimed} sent=${summary.sent} retrying=${summary.retrying} dead=${summary.dead}`);
+
+  // Retention: delivered rows older than LEADSMIND_RETENTION_DAYS (default
+  // 180, minimum 30) are removed. Pending and dead rows are kept.
+  let purged = 0;
+  const days = Number.parseInt(process.env.LEADSMIND_RETENTION_DAYS ?? "", 10);
+  const { data: removed, error: purgeError } = await supabaseServiceRole.rpc("purge_sent_leadsmind_outbox", {
+    p_days: Number.isFinite(days) ? days : 180,
+  });
+  if (purgeError) console.error("[leadsmind-retry] purge failed:", purgeError.code ?? "unknown");
+  else purged = typeof removed === "number" ? removed : 0;
+
+  console.info(
+    `[leadsmind-retry] backfilled=${backfilled} claimed=${summary.claimed} sent=${summary.sent} retrying=${summary.retrying} dead=${summary.dead} purged=${purged}`
+  );
   // 500 when the queue couldn't be read, so a scheduler/monitor sees the failure.
-  return NextResponse.json({ ok: !summary.claimFailed, backfilled, ...summary }, { status: summary.claimFailed ? 500 : 200 });
+  return NextResponse.json(
+    { ok: !summary.claimFailed, backfilled, purged, ...summary },
+    { status: summary.claimFailed ? 500 : 200 }
+  );
 }
 
 export const GET = handle;

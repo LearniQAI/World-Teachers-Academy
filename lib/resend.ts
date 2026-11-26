@@ -11,6 +11,26 @@ function getResend(): Resend {
   return (client ??= new Resend(key));
 }
 
+
+// Staging safety net for outgoing email.
+//
+// On a Vercel Preview deployment (VERCEL_ENV=preview), email may only go to the
+// addresses listed in EMAIL_TEST_ALLOWLIST (comma-separated). If that variable
+// is missing on a preview, NO email is sent at all (fails closed). This stops a
+// staging site from ever emailing a real visitor, whatever key it is given.
+//
+// Production (VERCEL_ENV=production) is not affected unless EMAIL_TEST_ALLOWLIST
+// is set there, which it never should be.
+
+export function emailAllowed(to: string, env: Record<string, string | undefined> = process.env): boolean {
+  const list = (env.EMAIL_TEST_ALLOWLIST ?? "")
+    .split(",")
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean);
+  if (list.length > 0) return list.includes(to.trim().toLowerCase());
+  return env.VERCEL_ENV !== "preview";
+}
+
 const INK_NAVY = "#0F172A";
 const SIGNAL_INDIGO = "#4F46E5";
 
@@ -23,6 +43,10 @@ const SIGNAL_INDIGO = "#4F46E5";
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "World Teachers Academy <noreply@notify.worldteachers.academy>";
 
 export async function sendOtpEmail(email: string, code: string) {
+  if (!emailAllowed(email)) {
+    // Staging: this address is not on EMAIL_TEST_ALLOWLIST, so nothing is sent.
+    throw new Error("Email sending is restricted to approved test addresses on this staging site.");
+  }
   // The Resend SDK never throws on an API-level failure (invalid key,
   // unverified domain, rejected address, etc.) — it always resolves and
   // returns { data, error } instead. Without checking `error` here, a failed

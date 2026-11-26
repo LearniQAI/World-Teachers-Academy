@@ -68,38 +68,48 @@ and set `LEADSMIND_FORM_ID`, `LEADSMIND_WORKSPACE_ID` and `LEADSMIND_FIELD_MAP`.
 
 ## Scheduling the retry job
 
-The repo has no `vercel.json` cron (Hobby plans only allow daily crons). Use
-Supabase `pg_cron`, the same pattern as `ingest-jobs`. Run once in the SQL
-editor after storing the secret in Vault as `leadsmind_retry_cron_secret`
-(same value as Vercel's `CRON_SECRET`):
+`vercel.json` schedules `/api/cron/leadsmind-retry` every 10 minutes. The
+team is on Vercel **Pro**, which allows sub-daily crons (Hobby allows only
+daily). Vercel Cron runs on **production deployments only**, and sends
+`Authorization: Bearer <CRON_SECRET>` automatically once `CRON_SECRET` is set.
+Each run:
 
-```sql
-select cron.schedule(
-  'leadsmind-retry-10min',
-  '*/10 * * * *',
-  $$
-  select net.http_get(
-    url := 'https://worldteachers.academy/api/cron/leadsmind-retry',
-    headers := jsonb_build_object(
-      'Authorization', 'Bearer ' || (
-        select decrypted_secret from vault.decrypted_secrets
-        where name = 'leadsmind_retry_cron_secret'
-      )
-    )
-  );
-  $$
-);
+1. queues missed leads (only when `LEADSMIND_SYNC_START` is set),
+2. sends at most 5 due rows (LeadsMind's public limit is 5 a minute per IP),
+3. deletes `sent` rows older than `LEADSMIND_RETENTION_DAYS` (default 180,
+   minimum 30). `pending` and `dead` rows are never purged.
+
+## Admin: visibility and manual retry
+
+`/api/admin/leadsmind-outbox`, with `Authorization: Bearer <LEADSMIND_ADMIN_SECRET>`.
+Without that variable it refuses everything (503). Responses carry queue metadata
+only, never names or emails.
+
+```bash
+# counts per status + the 50 newest rows (optionally ?status=dead)
+curl -s -H "Authorization: Bearer $LEADSMIND_ADMIN_SECRET" https://worldteachers.academy/api/admin/leadsmind-outbox
+# re-queue one row (dead or pending; sent rows are refused, so nothing is sent twice)
+curl -s -X POST -H "Authorization: Bearer $LEADSMIND_ADMIN_SECRET" -H 'content-type: application/json' \
+  -d '{"action":"retry","id":"<outbox id>"}' https://worldteachers.academy/api/admin/leadsmind-outbox
+# re-queue all dead rows / deliver due rows now
+-d '{"action":"retry_dead"}'    -d '{"action":"run"}'
 ```
 
-Each run sends at most 5 leads, matching LeadsMind's public limit of
-5 submissions per minute per sending IP.
+The same data is visible in the Supabase dashboard (table `leadsmind_outbox`,
+or `select * from leadsmind_outbox_summary();`).
 
-## Checking the queue
+## Staging safety
+
+On a Vercel Preview (`VERCEL_ENV=preview`) the code email is only sent to
+addresses in `EMAIL_TEST_ALLOWLIST`. With no list, previews send no email at
+all. Preview variables for this branch point at the `wta-staging` database
+and the LeadsMind **staging** test form, never production.
+
+## Checking the queue (SQL)
 
 ```sql
-select status, count(*), max(attempts), min(created_at) from leadsmind_outbox group by status;
+select * from leadsmind_outbox_summary();
 select id, lead_id, attempts, last_status_code, last_error, next_attempt_at
   from leadsmind_outbox where status in ('pending','dead') order by created_at;
--- Re-queue a dead row after fixing the cause:
-update leadsmind_outbox set status='pending', attempts=0, next_attempt_at=now() where id='…';
+select retry_leadsmind_outbox('<id>');   -- manual retry of one row
 ```
