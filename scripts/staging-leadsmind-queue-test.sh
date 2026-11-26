@@ -24,12 +24,13 @@ ADMIN="${ADMIN_SECRET_VALUE:-$(ask 'LEADSMIND_ADMIN_SECRET (preview value)')}"
 call() { # method path auth-secret [json]
   local m="$1" p="$2" s="$3" d="${4:-}"
   local out; out=$(mktemp)   # one file per call: parallel calls must not share it
-  # Secret headers are passed through file descriptors (-H @...), never as
-  # command-line arguments, so they don't appear in the process list.
-  local args=(-s --max-redirs 0 -o "$out" -w '%{http_code}' -X "$m" -H @<(printf 'x-vercel-protection-bypass: %s' "$BYPASS"))
-  [ -n "$s" ] && args+=(-H @<(printf 'Authorization: Bearer %s' "$s"))
+  # Secret headers are fed to curl as a config on stdin (-K -): never as
+  # command-line arguments (so not in the process list) and never on disk.
+  local args=(-s --max-redirs 0 -o "$out" -w '%{http_code}' -X "$m" -K -)
   [ -n "$d" ] && args+=(-H 'content-type: application/json' -d "$d")
-  local code; code=$(curl "${args[@]}" "$BASE$p")
+  local code; code=$( { printf 'header = "x-vercel-protection-bypass: %s"\n' "$BYPASS"
+                        [ -n "$s" ] && printf 'header = "Authorization: Bearer %s"\n' "$s"
+                        true; } | curl "${args[@]}" "$BASE$p")
   echo "$(date -u +%T) $m $p -> $code $(head -c 1500 "$out")"; rm -f "$out"
 }
 TEST_EMAIL="info@docssa.co.za"   # the only address on the preview's email allow-list
