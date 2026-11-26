@@ -102,7 +102,11 @@ or `select * from leadsmind_outbox_summary();`).
 
 On a Vercel Preview (`VERCEL_ENV=preview`) the code email is only sent to
 addresses in `EMAIL_TEST_ALLOWLIST`. With no list, previews send no email at
-all. Preview variables for this branch point at the `wta-staging` database
+all. The preview sends from `RESEND_FROM_EMAIL` =
+`World Teachers Academy STAGING <wta-staging@staging-mail.leadsmind.io>` with its
+own Resend key; production leaves `RESEND_FROM_EMAIL` unset and sends from
+`noreply@notify.worldteachers.academy` (verified in the docssa Resend workspace,
+DNS at Namecheap; restored 26 Nov 2026). Preview variables for this branch point at the `wta-staging` database
 and the LeadsMind **staging** test form, never production.
 
 ## Checking the queue (SQL)
