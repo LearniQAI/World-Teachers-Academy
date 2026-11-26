@@ -2,17 +2,19 @@
 # STAGING ONLY: exercises the LeadsMind retry queue on the feat/leadsmind-job-portal-sync
 # preview (wta-staging DB + LeadsMind staging). Never point it at production.
 #
-# Run from a terminal; it asks for three secrets without echoing them, and never
-# prints them. Output: HTTP status + JSON for each step (queue metadata only).
+# Run from a terminal; it asks for three secrets without echoing them (or reads
+# them from VERCEL_BYPASS / CRON_SECRET_VALUE / ADMIN_SECRET_VALUE), and never
+# prints, logs or writes them to disk. Output: HTTP status + JSON for each step (queue metadata only).
 #
 #   bash scripts/staging-leadsmind-queue-test.sh <step>
 #   steps: auth | summary | concurrent | run | retry <outbox-id> | retry-dead
 set -euo pipefail
 
-BASE="${WTA_PREVIEW_URL:-https://world-teachers-academy-git-feat-4f5483-nelly-agboolas-projects.vercel.app}"
-case "$BASE" in
-  *worldteachers.academy*|*world-teachers-academy.vercel.app*|*git-main*) echo "Refusing: $BASE looks like production." >&2; exit 1;;
-esac
+# Allow-list, not deny-list: the ONLY host this script will ever call is the
+# feat/leadsmind-job-portal-sync preview alias. Anything else is refused.
+STAGING_BASE="https://world-teachers-academy-git-feat-4f5483-nelly-agboolas-projects.vercel.app"
+BASE="${WTA_PREVIEW_URL:-$STAGING_BASE}"
+if [ "$BASE" != "$STAGING_BASE" ]; then echo "Refusing: only $STAGING_BASE is allowed." >&2; exit 1; fi
 
 ask() { local v; read -r -s -p "$1: " v; echo >&2; printf '%s' "$v"; }
 BYPASS="${VERCEL_BYPASS:-$(ask 'Vercel protection bypass secret (Settings > Deployment Protection)')}"
@@ -22,8 +24,10 @@ ADMIN="${ADMIN_SECRET_VALUE:-$(ask 'LEADSMIND_ADMIN_SECRET (preview value)')}"
 call() { # method path auth-secret [json]
   local m="$1" p="$2" s="$3" d="${4:-}"
   local out; out=$(mktemp)   # one file per call: parallel calls must not share it
-  local args=(-s -o "$out" -w '%{http_code}' -X "$m" -H "x-vercel-protection-bypass: $BYPASS")
-  [ -n "$s" ] && args+=(-H "Authorization: Bearer $s")
+  # Secret headers are passed through file descriptors (-H @...), never as
+  # command-line arguments, so they don't appear in the process list.
+  local args=(-s --max-redirs 0 -o "$out" -w '%{http_code}' -X "$m" -H @<(printf 'x-vercel-protection-bypass: %s' "$BYPASS"))
+  [ -n "$s" ] && args+=(-H @<(printf 'Authorization: Bearer %s' "$s"))
   [ -n "$d" ] && args+=(-H 'content-type: application/json' -d "$d")
   local code; code=$(curl "${args[@]}" "$BASE$p")
   echo "$(date -u +%T) $m $p -> $code $(head -c 1500 "$out")"; rm -f "$out"
