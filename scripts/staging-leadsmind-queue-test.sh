@@ -21,12 +21,14 @@ ADMIN="${ADMIN_SECRET_VALUE:-$(ask 'LEADSMIND_ADMIN_SECRET (preview value)')}"
 
 call() { # method path auth-secret [json]
   local m="$1" p="$2" s="$3" d="${4:-}"
-  local args=(-s -o /tmp/wta-q.$$ -w '%{http_code}' -X "$m" -H "x-vercel-protection-bypass: $BYPASS")
+  local out; out=$(mktemp)   # one file per call: parallel calls must not share it
+  local args=(-s -o "$out" -w '%{http_code}' -X "$m" -H "x-vercel-protection-bypass: $BYPASS")
   [ -n "$s" ] && args+=(-H "Authorization: Bearer $s")
   [ -n "$d" ] && args+=(-H 'content-type: application/json' -d "$d")
   local code; code=$(curl "${args[@]}" "$BASE$p")
-  echo "$m $p -> $code $(head -c 1500 /tmp/wta-q.$$)"; rm -f /tmp/wta-q.$$
+  echo "$(date -u +%T) $m $p -> $code $(head -c 1500 "$out")"; rm -f "$out"
 }
+TEST_EMAIL="info@docssa.co.za"   # the only address on the preview's email allow-list
 
 case "${1:-}" in
   auth)
@@ -43,5 +45,11 @@ case "${1:-}" in
   run) call GET /api/cron/leadsmind-retry "$CRON" ;;
   retry) call POST /api/admin/leadsmind-outbox "$ADMIN" "{\"action\":\"retry\",\"id\":\"${2:?outbox id}\"}" ;;
   retry-dead) call POST /api/admin/leadsmind-outbox "$ADMIN" '{"action":"retry_dead"}' ;;
-  *) echo "usage: $0 auth|summary|concurrent|run|retry <id>|retry-dead" >&2; exit 2 ;;
+  # Already verified for this job in the last 24 h: must skip the code (no email, no new lead).
+  verified-skip) call POST /api/leads/request-code "" "{\"name\":\"WTA E2E Test\",\"email\":\"$TEST_EMAIL\",\"job_id\":\"${2:?job id}\",\"consent_given\":true}" ;;
+  # Address not on EMAIL_TEST_ALLOWLIST: no email may be sent.
+  allowlist) call POST /api/leads/request-code "" "{\"name\":\"WTA E2E Blocked\",\"email\":\"wta-e2e-blocked@example.com\",\"job_id\":\"${2:?job id}\",\"consent_given\":true}" ;;
+  # A wrong code for an open request: must be refused with attempts left.
+  wrong-code) call POST /api/leads/verify "" "{\"email\":\"$TEST_EMAIL\",\"job_id\":\"${2:?job id}\",\"code\":\"000000\"}" ;;
+  *) echo "usage: $0 auth|summary|concurrent|run|retry <id>|retry-dead|verified-skip <job>|allowlist <job>|wrong-code <job>" >&2; exit 2 ;;
 esac
