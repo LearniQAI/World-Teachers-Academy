@@ -89,13 +89,15 @@ runs on production deployments only (the team is on Pro) and sends
    - re-sent only when the kind of problem changes, and at most once an hour;
    - a daily summary from 07:00 SAST while anything is unresolved;
    - one "recovered" email when it clears;
+   - if sending an alert fails, all alerts pause for 15 minutes and the send is retried;
    - statistics only: no names, emails or lead ids.
 
 ### Recovery scenarios
 
 | Scenario | What happens | Action needed |
 | --- | --- | --- |
-| LeadsMind down or slow, even for days | Leads queue and retry with back-off. After 12 failed attempts they become `dead`, which triggers an alert. As soon as LeadsMind accepts a lead again, dead rows are re-queued automatically (up to 100 per run). | None. `retry_dead` is still available. |
+| LeadsMind down or slow, even for days | Leads queue and retry with back-off. After 12 failed attempts they become `dead`, which triggers an alert. A **recovery probe** retries one dead lead after 1 h, then 2 h, 4 h and every 6 h. All dead leads wait for the same probe, so a long outage costs a handful of calls. When a probe or any delivery succeeds, every dead lead is re-queued automatically, even if nobody applies. | None. `retry_dead` is still available. |
+| LeadsMind rejects the request (400/401/403/404/409/410/422: wrong form id, unpublished form, validation) | Treated as **permanent**: gives up after 3 tries, alerts, and is probed once a day. Once the cause is fixed, the next daily probe recovers everything. | Fix the cause. `retry_dead` recovers at once. |
 | Sync paused (`LEADSMIND_DISABLED=true`) | Applicants unaffected, and leads queue. | Unset it; everything queued is sent. |
 | Site rolled back to the pre-integration release | Applicants unaffected. Leads are saved in `leads` but not queued. | Re-deploy the integration. The next run's catch-up queues them (no age limit). |
 | Queue insert failed | Lead saved, not queued | Automatic: the next run's catch-up queues it. |

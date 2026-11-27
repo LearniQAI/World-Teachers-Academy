@@ -4,6 +4,7 @@ import {
   planAlerts,
   processOutbox,
   type AlertStateRow,
+  type OutboxRow,
   type OutboxStore,
   type ProcessSummary,
   type QueueHealth,
@@ -71,6 +72,21 @@ export const supabaseOutboxStore: OutboxStore = {
       })
       .eq("id", id);
     if (error) throw new Error(`markFailed failed (${error.code ?? "unknown"})`);
+  },
+
+  async claimProbe() {
+    const { data, error } = await supabaseServiceRole.rpc("claim_leadsmind_probe", { p_lease_seconds: 120 });
+    if (error) throw new Error(`claimProbe failed (${error.code ?? "unknown"})`);
+    const rows = (data ?? []) as OutboxRow[];
+    return rows[0] ?? null;
+  },
+
+  async deferProbes(until, sameErrorOnly) {
+    const { error } = await supabaseServiceRole.rpc("defer_leadsmind_probes", {
+      p_until: until.toISOString(),
+      p_last_error: sameErrorOnly,
+    });
+    if (error) throw new Error(`deferProbes failed (${error.code ?? "unknown"})`);
   },
 
   async reviveDead(limit) {
@@ -146,11 +162,15 @@ export async function runLeadsMindAlerts(now = new Date()): Promise<string[]> {
   if (!config.alertEmail) return [];
   try {
     const health = await getQueueHealth();
-    const { data: state } = await supabaseServiceRole.from("leadsmind_alert_state").select("kind, fingerprint, last_sent_at");
+    const { data: state } = await supabaseServiceRole
+      .from("leadsmind_alert_state")
+      .select("kind, fingerprint, last_sent_at, last_attempt_at");
     const planned = planAlerts(health, problems, (state ?? []) as AlertStateRow[], now);
     const sent: string[] = [];
     for (const alert of planned) {
       try {
+        // Recorded first, so a failing mail service is retried at most every 15 min.
+        await supabaseServiceRole.rpc("record_leadsmind_alert_attempt", { p_kind: alert.kind });
         await sendAlertEmail(config.alertEmail, alert.subject, alert.text);
         await supabaseServiceRole.rpc("record_leadsmind_alert", { p_kind: alert.kind, p_fingerprint: alert.fingerprint, p_sent: true });
         if (alert.kind === "resolved") {

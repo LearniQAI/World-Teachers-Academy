@@ -9,6 +9,9 @@ create table public.leadsmind_alert_state (
   kind text primary key check (kind in ('critical', 'daily_summary', 'resolved')),
   fingerprint text,
   last_sent_at timestamptz,
+  -- last time sending this alert was attempted (failed sends are retried no
+  -- more than every 15 minutes, see planAlerts)
+  last_attempt_at timestamptz,
   updated_at timestamptz not null default now()
 );
 alter table public.leadsmind_alert_state enable row level security;
@@ -91,13 +94,72 @@ declare
 begin
   update public.leadsmind_outbox
      set status = 'pending', attempts = 0, next_attempt_at = now(), locked_until = null
-   where id in (select id from public.leadsmind_outbox where status = 'dead'
+   where id in (select id from public.leadsmind_outbox
+                 where status = 'dead' and coalesce(last_error, '') <> 'lead_not_found'
                  order by created_at limit greatest(1, least(p_limit, 1000)));
   get diagnostics changed = row_count;
   return changed;
 end;
 $$;
 
+-- Recovery probe: claims at most ONE dead row whose probe time has come, so a
+-- recovered LeadsMind is noticed even when no new applicant arrives. SKIP
+-- LOCKED + lease: parallel runs never probe the same row.
+create or replace function public.claim_leadsmind_probe(p_lease_seconds int default 120)
+returns setof public.leadsmind_outbox
+language sql
+security definer
+set search_path = public
+as $$
+  update public.leadsmind_outbox o
+     set status = 'sending',
+         attempts = o.attempts + 1,
+         locked_until = now() + make_interval(secs => p_lease_seconds)
+   where o.id = (
+     select c.id from public.leadsmind_outbox c
+      where c.status = 'dead'
+        and c.next_attempt_at <= now()
+        and coalesce(c.last_error, '') <> 'lead_not_found'
+      order by c.next_attempt_at
+      limit 1
+      for update skip locked
+   )
+  returning o.*;
+$$;
+
+-- After a failed probe: hold back the other dead rows until p_until, so there
+-- is at most one probe per interval however many rows are dead. p_last_error
+-- null = all dead rows (an outage); otherwise only rows with that error.
+create or replace function public.defer_leadsmind_probes(p_until timestamptz, p_last_error text default null)
+returns void
+language sql
+security definer
+set search_path = public
+as $$
+  update public.leadsmind_outbox
+     set next_attempt_at = greatest(next_attempt_at, p_until)
+   where status = 'dead'
+     and (p_last_error is null or last_error = p_last_error);
+$$;
+
+-- Notes that an alert send was attempted (successful or not).
+create or replace function public.record_leadsmind_alert_attempt(p_kind text)
+returns void
+language sql
+security definer
+set search_path = public
+as $$
+  insert into public.leadsmind_alert_state (kind, last_attempt_at, updated_at)
+  values (p_kind, now(), now())
+  on conflict (kind) do update set last_attempt_at = now(), updated_at = now();
+$$;
+
+revoke all on function public.claim_leadsmind_probe(int) from public, anon, authenticated;
+revoke all on function public.defer_leadsmind_probes(timestamptz, text) from public, anon, authenticated;
+grant execute on function public.defer_leadsmind_probes(timestamptz, text) to service_role;
+revoke all on function public.record_leadsmind_alert_attempt(text) from public, anon, authenticated;
+grant execute on function public.claim_leadsmind_probe(int) to service_role;
+grant execute on function public.record_leadsmind_alert_attempt(text) to service_role;
 revoke all on function public.revive_dead_leadsmind_outbox(int) from public, anon, authenticated;
 grant execute on function public.revive_dead_leadsmind_outbox(int) to service_role;
 revoke all on function public.preview_missing_leadsmind_leads(text, timestamptz) from public, anon, authenticated;

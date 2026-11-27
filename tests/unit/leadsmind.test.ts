@@ -6,8 +6,12 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import {
+  ALERT_RETRY_MINUTES,
   alertBody,
   backoffMinutes,
+  failureKind,
+  maxAttemptsFor,
+  probeDelayMinutes,
   planAlerts,
   resolveBackfillSince,
   type QueueHealth,
@@ -484,4 +488,170 @@ test("F3: an invalid alert address turns alerts off but never stops the sync", (
   assert.equal(config.enabled, true);
   assert.deepEqual(problems, []);
   assert.equal(getLeadsMindConfig({ LEADSMIND_ALERT_EMAIL: " info@docssa.co.za " }).config.alertEmail, "info@docssa.co.za");
+});
+
+// ---------- Recovery without new applicants (probes) ----------
+// A fuller in-memory queue mirroring the SQL functions (claim, claim_probe,
+// revive_dead, defer_probes) with a controllable clock.
+type QRow = { id: string; lead_id: string; client_submission_id: string; attempts: number; status: string; next: number; last_error: string | null };
+function sqlLikeStore(rows: QRow[], clock: { t: number }, leadFor = (id: string) => (id === "gone" ? null : { name: "Probe Test", email: `p-${id}@example.com` })) {
+  const store: OutboxStore & { rows: QRow[] } = {
+    rows,
+    async enqueue() { return null; },
+    async claim({ limit }) {
+      const due = rows.filter((r) => r.status === "pending" && r.next <= clock.t).slice(0, limit);
+      due.forEach((r) => { r.status = "sending"; r.attempts++; });
+      return due.map((r) => ({ ...r }));
+    },
+    async claimProbe() {
+      const r = rows.filter((x) => x.status === "dead" && x.next <= clock.t && x.last_error !== "lead_not_found").sort((a, b) => a.next - b.next)[0];
+      if (!r) return null;
+      r.status = "sending"; r.attempts++;   // synchronous: a parallel run cannot take it too
+      return { ...r };
+    },
+    async loadLead(id) { return leadFor(id); },
+    async markSent(id) { const r = rows.find((x) => x.id === id)!; r.status = "sent"; r.last_error = null; },
+    async markFailed(id, f) { const r = rows.find((x) => x.id === id)!; r.status = f.dead ? "dead" : "pending"; r.last_error = f.error; r.next = f.nextAttemptAt.getTime(); },
+    async reviveDead(limit) {
+      const d = rows.filter((r) => r.status === "dead" && r.last_error !== "lead_not_found").slice(0, limit);
+      d.forEach((r) => { r.status = "pending"; r.attempts = 0; r.next = clock.t; });
+      return d.length;
+    },
+    async deferProbes(until, same) {
+      rows.filter((r) => r.status === "dead" && (same === null || r.last_error === same)).forEach((r) => { r.next = Math.max(r.next, until.getTime()); });
+    },
+  };
+  return store;
+}
+const deadRows = (n: number, t0: number, err = "http_503"): QRow[] =>
+  Array.from({ length: n }, (_, i) => ({ id: `d${i}`, lead_id: `L${i}`, client_submission_id: `00000000-0000-4000-8000-${String(i).padStart(12, "0")}`, attempts: 12, status: "dead", next: t0, last_error: err }));
+function countingFetch(statusFor: () => number | "network") {
+  const calls: string[] = [];
+  const f = (async (_url: string, init: RequestInit) => {
+    calls.push(JSON.parse(String(init.body)).client_submission_id);
+    const st = statusFor();
+    if (st === "network") throw new TypeError("fetch failed");
+    return new Response("{}", { status: st });
+  }) as unknown as typeof fetch;
+  return { f, calls };
+}
+
+test("classification: outages are transient, rejections are permanent, deleted leads are gone", () => {
+  for (const e of ["http_500", "http_502", "http_503", "http_429", "http_408", "timeout", "network_TypeError", "store_Error", "deferred_rate_limited"]) assert.equal(failureKind(e), "transient", e);
+  for (const e of ["http_400", "http_401", "http_403", "http_404", "http_409", "http_410", "http_422"]) assert.equal(failureKind(e), "permanent", e);
+  assert.equal(failureKind("lead_not_found"), "gone");
+  assert.equal(maxAttemptsFor("permanent", 12), 3, "rejections give up after 3 tries, not 12");
+  assert.equal(maxAttemptsFor("transient", 12), 12);
+  assert.deepEqual([13, 14, 15, 16, 30].map((a) => probeDelayMinutes("transient", a, 12)), [60, 120, 240, 360, 360]);
+  assert.equal(probeDelayMinutes("permanent", 13, 12), 1440);
+  assert.equal(probeDelayMinutes("gone", 13, 12), null);
+});
+
+test("scenario: everything died in an outage, LeadsMind returns, NO new applicant - recovers on its own", async () => {
+  const logs = captureLogs();
+  try {
+    const clock = { t: Date.parse("2026-12-02T10:00:00Z") };
+    const store = sqlLikeStore(deadRows(40, clock.t), clock);
+    const up = true;
+    const { f, calls } = countingFetch(() => (up ? 200 : 503));
+    const run = () => processOutbox(store, { config: baseConfig, fetchImpl: f, now: () => new Date(clock.t), limit: 5 });
+    const first = await run();                         // no pending rows at all, only dead ones
+    assert.equal(first.claimed, 0);
+    assert.equal(first.probe, "ok", "a probe ran although nobody applied");
+    assert.equal(first.revived, 39, "the other dead rows were re-queued automatically");
+    for (let i = 0; i < 12 && store.rows.some((r) => r.status !== "sent"); i++) { clock.t += 2 * 60_000; await run(); }
+    assert.equal(store.rows.filter((r) => r.status === "sent").length, 40, "every lead delivered");
+    assert.equal(new Set(calls).size, calls.length, "each lead sent exactly once (no duplicate submissions)");
+    assert.equal(up, true);
+  } finally { logs.restore(); }
+});
+
+test("bounded cost: a 3-day outage with 50 dead leads makes ~1 probe per interval, growing to 6 h", async () => {
+  const logs = captureLogs();
+  try {
+    const clock = { t: Date.parse("2026-12-02T00:00:00Z") };
+    const store = sqlLikeStore(deadRows(50, clock.t), clock);
+    const { f, calls } = countingFetch(() => 503);
+    for (let i = 0; i < (3 * 24 * 60) / 2; i++) {           // every 2 minutes for 3 days = 2,160 runs
+      await processOutbox(store, { config: baseConfig, fetchImpl: f, now: () => new Date(clock.t), limit: 5 });
+      clock.t += 2 * 60_000;
+    }
+    // 1 h, 2 h, 4 h, then every 6 h: about 14 calls in 72 h, not thousands.
+    assert.ok(calls.length <= 16, `LeadsMind was called ${calls.length} times`);
+    assert.ok(calls.length >= 10, "it does keep trying");
+    assert.equal(store.rows.filter((r) => r.status === "dead").length, 50, "nothing lost, nothing marked sent");
+  } finally { logs.restore(); }
+});
+
+test("permanent errors are probed daily only, and a fixed configuration then recovers everything", async () => {
+  const logs = captureLogs();
+  try {
+    const clock = { t: Date.parse("2026-12-02T00:00:00Z") };
+    const store = sqlLikeStore(deadRows(10, clock.t, "http_404"), clock);
+    let fixed = false;
+    const { f, calls } = countingFetch(() => (fixed ? 200 : 404));
+    const run = () => processOutbox(store, { config: baseConfig, fetchImpl: f, now: () => new Date(clock.t), limit: 5 });
+    for (let i = 0; i < 720; i++) { await run(); clock.t += 2 * 60_000; }    // 24 h of runs
+    assert.ok(calls.length <= 2, `probed ${calls.length} times in a day`);
+    fixed = true;                                                            // owner fixes the form
+    for (let i = 0; i < 720 && store.rows.some((r) => r.status !== "sent"); i++) { await run(); clock.t += 2 * 60_000; }
+    assert.equal(store.rows.filter((r) => r.status === "sent").length, 10, "recovered within the next daily probe");
+  } finally { logs.restore(); }
+});
+
+test("deleted leads are never probed or revived", async () => {
+  const logs = captureLogs();
+  try {
+    const clock = { t: Date.parse("2026-12-02T00:00:00Z") };
+    const rows = deadRows(1, clock.t, "lead_not_found");
+    const store = sqlLikeStore(rows, clock);
+    const { f, calls } = countingFetch(() => 200);
+    await processOutbox(store, { config: baseConfig, fetchImpl: f, now: () => new Date(clock.t) });
+    assert.equal(calls.length, 0);
+    assert.equal(rows[0].status, "dead");
+  } finally { logs.restore(); }
+});
+
+test("rate limit: a probe answered with 429 stays dead and waits 10 min; a rate-limited batch skips the probe", async () => {
+  const logs = captureLogs();
+  try {
+    const clock = { t: Date.parse("2026-12-02T00:00:00Z") };
+    const store = sqlLikeStore(deadRows(3, clock.t), clock);
+    const { f, calls } = countingFetch(() => 429);
+    const s1 = await processOutbox(store, { config: baseConfig, fetchImpl: f, now: () => new Date(clock.t) });
+    assert.equal(s1.probe, "rate_limited");
+    assert.ok(store.rows.every((r) => r.status === "dead"));
+    assert.ok(store.rows.every((r) => r.next >= clock.t + 10 * 60_000), "all dead rows wait for the next probe");
+    const pending: QRow = { id: "p", lead_id: "P", client_submission_id: "00000000-0000-4000-8000-0000000000ff", attempts: 0, status: "pending", next: 0, last_error: null };
+    const store2 = sqlLikeStore([pending, ...deadRows(2, 0)], { t: clock.t });
+    const before = calls.length;
+    const s2 = await processOutbox(store2, { config: baseConfig, fetchImpl: f, now: () => new Date(clock.t) });
+    assert.equal(calls.length - before, 1, "the batch hit 429; no probe was added on top");
+    assert.equal(s2.probe, undefined);
+  } finally { logs.restore(); }
+});
+
+test("concurrency: six simultaneous runs never probe or send the same lead twice", async () => {
+  const logs = captureLogs();
+  try {
+    const clock = { t: Date.parse("2026-12-02T00:00:00Z") };
+    const store = sqlLikeStore(deadRows(5, clock.t), clock);
+    const { f, calls } = countingFetch(() => 200);
+    const runs = await Promise.all(Array.from({ length: 6 }, () => processOutbox(store, { config: baseConfig, fetchImpl: f, now: () => new Date(clock.t), limit: 5 })));
+    // Parallel runs may each probe a different dead lead; none probes the same one.
+    assert.ok(runs.filter((r) => r.probe === "ok").length <= 5);
+    for (let i = 0; i < 3; i++) { clock.t += 120_000; await processOutbox(store, { config: baseConfig, fetchImpl: f, now: () => new Date(clock.t), limit: 5 }); }
+    assert.equal(new Set(calls).size, calls.length, "no lead sent twice");
+    assert.equal(store.rows.filter((r) => r.status === "sent").length, 5);
+  } finally { logs.restore(); }
+});
+
+test("alert send failures are retried, but not more than every 15 minutes", () => {
+  const t = at("2026-12-02T10:00:00Z");
+  const failed = [{ kind: "critical" as const, fingerprint: null, last_sent_at: null, last_attempt_at: "2026-12-02T09:50:00Z" }];
+  assert.deepEqual(planAlerts(badHealth, [], failed, t).map((x) => x.kind), [], "attempted 10 min ago and failed: wait (no daily summary either)");
+  const later = [{ ...failed[0], last_attempt_at: `2026-12-02T09:4${ALERT_RETRY_MINUTES === 15 ? "4" : "0"}:00Z` }];
+  assert.deepEqual(planAlerts(badHealth, [], later, t).map((x) => x.kind), ["critical"], "16 min later: retry");
+  const ok = [{ kind: "critical" as const, fingerprint: "dead,stale", last_sent_at: "2026-12-02T09:50:00Z", last_attempt_at: "2026-12-02T09:50:00Z" }];
+  assert.equal(planAlerts(badHealth, [], ok, t).some((x) => x.kind === "critical"), false, "sent successfully: the critical alert is not repeated");
 });

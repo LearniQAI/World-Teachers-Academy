@@ -199,6 +199,46 @@ export function backoffMinutes(attempts: number): number {
   return Math.min(2 ** Math.max(attempts - 1, 0), 12 * 60);
 }
 
+/**
+ * Why a send failed:
+ * - transient: LeadsMind or the network was unavailable (5xx, 408, 429,
+ *   timeouts, network errors, our own database hiccups). Worth retrying.
+ * - permanent: LeadsMind rejected the request itself (400/401/403/404/409/410/
+ *   422): wrong form id, unpublished form, validation. Needs a fix by a person,
+ *   so it is retried rarely.
+ * - gone: the lead no longer exists. Never retried.
+ */
+export type FailureKind = "transient" | "permanent" | "gone";
+export function failureKind(error: string | null | undefined): FailureKind {
+  if (error === "lead_not_found") return "gone";
+  const m = /^http_(\d{3})$/.exec(error ?? "");
+  if (m) {
+    const code = Number(m[1]);
+    if (code === 408 || code === 429 || code >= 500) return "transient";
+    if (code >= 400) return "permanent";
+  }
+  return "transient";
+}
+
+/** Attempts before a row is marked dead: permanent errors give up early. */
+export function maxAttemptsFor(kind: FailureKind, configured: number): number {
+  if (kind === "gone") return 1;
+  return kind === "permanent" ? Math.min(3, configured) : configured;
+}
+
+/**
+ * Wait before the next recovery probe. Outages: 1 h after a row dies, then
+ * 2 h, 4 h, capped at 6 h while probes keep failing (attempts counts every
+ * try, so it keeps growing). Errors that need a person: daily. Deleted
+ * leads: never (null).
+ */
+export function probeDelayMinutes(kind: FailureKind, attempts = 0, maxAttempts = 12): number | null {
+  if (kind === "gone") return null;
+  if (kind === "permanent") return 24 * 60;
+  const failedProbes = Math.max(0, attempts - maxAttempts - 1);
+  return Math.min(60 * 2 ** failedProbes, 6 * 60);
+}
+
 export interface OutboxRow {
   id: string;
   lead_id: string;
@@ -214,6 +254,18 @@ export interface OutboxStore {
   markFailed(id: string, opts: { status: number | null; error: string; dead: boolean; nextAttemptAt: Date }): Promise<void>;
   /** Puts 'dead' rows back in the queue (automatic recovery after an outage). */
   reviveDead?(limit: number): Promise<number>;
+  /**
+   * Claims at most ONE dead row whose recovery probe is due (status 'dead',
+   * next_attempt_at passed, not a deleted lead). Atomic: concurrent runs never
+   * get the same row.
+   */
+  claimProbe?(): Promise<OutboxRow | null>;
+  /**
+   * After a failed probe: no other dead row is probed before `until` (all dead
+   * rows for an outage; rows with the same error for a permanent failure).
+   * Keeps probing to one call per interval however many rows are dead.
+   */
+  deferProbes?(until: Date, sameErrorOnly: string | null): Promise<void>;
 }
 
 export interface ProcessSummary {
@@ -225,6 +277,63 @@ export interface ProcessSummary {
   claimFailed?: boolean;
   /** Dead rows re-queued because LeadsMind accepted a lead again in this run. */
   revived?: number;
+  /** A recovery probe on a dead row ran in this run: "ok" or the error class. */
+  probe?: string;
+}
+
+type DeliveryOutcome = "sent" | "retrying" | "dead" | "rate_limited";
+
+async function deliverRow(
+  store: OutboxStore,
+  row: OutboxRow,
+  config: LeadsMindConfig,
+  now: () => Date,
+  fetchImpl: typeof fetch | undefined,
+  isProbe: boolean
+): Promise<DeliveryOutcome> {
+  let result: SendResult;
+  try {
+    const lead = await store.loadLead(row.lead_id);
+    result = lead
+      ? await postToLeadsMind(buildSubmission(lead, config, row.client_submission_id), config, fetchImpl)
+      : { ok: false, status: null, error: "lead_not_found" };
+  } catch (err) {
+    result = { ok: false, status: null, error: `store_${err instanceof Error ? err.name : "unknown"}`.slice(0, 60) };
+  }
+
+  try {
+    if (result.ok) {
+      await store.markSent(row.id, result.status);
+      return "sent";
+    }
+    const kind = failureKind(result.error);
+    const rateLimited = result.status === 429;
+    // A probe that fails puts the row straight back to 'dead' with its next
+    // probe time; normal rows become dead after maxAttemptsFor(kind).
+    const dead = !rateLimited && (isProbe || row.attempts >= maxAttemptsFor(kind, config.maxAttempts));
+    let delayMinutes = rateLimited ? 1 : backoffMinutes(row.attempts);
+    if (dead) delayMinutes = probeDelayMinutes(kind, row.attempts, config.maxAttempts) ?? 100 * 365 * 24 * 60; // "gone": effectively never
+    if (isProbe && rateLimited) delayMinutes = 10;
+    const nextAttemptAt = new Date(now().getTime() + delayMinutes * 60_000);
+    await store.markFailed(row.id, {
+      status: result.status,
+      error: result.error,
+      dead: dead || (isProbe && rateLimited),
+      nextAttemptAt,
+    });
+    if (isProbe && kind !== "gone" && store.deferProbes) {
+      await store.deferProbes(nextAttemptAt, kind === "permanent" ? result.error : null);
+    }
+    console.warn(
+      `[leadsmind] outbox ${row.id} ${isProbe ? "recovery probe" : `attempt ${row.attempts}`} failed (${result.error}, ${kind})${dead ? ` - dead, next probe in ${delayMinutes} min` : ""}`
+    );
+    if (rateLimited) return "rate_limited";
+    return dead ? "dead" : "retrying";
+  } catch (err) {
+    // The lease on the row expires and it is retried; nothing is lost.
+    console.error(`[leadsmind] could not update outbox ${row.id}:`, err instanceof Error ? err.name : "unknown");
+    return "retrying";
+  }
 }
 
 /** Delivers due outbox rows. Never throws; returns counts for logging/tests. */
@@ -267,41 +376,34 @@ export async function processOutbox(
       }
       continue;
     }
-
-    let result: SendResult;
-    try {
-      const lead = await store.loadLead(row.lead_id);
-      result = lead
-        ? await postToLeadsMind(buildSubmission(lead, config, row.client_submission_id), config, opts.fetchImpl)
-        : { ok: false, status: null, error: "lead_not_found" };
-    } catch (err) {
-      result = { ok: false, status: null, error: `store_${err instanceof Error ? err.name : "unknown"}`.slice(0, 60) };
-    }
-
-    try {
-      if (result.ok) {
-        await store.markSent(row.id, result.status);
-        summary.sent++;
-      } else {
-        if (result.status === 429) rateLimited = true;
-        const dead = row.attempts >= config.maxAttempts && result.status !== 429;
-        const delayMinutes = result.status === 429 ? 1 : backoffMinutes(row.attempts);
-        const nextAttemptAt = new Date(now().getTime() + delayMinutes * 60_000);
-        await store.markFailed(row.id, { status: result.status, error: result.error, dead, nextAttemptAt });
-        if (dead) summary.dead++;
-        else summary.retrying++;
-        console.warn(
-          `[leadsmind] outbox ${row.id} attempt ${row.attempts} failed (${result.error})${dead ? " - giving up, kept as dead" : ""}`
-        );
-      }
-    } catch (err) {
-      // The lease on the row expires and it is retried; nothing is lost.
-      console.error(`[leadsmind] could not update outbox ${row.id}:`, err instanceof Error ? err.name : "unknown");
+    const outcome = await deliverRow(store, row, config, now, opts.fetchImpl, false);
+    if (outcome === "sent") summary.sent++;
+    else if (outcome === "dead") summary.dead++;
+    else {
+      summary.retrying++;
+      if (outcome === "rate_limited") rateLimited = true;
     }
   }
 
-  // LeadsMind is reachable again: give rows that had given up during the
-  // outage a fresh start, without anyone pressing "retry dead".
+  // Recovery probe: even when no new lead arrives, one dead row whose probe
+  // time has come is tried per run (hourly per row for outages, daily for
+  // errors that need a person). Skipped once LeadsMind has rate-limited us
+  // or when this run targets one specific row.
+  if (!rateLimited && !opts.id && store.claimProbe) {
+    try {
+      const probeRow = await store.claimProbe();
+      if (probeRow) {
+        const outcome = await deliverRow(store, probeRow, config, now, opts.fetchImpl, true);
+        summary.probe = outcome === "sent" ? "ok" : outcome;
+        if (outcome === "sent") summary.sent++;
+      }
+    } catch (err) {
+      console.error("[leadsmind] recovery probe failed to start:", err instanceof Error ? err.name : "unknown");
+    }
+  }
+
+  // LeadsMind is accepting leads again: give rows that had given up a fresh
+  // start (deleted leads excluded), without anyone pressing "retry dead".
   if (summary.sent > 0 && store.reviveDead) {
     try {
       summary.revived = await store.reviveDead(100);
@@ -364,6 +466,18 @@ export interface AlertStateRow {
   kind: "critical" | "daily_summary" | "resolved";
   fingerprint: string | null;
   last_sent_at: string | null;
+  /** Last attempt to send (successful or not). */
+  last_attempt_at?: string | null;
+}
+
+/** A failed alert send is retried, but not more often than this. */
+export const ALERT_RETRY_MINUTES = 15;
+
+function recentlyFailed(row: AlertStateRow | undefined, now: Date): boolean {
+  if (!row?.last_attempt_at) return false;
+  const attempt = new Date(row.last_attempt_at).getTime();
+  const sent = row.last_sent_at ? new Date(row.last_sent_at).getTime() : 0;
+  return attempt > sent && now.getTime() - attempt < ALERT_RETRY_MINUTES * 60_000;
 }
 
 export interface PlannedAlert {
@@ -422,11 +536,15 @@ export function planAlerts(
     .join(",");
   const out: PlannedAlert[] = [];
   const critical = byKind.get("critical");
+  // Any alert send that failed in the last 15 minutes pauses ALL alert kinds:
+  // the mail service is probably failing, so don't hammer it every 2 minutes.
+  if (state.some((row) => recentlyFailed(row, now))) return [];
+  const hold = (k: AlertStateRow["kind"]) => recentlyFailed(byKind.get(k), now);
   const lastCritical = critical?.last_sent_at ? new Date(critical.last_sent_at).getTime() : 0;
 
   if (categories) {
     const changed = (critical?.fingerprint ?? "") !== categories;
-    if (changed && now.getTime() - lastCritical >= HOUR) {
+    if (changed && now.getTime() - lastCritical >= HOUR && !hold("critical")) {
       out.push({
         kind: "critical",
         fingerprint: categories,
@@ -437,7 +555,7 @@ export function planAlerts(
     const daily = byKind.get("daily_summary");
     const lastDaily = daily?.last_sent_at ? new Date(daily.last_sent_at).getTime() : 0;
     // Not in the same run as a critical alert: one email per run at most.
-    if (out.length === 0 && now.getUTCHours() >= 5 && now.getTime() - lastDaily >= 23 * HOUR) {
+    if (out.length === 0 && now.getUTCHours() >= 5 && now.getTime() - lastDaily >= 23 * HOUR && !hold("daily_summary")) {
       out.push({
         kind: "daily_summary",
         fingerprint: categories,
@@ -445,7 +563,7 @@ export function planAlerts(
         text: alertBody(h, problems, now, "Daily summary of unresolved LeadsMind sync items."),
       });
     }
-  } else if (critical?.fingerprint) {
+  } else if (critical?.fingerprint && !hold("resolved")) {
     out.push({
       kind: "resolved",
       fingerprint: "",
