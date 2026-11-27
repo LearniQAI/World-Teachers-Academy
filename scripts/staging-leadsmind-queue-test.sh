@@ -50,11 +50,14 @@ case "${1:-}" in
   run) call GET /api/cron/leadsmind-retry "$CRON" ;;
   retry) call POST /api/admin/leadsmind-outbox "$ADMIN" "{\"action\":\"retry\",\"id\":\"${2:?outbox id}\"}" ;;
   retry-dead) call POST /api/admin/leadsmind-outbox "$ADMIN" '{"action":"retry_dead"}' ;;
+  backfill-preview) call POST /api/admin/leadsmind-outbox "$ADMIN" '{"action":"backfill_preview"}' ;;
+  backfill) call POST /api/admin/leadsmind-outbox "$ADMIN" '{"action":"backfill"}' ;;
+  backfill-before-golive) call POST /api/admin/leadsmind-outbox "$ADMIN" '{"action":"backfill_preview","since":"2026-11-01T00:00:00Z"}' ;;
   # Already verified for this job in the last 24 h: must skip the code (no email, no new lead).
   verified-skip) call POST /api/leads/request-code "" "{\"name\":\"WTA E2E Test\",\"email\":\"$TEST_EMAIL\",\"job_id\":\"${2:?job id}\",\"consent_given\":true}" ;;
   # Address not on EMAIL_TEST_ALLOWLIST: no email may be sent.
   allowlist) call POST /api/leads/request-code "" "{\"name\":\"WTA E2E Blocked\",\"email\":\"wta-e2e-blocked@example.com\",\"job_id\":\"${2:?job id}\",\"consent_given\":true}" ;;
   # A wrong code for an open request: must be refused with attempts left.
   wrong-code) call POST /api/leads/verify "" "{\"email\":\"$TEST_EMAIL\",\"job_id\":\"${2:?job id}\",\"code\":\"000000\"}" ;;
-  *) echo "usage: $0 auth|summary|concurrent|run|retry <id>|retry-dead|verified-skip <job>|allowlist <job>|wrong-code <job>" >&2; exit 2 ;;
+  *) echo "usage: $0 auth|summary|concurrent|run|retry <id>|retry-dead|verified-skip <job>|allowlist <job>|wrong-code <job>|backfill-preview|backfill|backfill-before-golive" >&2; exit 2 ;;
 esac
