@@ -50,14 +50,15 @@ logged (covered by `tests/unit/leadsmind.test.ts`).
 
 | Variable | Default | Purpose |
 |---|---|---|
-| `LEADSMIND_DISABLED` | (unset) | `true` turns the sync off. Leads stay queued. |
+| `LEADSMIND_DISABLED` | (unset) | `true` pauses **delivery** only. Verified leads are still queued and are sent automatically when it is unset again. |
 | `LEADSMIND_BASE_URL` | `https://www.leadsmind.io` | LeadsMind origin |
 | `LEADSMIND_FORM_ID` | `762edbd4-3d18-47c3-8d54-3c9209edf650` | Target form |
 | `LEADSMIND_WORKSPACE_ID` | `94d419d2-76c1-43fb-90ca-65f096a898ee` | The form's workspace |
 | `LEADSMIND_FIELD_MAP` | Test 33's field ids | JSON `{"firstName":"…","lastName":"…","email":"…"}` |
 | `LEADSMIND_MAX_ATTEMPTS` | `12` | Attempts before `dead` |
 | `CRON_SECRET` | (unset) | **Required** for the retry route. Without it the route answers 503. |
-| `LEADSMIND_SYNC_START` | (unset) | ISO date. If set, the retry job also queues verified leads since then that have no queue row (never more than 2 days back). |
+| `LEADSMIND_SYNC_START` | (unset) | **Set this to the go-live time in production.** Every run queues each verified lead since then that has no queue row, with no age limit. This recovers applicants from a pause or a deployment rollback. Leads before it are never sent automatically. |
+| `LEADSMIND_ALERT_EMAIL` | (unset) | Where sync alerts go. Unset means no alerts. |
 
 Invalid values (non-UUID form id, bad field map, non-https URL) switch the
 sync off rather than sending leads to the wrong place.
@@ -66,18 +67,39 @@ sync off rather than sending leads to the wrong place.
 `GET https://www.leadsmind.io/api/public/forms/<form id>` (`form.fields[].id`)
 and set `LEADSMIND_FORM_ID`, `LEADSMIND_WORKSPACE_ID` and `LEADSMIND_FIELD_MAP`.
 
-## Scheduling the retry job
+## Scheduling, recovery and alerts
 
-`vercel.json` schedules `/api/cron/leadsmind-retry` every 10 minutes. The
-team is on Vercel **Pro**, which allows sub-daily crons (Hobby allows only
-daily). Vercel Cron runs on **production deployments only**, and sends
-`Authorization: Bearer <CRON_SECRET>` automatically once `CRON_SECRET` is set.
-Each run:
+`vercel.json` runs `/api/cron/leadsmind-retry` **every 2 minutes**. Vercel Cron
+runs on production deployments only (the team is on Pro) and sends
+`Authorization: Bearer <CRON_SECRET>`. Each run:
 
-1. queues missed leads (only when `LEADSMIND_SYNC_START` is set),
-2. sends at most 5 due rows (LeadsMind's public limit is 5 a minute per IP),
-3. deletes `sent` rows older than `LEADSMIND_RETENTION_DAYS` (default 180,
-   minimum 30). `pending` and `dead` rows are never purged.
+1. **Catch-up:** queues every verified lead since `LEADSMIND_SYNC_START` that
+   has no queue row. This covers leads verified while the site was rolled back
+   to a version without this integration, or when a queue insert failed. It is
+   set-based and idempotent (`unique (lead_id, form_id)`), so parallel runs and
+   large backlogs are safe. It runs even while delivery is paused.
+2. **Delivery:** up to 5 due rows (LeadsMind's public limit is 5 a minute per
+   IP; a 429 defers the rest). Skipped while `LEADSMIND_DISABLED=true`.
+   Capacity is about 3,600 leads a day. New leads are also sent within
+   seconds of verification.
+3. **Retention:** deletes `sent` rows older than `LEADSMIND_RETENTION_DAYS`.
+4. **Alerts** (`LEADSMIND_ALERT_EMAIL`):
+   - a critical alert as soon as any lead is `dead`, a lead has waited more
+     than 2 hours, or the configuration is invalid;
+   - re-sent only when the kind of problem changes, and at most once an hour;
+   - a daily summary from 07:00 SAST while anything is unresolved;
+   - one "recovered" email when it clears;
+   - statistics only: no names, emails or lead ids.
+
+### Recovery scenarios
+
+| Scenario | What happens | Action needed |
+| --- | --- | --- |
+| LeadsMind down or slow | Leads queue and retry with back-off. After 12 failed attempts they become `dead` (alerted). | Usually none. After a long outage, use `retry_dead`. |
+| Sync paused (`LEADSMIND_DISABLED=true`) | Applicants unaffected, and leads queue. | Unset it; everything queued is sent. |
+| Site rolled back to the pre-integration release | Applicants unaffected. Leads are saved in `leads` but not queued. | Re-deploy the integration. The next run's catch-up queues them (no age limit). |
+| Queue insert failed | Lead saved, not queued | Automatic: the next run's catch-up queues it. |
+| Anything else | | `backfill_preview` (dry run), then `backfill`, with a start date. |
 
 ## Admin: visibility and manual retry
 
@@ -93,7 +115,15 @@ curl -s -X POST -H "Authorization: Bearer $LEADSMIND_ADMIN_SECRET" -H 'content-t
   -d '{"action":"retry","id":"<outbox id>"}' https://worldteachers.academy/api/admin/leadsmind-outbox
 # re-queue all dead rows / deliver due rows now
 -d '{"action":"retry_dead"}'    -d '{"action":"run"}'
+# recovery: dry run first, then queue (since defaults to LEADSMIND_SYNC_START)
+-d '{"action":"backfill_preview"}'    -d '{"action":"backfill"}'
+-d '{"action":"backfill","since":"2026-12-01T00:00:00Z"}'
 ```
+
+`GET` also returns `sync` (enabled, configuration problems, sync start,
+alerts configured) and `health`. `health` holds counts per status, leads
+waiting more than 2 h, dead count, the oldest pending, the **last successful
+sync**, and error types.
 
 The same data is visible in the Supabase dashboard (table `leadsmind_outbox`,
 or `select * from leadsmind_outbox_summary();`).

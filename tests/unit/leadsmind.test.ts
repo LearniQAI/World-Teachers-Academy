@@ -6,7 +6,11 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import {
+  alertBody,
   backoffMinutes,
+  planAlerts,
+  resolveBackfillSince,
+  type QueueHealth,
   buildSubmission,
   getLeadsMindConfig,
   LEADSMIND_MARKETING_CONSENT_FIELD,
@@ -343,7 +347,122 @@ test("wiring: retry and admin endpoints fail closed and compare secrets in const
   assert.equal(checkBearer("Bearer s3cret", "s3cret"), "ok");
 });
 
-test("schedule: vercel.json runs the retry job every 10 minutes", () => {
+test("schedule: vercel.json runs the sync job every 2 minutes", () => {
   const vercel = JSON.parse(readFileSync(new URL("../../vercel.json", import.meta.url), "utf8"));
-  assert.deepEqual(vercel.crons, [{ path: "/api/cron/leadsmind-retry", schedule: "*/10 * * * *" }]);
+  assert.deepEqual(vercel.crons, [{ path: "/api/cron/leadsmind-retry", schedule: "*/2 * * * *" }]);
+});
+
+// ---------- F1: pausing never stops queueing ----------
+const storeSrc = readFileSync(new URL("../../lib/leadsmind-store.ts", import.meta.url), "utf8");
+function fnBody(src: string, name: string) {
+  const start = src.indexOf(`export async function ${name}`);
+  assert.ok(start >= 0, `${name} exists`);
+  return src.slice(start, src.indexOf("\n}\n", start));
+}
+
+test("F1: queueing and catch-up ignore LEADSMIND_DISABLED (only delivery is paused)", () => {
+  assert.equal(/enabled/.test(fnBody(storeSrc, "enqueueLeadForLeadsMind")), false);
+  assert.equal(/enabled/.test(fnBody(storeSrc, "enqueueMissingLeads")), false);
+  // Delivery itself stops while disabled (processOutbox early return), tested above in "disabled".
+});
+
+test("F1/F2: the sync job runs catch-up before delivery, and regardless of the pause switch", () => {
+  const backfillAt = cronSrc.indexOf("enqueueMissingLeads(window.since)");
+  const deliverAt = cronSrc.indexOf("runLeadsMindOutbox({ limit: 5 })");
+  assert.ok(backfillAt > 0 && deliverAt > backfillAt);
+  assert.equal(/if \(!?config\.enabled\)/.test(cronSrc), false, "no enabled-gate around catch-up");
+});
+
+// ---------- F2: recovery window ----------
+test("F2: catch-up starts at go-live with no age limit", () => {
+  const r = resolveBackfillSince("2026-12-01T08:00:00Z");
+  assert.ok("since" in r && r.since.toISOString() === "2026-12-01T08:00:00.000Z");
+  // a lead from a 30-day pause is still inside the window: nothing caps it
+  assert.equal(/2 \* 24 \* 60 \* 60 \* 1000|twoDaysAgo/.test(cronSrc), false, "the old 2-day cap is gone");
+});
+
+test("F2: manual recovery cannot reach before go-live without explicit confirmation", () => {
+  const start = "2026-12-01T08:00:00Z";
+  assert.ok("since" in resolveBackfillSince(start, "2026-12-05T00:00:00Z"));
+  assert.ok("error" in resolveBackfillSince(start, "2026-11-01T00:00:00Z"));
+  assert.ok("since" in resolveBackfillSince(start, "2026-11-01T00:00:00Z", true));
+  assert.ok("error" in resolveBackfillSince(undefined, null));
+  assert.ok("error" in resolveBackfillSince(undefined, "2026-12-05T00:00:00Z"));
+  assert.ok("error" in resolveBackfillSince("not-a-date"));
+  assert.ok("error" in resolveBackfillSince(start, "garbage"));
+});
+
+test("F2: the admin endpoint offers a dry run and a real run, both behind the admin key", () => {
+  const adminSrc = readFileSync(new URL("../../app/api/admin/leadsmind-outbox/route.ts", import.meta.url), "utf8");
+  assert.match(adminSrc, /action === "backfill_preview"/);
+  assert.match(adminSrc, /previewMissingLeads\(window\.since\)/);
+  assert.match(adminSrc, /dry_run: true/);
+  const guardAt = adminSrc.indexOf("const denied = guard(request);", adminSrc.indexOf("export async function POST"));
+  assert.ok(guardAt > 0 && guardAt < adminSrc.indexOf('action === "backfill_preview"'));
+});
+
+// ---------- F3: alerts ----------
+const okHealth: QueueHealth = {
+  counts: { sent: 10 }, oldest_pending_at: null, stale_pending: 0, dead: 0, oldest_dead_at: null,
+  last_sent_at: "2026-12-02T09:00:00Z", error_classes: {}, checked_at: "2026-12-02T10:00:00Z",
+};
+const badHealth: QueueHealth = {
+  ...okHealth, counts: { sent: 10, pending: 3, dead: 2 }, stale_pending: 3, dead: 2,
+  oldest_pending_at: "2026-12-02T06:00:00Z", error_classes: { http_503: 4, timeout: 1 },
+};
+const at = (iso: string) => new Date(iso);
+
+test("F3: a critical alert is sent as soon as leads fail or wait over 2 hours", () => {
+  const p = planAlerts(badHealth, [], [], at("2026-12-02T03:00:00Z"));
+  assert.deepEqual(p.map((x) => x.kind), ["critical"]);
+  assert.equal(p[0].fingerprint, "dead,stale");
+  assert.match(p[0].text, /Failed permanently \(dead\): 2/);
+  assert.match(p[0].text, /Waiting more than 2 hours: 3/);
+  assert.match(p[0].text, /Last successful sync: 2026-12-02T09:00:00Z/);
+});
+
+test("F3: no flooding - the same problem is not re-alerted, a new kind of problem is (max once an hour)", () => {
+  const sent = [{ kind: "critical" as const, fingerprint: "dead,stale", last_sent_at: "2026-12-02T03:00:00Z" }];
+  assert.deepEqual(planAlerts(badHealth, [], sent, at("2026-12-02T03:30:00Z")).map((x) => x.kind), []);
+  assert.deepEqual(planAlerts(badHealth, [], sent, at("2026-12-02T04:59:00Z")).map((x) => x.kind), []);
+  const worse = planAlerts(badHealth, ["LEADSMIND_FORM_ID must be a UUID"], sent, at("2026-12-02T03:30:00Z"));
+  assert.deepEqual(worse.map((x) => x.kind), [], "changed, but within the hour: held back");
+  const later = planAlerts(badHealth, ["LEADSMIND_FORM_ID must be a UUID"], sent, at("2026-12-02T04:10:00Z"));
+  assert.deepEqual(later.map((x) => x.kind), ["critical"]);
+});
+
+test("F3: never two emails in one run (new problem after 07:00 sends only the critical alert)", () => {
+  assert.deepEqual(planAlerts(badHealth, [], [], at("2026-12-02T10:00:00Z")).map((x) => x.kind), ["critical"]);
+});
+
+test("F3: one daily summary while problems remain, from 07:00 Johannesburg time", () => {
+  const sent = [{ kind: "critical" as const, fingerprint: "dead,stale", last_sent_at: "2026-12-02T03:00:00Z" }];
+  assert.deepEqual(planAlerts(badHealth, [], sent, at("2026-12-02T04:59:00Z")).map((x) => x.kind), []);
+  assert.deepEqual(planAlerts(badHealth, [], sent, at("2026-12-02T05:00:00Z")).map((x) => x.kind), ["daily_summary"]);
+  const withDaily = [...sent, { kind: "daily_summary" as const, fingerprint: "dead,stale", last_sent_at: "2026-12-02T05:00:00Z" }];
+  assert.deepEqual(planAlerts(badHealth, [], withDaily, at("2026-12-02T18:00:00Z")).map((x) => x.kind), []);
+  assert.deepEqual(planAlerts(badHealth, [], withDaily, at("2026-12-03T05:00:00Z")).map((x) => x.kind), ["daily_summary"]);
+});
+
+test("F3: a single 'recovered' notice once everything clears, then silence", () => {
+  const sent = [{ kind: "critical" as const, fingerprint: "dead,stale", last_sent_at: "2026-12-02T03:00:00Z" }];
+  assert.deepEqual(planAlerts(okHealth, [], sent, at("2026-12-02T08:00:00Z")).map((x) => x.kind), ["resolved"]);
+  const cleared = [{ kind: "critical" as const, fingerprint: "", last_sent_at: "2026-12-02T03:00:00Z" }];
+  assert.deepEqual(planAlerts(okHealth, [], cleared, at("2026-12-02T09:00:00Z")).map((x) => x.kind), []);
+  assert.deepEqual(planAlerts(okHealth, [], [], at("2026-12-02T09:00:00Z")).map((x) => x.kind), [], "healthy and never alerted: nothing");
+});
+
+test("F3: alert text holds statistics only - no names, emails or lead ids", () => {
+  const text = alertBody(badHealth, [], at("2026-12-02T10:00:00Z"), "x");
+  assert.equal(/@/.test(text), false);
+  assert.equal(/[0-9a-f]{8}-[0-9a-f]{4}-/.test(text), false);
+  assert.match(text, /Applicants are not affected/);
+});
+
+test("F3: an invalid alert address turns alerts off but never stops the sync", () => {
+  const { config, problems } = getLeadsMindConfig({ LEADSMIND_ALERT_EMAIL: "not-an-email" });
+  assert.equal(config.alertEmail, null);
+  assert.equal(config.enabled, true);
+  assert.deepEqual(problems, []);
+  assert.equal(getLeadsMindConfig({ LEADSMIND_ALERT_EMAIL: " info@docssa.co.za " }).config.alertEmail, "info@docssa.co.za");
 });

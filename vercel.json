@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "crons": [
-    { "path": "/api/cron/leadsmind-retry", "schedule": "*/10 * * * *" }
+    { "path": "/api/cron/leadsmind-retry", "schedule": "*/2 * * * *" }
   ]
 }

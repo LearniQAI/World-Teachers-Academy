@@ -1,5 +1,14 @@
 import { supabaseServiceRole } from "@/lib/supabase";
-import { getLeadsMindConfig, processOutbox, type OutboxStore, type ProcessSummary } from "@/lib/leadsmind";
+import {
+  getLeadsMindConfig,
+  planAlerts,
+  processOutbox,
+  type AlertStateRow,
+  type OutboxStore,
+  type ProcessSummary,
+  type QueueHealth,
+} from "@/lib/leadsmind";
+import { sendAlertEmail } from "@/lib/resend";
 
 // Supabase implementation of the LeadsMind outbox (table: leadsmind_outbox,
 // migration 20261126190000). Server-side only: uses the service role.
@@ -65,14 +74,17 @@ export const supabaseOutboxStore: OutboxStore = {
   },
 };
 
-/** Queues a verified lead. Returns the outbox id, or null if it couldn't be queued. */
+/**
+ * Queues a verified lead. Runs whether or not the sync is enabled (F1):
+ * LEADSMIND_DISABLED pauses delivery only, so leads verified while paused are
+ * kept and sent automatically once it is switched back on.
+ */
 export async function enqueueLeadForLeadsMind(leadId: string): Promise<string | null> {
   const { config } = getLeadsMindConfig();
-  if (!config.enabled) return null;
   try {
     return await supabaseOutboxStore.enqueue(leadId, config.formId);
   } catch (err) {
-    // The retry job's safety net (enqueue_missing_leadsmind_leads) picks it up.
+    // The retry job's catch-up (enqueue_missing_leadsmind_leads) picks it up.
     console.error("[leadsmind] could not queue lead:", err instanceof Error ? err.message : "unknown");
     return null;
   }
@@ -82,14 +94,70 @@ export function runLeadsMindOutbox(opts: { limit?: number; id?: string | null } 
   return processOutbox(supabaseOutboxStore, opts);
 }
 
-/** Queues verified leads that were missed (only those applied at/after `since`). */
+/**
+ * Queues verified leads applied at/after `since` that have no queue row (F2).
+ * Set-based and idempotent (unique lead+form), so it is safe to run in
+ * parallel and on any number of leads. Runs even while delivery is paused.
+ */
 export async function enqueueMissingLeads(since: Date): Promise<number> {
   const { config } = getLeadsMindConfig();
-  if (!config.enabled) return 0;
   const { data, error } = await supabaseServiceRole.rpc("enqueue_missing_leadsmind_leads", {
     p_form_id: config.formId,
     p_since: since.toISOString(),
   });
   if (error) throw new Error(`backfill failed (${error.code ?? "unknown"})`);
   return typeof data === "number" ? data : 0;
+}
+
+/** Dry run for enqueueMissingLeads: counts and dates only, nothing is queued. */
+export async function previewMissingLeads(since: Date): Promise<{ missing: number; oldest_applied_at: string | null; newest_applied_at: string | null }> {
+  const { config } = getLeadsMindConfig();
+  const { data, error } = await supabaseServiceRole.rpc("preview_missing_leadsmind_leads", {
+    p_form_id: config.formId,
+    p_since: since.toISOString(),
+  });
+  if (error) throw new Error(`backfill preview failed (${error.code ?? "unknown"})`);
+  const row = Array.isArray(data) ? data[0] : data;
+  return {
+    missing: Number(row?.missing ?? 0),
+    oldest_applied_at: row?.oldest_applied_at ?? null,
+    newest_applied_at: row?.newest_applied_at ?? null,
+  };
+}
+
+export async function getQueueHealth(): Promise<QueueHealth> {
+  const { data, error } = await supabaseServiceRole.rpc("leadsmind_outbox_health", { p_stale_after_minutes: 120 });
+  if (error) throw new Error(`health failed (${error.code ?? "unknown"})`);
+  return data as QueueHealth;
+}
+
+/**
+ * F3: emails sync alerts to LEADSMIND_ALERT_EMAIL when planAlerts says so.
+ * Never throws. Returns the kinds sent, for the retry job's log line.
+ */
+export async function runLeadsMindAlerts(now = new Date()): Promise<string[]> {
+  const { config, problems } = getLeadsMindConfig();
+  if (!config.alertEmail) return [];
+  try {
+    const health = await getQueueHealth();
+    const { data: state } = await supabaseServiceRole.from("leadsmind_alert_state").select("kind, fingerprint, last_sent_at");
+    const planned = planAlerts(health, problems, (state ?? []) as AlertStateRow[], now);
+    const sent: string[] = [];
+    for (const alert of planned) {
+      try {
+        await sendAlertEmail(config.alertEmail, alert.subject, alert.text);
+        await supabaseServiceRole.rpc("record_leadsmind_alert", { p_kind: alert.kind, p_fingerprint: alert.fingerprint, p_sent: true });
+        if (alert.kind === "resolved") {
+          await supabaseServiceRole.rpc("record_leadsmind_alert", { p_kind: "critical", p_fingerprint: "", p_sent: false });
+        }
+        sent.push(alert.kind);
+      } catch (err) {
+        console.error(`[leadsmind-alert] ${alert.kind} not sent:`, err instanceof Error ? err.name : "unknown");
+      }
+    }
+    return sent;
+  } catch (err) {
+    console.error("[leadsmind-alert] check failed:", err instanceof Error ? err.message : "unknown");
+    return [];
+  }
 }

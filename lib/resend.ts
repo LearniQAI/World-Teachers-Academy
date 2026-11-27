@@ -92,3 +92,18 @@ export async function sendOtpEmail(email: string, code: string) {
     throw new Error(error.message || "Resend failed to send the verification email");
   }
 }
+
+/**
+ * Plain-text operational email (LeadsMind sync alerts). Same safety rules as
+ * the code email: preview deployments only send to EMAIL_TEST_ALLOWLIST, and a
+ * rejected send throws instead of looking successful. Callers must not put
+ * applicant personal data in subject or text.
+ */
+export async function sendAlertEmail(to: string, subject: string, text: string) {
+  if (!emailAllowed(to)) throw new Error("Email sending is restricted to approved test addresses on this staging site.");
+  const { error } = await getResend().emails.send({ from: FROM_EMAIL, to, subject, text });
+  if (error) {
+    console.error("[sendAlertEmail] Resend rejected the send:", error.name ?? "error");
+    throw new Error(error.message || "Resend failed to send the alert email");
+  }
+}

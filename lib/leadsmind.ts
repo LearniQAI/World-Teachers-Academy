@@ -34,6 +34,8 @@ export interface LeadsMindConfig {
   /** Where the lead came from, as shown on the LeadsMind contact/submission. */
   sourceLabel: string;
   sourcePage: string;
+  /** Where sync alerts go (LEADSMIND_ALERT_EMAIL). Unset = no alert emails. */
+  alertEmail: string | null;
 }
 
 // Defaults: the World Teachers Academy workspace's form
@@ -105,7 +107,10 @@ export function getLeadsMindConfig(env: Record<string, string | undefined> = pro
     maxAttempts: intFromEnv(env.LEADSMIND_MAX_ATTEMPTS, DEFAULTS.maxAttempts, 1, 50),
     sourceLabel: env.LEADSMIND_SOURCE_LABEL || DEFAULTS.sourceLabel,
     sourcePage: env.LEADSMIND_SOURCE_PAGE || DEFAULTS.sourcePage,
+    alertEmail: env.LEADSMIND_ALERT_EMAIL?.trim() || null,
   };
+  // An invalid alert address only turns alerts off; it must never stop the sync.
+  if (config.alertEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(config.alertEmail)) config.alertEmail = null;
 
   if (!/^https:\/\/[^/]+$/.test(config.baseUrl) && !/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(config.baseUrl)) {
     problems.push("LEADSMIND_BASE_URL must be an https origin");
@@ -291,4 +296,147 @@ export async function processOutbox(
     }
   }
   return summary;
+}
+
+// ---------------------------------------------------------------------------
+// F2: recovery (backfill) window
+// ---------------------------------------------------------------------------
+
+/**
+ * Works out from when verified leads may be (re)queued. LEADSMIND_SYNC_START
+ * (the go-live time) is the floor: leads from before go-live are never sent
+ * unless the admin explicitly asks with allowBeforeGoLive. There is no other
+ * age limit, so applicants who verified during a long pause or a rollback are
+ * always recovered.
+ */
+export function resolveBackfillSince(
+  syncStart: string | undefined,
+  requested?: string | null,
+  allowBeforeGoLive = false
+): { since: Date } | { error: string } {
+  const start = syncStart ? new Date(syncStart) : null;
+  if (start && Number.isNaN(start.getTime())) return { error: "LEADSMIND_SYNC_START is not a valid date" };
+  if (!requested) {
+    return start ? { since: start } : { error: "LEADSMIND_SYNC_START is not set and no start date was given" };
+  }
+  const since = new Date(requested);
+  if (Number.isNaN(since.getTime())) return { error: "since is not a valid date" };
+  if (start && since < start && !allowBeforeGoLive) {
+    return { error: "since is before go-live (LEADSMIND_SYNC_START); pass allow_before_go_live to confirm" };
+  }
+  if (!start && !allowBeforeGoLive) {
+    return { error: "LEADSMIND_SYNC_START is not set; pass allow_before_go_live to confirm the start date" };
+  }
+  return { since };
+}
+
+// ---------------------------------------------------------------------------
+// F3: alerts
+// ---------------------------------------------------------------------------
+
+export interface QueueHealth {
+  counts: Record<string, number>;
+  oldest_pending_at: string | null;
+  stale_pending: number;
+  dead: number;
+  oldest_dead_at: string | null;
+  last_sent_at: string | null;
+  error_classes: Record<string, number>;
+  checked_at: string;
+}
+
+export interface AlertStateRow {
+  kind: "critical" | "daily_summary" | "resolved";
+  fingerprint: string | null;
+  last_sent_at: string | null;
+}
+
+export interface PlannedAlert {
+  kind: AlertStateRow["kind"];
+  fingerprint: string;
+  subject: string;
+  text: string;
+}
+
+const HOUR = 60 * 60 * 1000;
+
+function age(fromIso: string | null, now: Date): string {
+  if (!fromIso) return "n/a";
+  const mins = Math.max(0, Math.round((now.getTime() - new Date(fromIso).getTime()) / 60000));
+  return mins < 120 ? `${mins} min` : `${Math.round(mins / 60)} h`;
+}
+
+/** Plain-text body with queue statistics only: no names, emails or lead ids. */
+export function alertBody(h: QueueHealth, problems: string[], now: Date, headline: string): string {
+  const counts = ["pending", "sending", "sent", "dead"].map((s) => `${s}: ${h.counts?.[s] ?? 0}`).join(", ");
+  const errors = Object.entries(h.error_classes ?? {}).map(([k, v]) => `${k} x${v}`).join(", ") || "none";
+  return [
+    headline,
+    "",
+    `Queue: ${counts}`,
+    `Failed permanently (dead): ${h.dead}`,
+    `Waiting more than 2 hours: ${h.stale_pending} (oldest waiting ${age(h.oldest_pending_at, now)})`,
+    `Last successful sync: ${h.last_sent_at ?? "never"} (${age(h.last_sent_at, now)} ago)`,
+    `Error types: ${errors}`,
+    problems.length ? `Configuration problems: ${problems.join("; ")}` : "Configuration: OK",
+    "",
+    "Applicants are not affected: they can still apply. Leads wait in the queue and are retried automatically.",
+    "Details: /api/admin/leadsmind-outbox (admin key required). Manual retry: action retry_dead.",
+    `Checked at ${now.toISOString()}.`,
+  ].join("\n");
+}
+
+/**
+ * Decides which alert emails to send now. Pure, so it is unit-tested.
+ * - critical: as soon as a problem category appears (dead rows, leads waiting
+ *   over 2 h, or invalid configuration). Repeated only when the set of
+ *   categories changes, and never more than once an hour.
+ * - daily_summary: once per 23 h while any problem remains, from 07:00
+ *   Johannesburg time (05:00 UTC).
+ * - resolved: once, when all problems have cleared after a critical alert.
+ */
+export function planAlerts(
+  h: QueueHealth,
+  problems: string[],
+  state: AlertStateRow[],
+  now: Date
+): PlannedAlert[] {
+  const byKind = new Map(state.map((s) => [s.kind, s]));
+  const categories = [h.dead > 0 ? "dead" : "", h.stale_pending > 0 ? "stale" : "", problems.length ? "config" : ""]
+    .filter(Boolean)
+    .join(",");
+  const out: PlannedAlert[] = [];
+  const critical = byKind.get("critical");
+  const lastCritical = critical?.last_sent_at ? new Date(critical.last_sent_at).getTime() : 0;
+
+  if (categories) {
+    const changed = (critical?.fingerprint ?? "") !== categories;
+    if (changed && now.getTime() - lastCritical >= HOUR) {
+      out.push({
+        kind: "critical",
+        fingerprint: categories,
+        subject: `[WTA job portal] LeadsMind sync needs attention (${categories})`,
+        text: alertBody(h, problems, now, "Some verified applicants have not reached LeadsMind yet."),
+      });
+    }
+    const daily = byKind.get("daily_summary");
+    const lastDaily = daily?.last_sent_at ? new Date(daily.last_sent_at).getTime() : 0;
+    // Not in the same run as a critical alert: one email per run at most.
+    if (out.length === 0 && now.getUTCHours() >= 5 && now.getTime() - lastDaily >= 23 * HOUR) {
+      out.push({
+        kind: "daily_summary",
+        fingerprint: categories,
+        subject: "[WTA job portal] Daily LeadsMind sync summary: unresolved items",
+        text: alertBody(h, problems, now, "Daily summary of unresolved LeadsMind sync items."),
+      });
+    }
+  } else if (critical?.fingerprint) {
+    out.push({
+      kind: "resolved",
+      fingerprint: "",
+      subject: "[WTA job portal] LeadsMind sync recovered",
+      text: alertBody(h, problems, now, "All earlier LeadsMind sync problems have cleared."),
+    });
+  }
+  return out;
 }

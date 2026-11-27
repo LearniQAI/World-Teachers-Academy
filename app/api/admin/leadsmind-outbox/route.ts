@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseServiceRole } from "@/lib/supabase";
 import { checkBearer } from "@/lib/admin-auth";
-import { runLeadsMindOutbox } from "@/lib/leadsmind-store";
+import { getLeadsMindConfig, resolveBackfillSince } from "@/lib/leadsmind";
+import { enqueueMissingLeads, getQueueHealth, previewMissingLeads, runLeadsMindOutbox } from "@/lib/leadsmind-store";
 
 // Admin view of the LeadsMind sync queue (docs/leadsmind-sync.md).
 //
@@ -9,6 +10,9 @@ import { runLeadsMindOutbox } from "@/lib/leadsmind-store";
 //   POST {"action":"retry","id":"<outbox id>"}        → re-queue one row now
 //   POST {"action":"retry_dead"}                      → re-queue every dead row
 //   POST {"action":"run"}                             → deliver due rows now (max 5)
+//   POST {"action":"backfill_preview","since"?:ISO}   → DRY RUN: how many verified leads lack a queue row
+//   POST {"action":"backfill","since"?:ISO}           → queue them (idempotent; delivery follows)
+//        since defaults to LEADSMIND_SYNC_START; earlier dates need "allow_before_go_live":true
 //
 // Requires Authorization: Bearer <LEADSMIND_ADMIN_SECRET>. Without that
 // variable the route refuses everything. Responses contain queue metadata
@@ -45,7 +49,24 @@ export async function GET(request: NextRequest) {
   const { data: rows, error } = await query;
   if (error) return NextResponse.json({ error: "Could not read the queue" }, { status: 500 });
 
-  return NextResponse.json({ summary, rows });
+  let health = null;
+  try {
+    health = await getQueueHealth();
+  } catch {
+    // The summary and rows above are still useful on their own.
+  }
+  const { config, problems } = getLeadsMindConfig();
+  return NextResponse.json({
+    sync: {
+      enabled: config.enabled,
+      config_problems: problems,
+      sync_start: process.env.LEADSMIND_SYNC_START ?? null,
+      alerts_to_configured: !!config.alertEmail,
+    },
+    health,
+    summary,
+    rows,
+  });
 }
 
 export async function POST(request: NextRequest) {
@@ -81,6 +102,26 @@ export async function POST(request: NextRequest) {
   if (action === "run") {
     const summary = await runLeadsMindOutbox({ limit: 5 });
     return NextResponse.json({ ok: !summary.claimFailed, ...summary }, { status: summary.claimFailed ? 500 : 200 });
+  }
+
+  if (action === "backfill_preview" || action === "backfill") {
+    const window = resolveBackfillSince(
+      process.env.LEADSMIND_SYNC_START,
+      typeof body.since === "string" ? body.since : null,
+      body.allow_before_go_live === true
+    );
+    if ("error" in window) return NextResponse.json({ error: window.error }, { status: 400 });
+    try {
+      if (action === "backfill_preview") {
+        const preview = await previewMissingLeads(window.since);
+        return NextResponse.json({ ok: true, dry_run: true, since: window.since.toISOString(), ...preview });
+      }
+      const queued = await enqueueMissingLeads(window.since);
+      console.info(`[leadsmind-admin] manual backfill since ${window.since.toISOString()} queued=${queued}`);
+      return NextResponse.json({ ok: true, since: window.since.toISOString(), queued });
+    } catch {
+      return NextResponse.json({ error: "Backfill failed" }, { status: 500 });
+    }
   }
 
   return NextResponse.json({ error: "Unknown action" }, { status: 400 });
