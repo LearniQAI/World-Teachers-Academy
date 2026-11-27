@@ -1,7 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
 import crypto from "crypto";
 import { supabaseServiceRole } from "@/lib/supabase";
 import { createLead } from "@/lib/leads";
+import { enqueueLeadForLeadsMind, runLeadsMindOutbox } from "@/lib/leadsmind-store";
 
 const GENERIC_ERROR = "Invalid or expired code";
 
@@ -81,6 +82,18 @@ export async function POST(request: NextRequest) {
       jobId: otp.job_id,
       sourceIp,
     });
+
+    // Verified lead → LeadsMind CRM. Only reached after the code matched and
+    // the lead row exists. The outbox row is written before we answer (so the
+    // lead is never lost); delivery runs after the response is sent, so the
+    // applicant never waits on LeadsMind. Neither step can fail this request.
+    const outboxId = await enqueueLeadForLeadsMind(result.id);
+    after(async () => {
+      if (outboxId) await runLeadsMindOutbox({ id: outboxId, limit: 1 });
+      // Opportunistically retry a few earlier failures too.
+      await runLeadsMindOutbox({ limit: 3 });
+    });
+
     return NextResponse.json(result);
   } catch {
     return NextResponse.json({ error: "Something went wrong. Please try again." }, { status: 500 });
