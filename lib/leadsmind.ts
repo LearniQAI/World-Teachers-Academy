@@ -200,42 +200,56 @@ export function backoffMinutes(attempts: number): number {
 }
 
 /**
- * Why a send failed:
+ * Why a send failed (mirrored in SQL by public.leadsmind_failure_kind):
  * - transient: LeadsMind or the network was unavailable (5xx, 408, 429,
- *   timeouts, network errors, our own database hiccups). Worth retrying.
- * - permanent: LeadsMind rejected the request itself (400/401/403/404/409/410/
- *   422): wrong form id, unpublished form, validation. Needs a fix by a person,
- *   so it is retried rarely.
+ *   timeouts, network errors, our own database hiccups). Retried with backoff,
+ *   then probed (1 h, 2 h, 4 h, capped at 6 h) and revived automatically.
+ * - config: the form or access is wrong on the LeadsMind side (401, 403, 404,
+ *   405, 410 and other 4xx not listed under invalid): unpublished or deleted
+ *   form, wrong form id, access refused. The same for every applicant, so it is
+ *   not the applicant's fault: retried 3 times, then probed like an outage and
+ *   revived automatically once any delivery succeeds again.
+ * - invalid: LeadsMind rejected this applicant's data (400, 409, 413, 422).
+ *   Retried 3 times, then probed once a day for at most a week, never revived
+ *   by other rows' success, then left for a person (admin "retry").
  * - gone: the lead no longer exists. Never retried.
  */
-export type FailureKind = "transient" | "permanent" | "gone";
+export type FailureKind = "transient" | "config" | "invalid" | "gone";
+const INVALID_STATUSES = new Set([400, 409, 413, 422]);
 export function failureKind(error: string | null | undefined): FailureKind {
   if (error === "lead_not_found") return "gone";
   const m = /^http_(\d{3})$/.exec(error ?? "");
   if (m) {
     const code = Number(m[1]);
     if (code === 408 || code === 429 || code >= 500) return "transient";
-    if (code >= 400) return "permanent";
+    if (INVALID_STATUSES.has(code)) return "invalid";
+    if (code >= 400) return "config";
   }
   return "transient";
 }
 
-/** Attempts before a row is marked dead: permanent errors give up early. */
+/** Attempts before a row is marked dead: rejections give up early. */
 export function maxAttemptsFor(kind: FailureKind, configured: number): number {
   if (kind === "gone") return 1;
-  return kind === "permanent" ? Math.min(3, configured) : configured;
+  return kind === "transient" ? configured : Math.min(3, configured);
 }
 
+/** Daily recovery probes for invalid applicant data before giving up for good. */
+export const INVALID_MAX_PROBES = 7;
+
 /**
- * Wait before the next recovery probe. Outages: 1 h after a row dies, then
- * 2 h, 4 h, capped at 6 h while probes keep failing (attempts counts every
- * try, so it keeps growing). Errors that need a person: daily. Deleted
- * leads: never (null).
+ * Wait before the next recovery probe, or null for never.
+ * - transient and config: 1 h after a row dies, then 2 h, 4 h, capped at 6 h
+ *   while probes keep failing (attempts counts every try, so it keeps growing).
+ * - invalid: daily, at most INVALID_MAX_PROBES times, then never.
+ * - gone: never.
+ * `maxAttempts` is the configured LEADSMIND_MAX_ATTEMPTS.
  */
 export function probeDelayMinutes(kind: FailureKind, attempts = 0, maxAttempts = 12): number | null {
   if (kind === "gone") return null;
-  if (kind === "permanent") return 24 * 60;
-  const failedProbes = Math.max(0, attempts - maxAttempts - 1);
+  const limit = maxAttemptsFor(kind, maxAttempts);
+  if (kind === "invalid") return attempts - limit < INVALID_MAX_PROBES ? 24 * 60 : null;
+  const failedProbes = Math.max(0, attempts - limit - 1);
   return Math.min(60 * 2 ** failedProbes, 6 * 60);
 }
 
@@ -252,7 +266,11 @@ export interface OutboxStore {
   loadLead(leadId: string): Promise<LeadForSync | null>;
   markSent(id: string, status: number): Promise<void>;
   markFailed(id: string, opts: { status: number | null; error: string; dead: boolean; nextAttemptAt: Date }): Promise<void>;
-  /** Puts 'dead' rows back in the queue (automatic recovery after an outage). */
+  /**
+   * Puts 'dead' rows back in the queue after a successful delivery: only rows
+   * that failed for a reason that affects everyone (transient or config), never
+   * invalid applicant data or deleted leads.
+   */
   reviveDead?(limit: number): Promise<number>;
   /**
    * Claims at most ONE dead row whose recovery probe is due (status 'dead',
@@ -262,7 +280,7 @@ export interface OutboxStore {
   claimProbe?(): Promise<OutboxRow | null>;
   /**
    * After a failed probe: no other dead row is probed before `until` (all dead
-   * rows for an outage; rows with the same error for a permanent failure).
+   * rows for an outage; rows with the same error for a configuration error).
    * Keeps probing to one call per interval however many rows are dead.
    */
   deferProbes?(until: Date, sameErrorOnly: string | null): Promise<void>;
@@ -312,7 +330,8 @@ async function deliverRow(
     // probe time; normal rows become dead after maxAttemptsFor(kind).
     const dead = !rateLimited && (isProbe || row.attempts >= maxAttemptsFor(kind, config.maxAttempts));
     let delayMinutes = rateLimited ? 1 : backoffMinutes(row.attempts);
-    if (dead) delayMinutes = probeDelayMinutes(kind, row.attempts, config.maxAttempts) ?? 100 * 365 * 24 * 60; // "gone": effectively never
+    const probeDelay = dead ? probeDelayMinutes(kind, row.attempts, config.maxAttempts) : undefined;
+    if (dead) delayMinutes = probeDelay ?? 100 * 365 * 24 * 60; // gone / invalid after its last probe: never again
     if (isProbe && rateLimited) delayMinutes = 10;
     const nextAttemptAt = new Date(now().getTime() + delayMinutes * 60_000);
     await store.markFailed(row.id, {
@@ -321,11 +340,14 @@ async function deliverRow(
       dead: dead || (isProbe && rateLimited),
       nextAttemptAt,
     });
-    if (isProbe && kind !== "gone" && store.deferProbes) {
-      await store.deferProbes(nextAttemptAt, kind === "permanent" ? result.error : null);
+    // One failed probe speaks for the others: an outage holds back every dead
+    // row, a configuration error the rows with the same error. Invalid data is
+    // specific to one applicant, so it holds back nothing else.
+    if (isProbe && (kind === "transient" || kind === "config") && store.deferProbes) {
+      await store.deferProbes(nextAttemptAt, kind === "config" ? result.error : null);
     }
     console.warn(
-      `[leadsmind] outbox ${row.id} ${isProbe ? "recovery probe" : `attempt ${row.attempts}`} failed (${result.error}, ${kind})${dead ? ` - dead, next probe in ${delayMinutes} min` : ""}`
+      `[leadsmind] outbox ${row.id} ${isProbe ? "recovery probe" : `attempt ${row.attempts}`} failed (${result.error}, ${kind})${dead ? (probeDelay === null ? " - dead, no further automatic tries" : ` - dead, next probe in ${delayMinutes} min`) : ""}`
     );
     if (rateLimited) return "rate_limited";
     return dead ? "dead" : "retrying";
@@ -386,8 +408,8 @@ export async function processOutbox(
   }
 
   // Recovery probe: even when no new lead arrives, one dead row whose probe
-  // time has come is tried per run (hourly per row for outages, daily for
-  // errors that need a person). Skipped once LeadsMind has rate-limited us
+  // time has come is tried per run (1-6 h for outages and configuration
+  // errors, daily for at most a week for invalid applicant data). Skipped once LeadsMind has rate-limited us
   // or when this run targets one specific row.
   if (!rateLimited && !opts.id && store.claimProbe) {
     try {
@@ -402,8 +424,10 @@ export async function processOutbox(
     }
   }
 
-  // LeadsMind is accepting leads again: give rows that had given up a fresh
-  // start (deleted leads excluded), without anyone pressing "retry dead".
+  // LeadsMind is accepting leads again (so it is up and the form is published
+  // and reachable): give rows that died of an outage or a configuration error
+  // a fresh start, without anyone pressing "retry dead". Invalid applicant
+  // data and deleted leads are never revived here (see failureKind).
   if (summary.sent > 0 && store.reviveDead) {
     try {
       summary.revived = await store.reviveDead(100);

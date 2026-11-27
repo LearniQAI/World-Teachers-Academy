@@ -513,7 +513,8 @@ function sqlLikeStore(rows: QRow[], clock: { t: number }, leadFor = (id: string)
     async markSent(id) { const r = rows.find((x) => x.id === id)!; r.status = "sent"; r.last_error = null; },
     async markFailed(id, f) { const r = rows.find((x) => x.id === id)!; r.status = f.dead ? "dead" : "pending"; r.last_error = f.error; r.next = f.nextAttemptAt.getTime(); },
     async reviveDead(limit) {
-      const d = rows.filter((r) => r.status === "dead" && r.last_error !== "lead_not_found").slice(0, limit);
+      // mirrors revive_dead_leadsmind_outbox: only outage / configuration rows
+      const d = rows.filter((r) => r.status === "dead" && ["transient", "config"].includes(failureKind(r.last_error))).slice(0, limit);
       d.forEach((r) => { r.status = "pending"; r.attempts = 0; r.next = clock.t; });
       return d.length;
     },
@@ -536,15 +537,26 @@ function countingFetch(statusFor: () => number | "network") {
   return { f, calls };
 }
 
-test("classification: outages are transient, rejections are permanent, deleted leads are gone", () => {
+test("classification: outages, configuration errors, invalid applicant data and deleted leads", () => {
   for (const e of ["http_500", "http_502", "http_503", "http_429", "http_408", "timeout", "network_TypeError", "store_Error", "deferred_rate_limited"]) assert.equal(failureKind(e), "transient", e);
-  for (const e of ["http_400", "http_401", "http_403", "http_404", "http_409", "http_410", "http_422"]) assert.equal(failureKind(e), "permanent", e);
+  for (const e of ["http_401", "http_403", "http_404", "http_405", "http_410"]) assert.equal(failureKind(e), "config", e);
+  for (const e of ["http_400", "http_409", "http_413", "http_422"]) assert.equal(failureKind(e), "invalid", e);
   assert.equal(failureKind("lead_not_found"), "gone");
-  assert.equal(maxAttemptsFor("permanent", 12), 3, "rejections give up after 3 tries, not 12");
+  assert.equal(maxAttemptsFor("config", 12), 3, "rejections give up after 3 tries, not 12");
+  assert.equal(maxAttemptsFor("invalid", 12), 3);
   assert.equal(maxAttemptsFor("transient", 12), 12);
   assert.deepEqual([13, 14, 15, 16, 30].map((a) => probeDelayMinutes("transient", a, 12)), [60, 120, 240, 360, 360]);
-  assert.equal(probeDelayMinutes("permanent", 13, 12), 1440);
+  assert.deepEqual([3, 4, 5, 6, 20].map((a) => probeDelayMinutes("config", a, 12)), [60, 60, 120, 240, 360]);
+  assert.deepEqual([3, 9, 10, 11].map((a) => probeDelayMinutes("invalid", a, 12)), [1440, 1440, null, null], "daily, 7 probes, then never");
   assert.equal(probeDelayMinutes("gone", 13, 12), null);
+});
+
+test("SQL classification mirrors failureKind (leadsmind_failure_kind)", () => {
+  const sql = readFileSync(new URL("../../supabase/migrations/20261127150000_leadsmind_failure_classes.sql", import.meta.url), "utf8");
+  assert.match(sql, /in \(408, 429\)[^\n]*>= 500 then 'transient'/);
+  assert.match(sql, /in \(400, 409, 413, 422\) then 'invalid'/);
+  assert.match(sql, />= 400 then 'config'/);
+  assert.match(sql, /leadsmind_failure_kind\(last_error\) in \('transient', 'config'\)/, "revive only outage and configuration rows");
 });
 
 test("scenario: everything died in an outage, LeadsMind returns, NO new applicant - recovers on its own", async () => {
@@ -583,19 +595,66 @@ test("bounded cost: a 3-day outage with 50 dead leads makes ~1 probe per interva
   } finally { logs.restore(); }
 });
 
-test("permanent errors are probed daily only, and a fixed configuration then recovers everything", async () => {
+test("unpublished form: applicants recover on their own once it is published again, with no new applicant", async () => {
   const logs = captureLogs();
   try {
     const clock = { t: Date.parse("2026-12-02T00:00:00Z") };
-    const store = sqlLikeStore(deadRows(10, clock.t, "http_404"), clock);
-    let fixed = false;
-    const { f, calls } = countingFetch(() => (fixed ? 200 : 404));
+    const store = sqlLikeStore(deadRows(10, clock.t, "http_404").map((r) => ({ ...r, attempts: 3 })), clock);
+    let published = false;
+    const { f, calls } = countingFetch(() => (published ? 200 : 404));
     const run = () => processOutbox(store, { config: baseConfig, fetchImpl: f, now: () => new Date(clock.t), limit: 5 });
-    for (let i = 0; i < 720; i++) { await run(); clock.t += 2 * 60_000; }    // 24 h of runs
-    assert.ok(calls.length <= 2, `probed ${calls.length} times in a day`);
-    fixed = true;                                                            // owner fixes the form
-    for (let i = 0; i < 720 && store.rows.some((r) => r.status !== "sent"); i++) { await run(); clock.t += 2 * 60_000; }
-    assert.equal(store.rows.filter((r) => r.status === "sent").length, 10, "recovered within the next daily probe");
+    for (let i = 0; i < 720; i++) { await run(); clock.t += 2 * 60_000; }    // form down for 24 h
+    assert.ok(calls.length <= 7, `probed ${calls.length} times in a day (1 h, 2 h, 4 h, then 6 h)`);
+    published = true;                                                        // owner republishes the form
+    const back = clock.t;
+    for (let i = 0; i < 400 && store.rows.some((r) => r.status !== "sent"); i++) { await run(); clock.t += 2 * 60_000; }
+    assert.equal(store.rows.filter((r) => r.status === "sent").length, 10, "all recovered automatically");
+    assert.ok(clock.t - back <= 6 * 3600_000 + 30 * 60_000, "within one probe interval (max 6 h) plus delivery time");
+    assert.equal(new Set(calls.slice(-10)).size, 10, "no duplicate submissions");
+  } finally { logs.restore(); }
+});
+
+test("invalid applicant data is never revived by other deliveries, probed daily at most 7 times, then left alone", async () => {
+  const logs = captureLogs();
+  try {
+    const clock = { t: Date.parse("2026-12-02T00:00:00Z") };
+    const bad: QRow = { id: "bad", lead_id: "bad", client_submission_id: "00000000-0000-4000-8000-0000000000bb", attempts: 3, status: "dead", next: clock.t + 24 * 3600_000, last_error: "http_422" };
+    const rows: QRow[] = [bad];
+    const store = sqlLikeStore(rows, clock);
+    const { f, calls } = countingFetch(() => 200);
+    const badFetch = (async (url: string, init: RequestInit) => {
+      const body = JSON.parse(String(init.body));
+      if (body.client_submission_id === bad.client_submission_id) { calls.push("bad"); return new Response("{}", { status: 422 }); }
+      return f(url, init);
+    }) as unknown as typeof fetch;
+    // 30 days, a successful new applicant every hour
+    for (let day = 0; day < 30; day++) {
+      for (let h = 0; h < 24; h++) {
+        rows.push({ id: `n${day}-${h}`, lead_id: `n${day}-${h}`, client_submission_id: `00000000-0000-4000-8000-${String(day * 24 + h).padStart(12, "0")}`, attempts: 0, status: "pending", next: clock.t, last_error: null });
+        for (let m = 0; m < 30; m++) { await processOutbox(store, { config: baseConfig, fetchImpl: badFetch, now: () => new Date(clock.t), limit: 5 }); clock.t += 2 * 60_000; }
+      }
+    }
+    const badCalls = calls.filter((c) => c === "bad").length;
+    assert.equal(badCalls, 7, "one probe a day for a week, then no more (not revived by the 720 successful deliveries)");
+    assert.equal(bad.status, "dead");
+    assert.equal(rows.filter((r) => r.status === "sent").length, 720, "everyone else delivered");
+  } finally { logs.restore(); }
+});
+
+test("24-hour probe: invalid data that LeadsMind later accepts is delivered by the daily probe, nobody applying", async () => {
+  const logs = captureLogs();
+  try {
+    const clock = { t: Date.parse("2026-12-02T00:00:00Z") };
+    const store = sqlLikeStore(deadRows(1, clock.t + 24 * 3600_000, "http_422").map((r) => ({ ...r, attempts: 3 })), clock);
+    let accepted = false;
+    const { f, calls } = countingFetch(() => (accepted ? 200 : 422));
+    const run = () => processOutbox(store, { config: baseConfig, fetchImpl: f, now: () => new Date(clock.t), limit: 5 });
+    for (let i = 0; i < 719; i++) { await run(); clock.t += 2 * 60_000; }
+    assert.equal(calls.length, 0, "nothing before 24 h");
+    accepted = true;                                                         // e.g. a LeadsMind validation rule relaxed
+    await run(); clock.t += 2 * 60_000; await run();
+    assert.equal(calls.length, 1);
+    assert.equal(store.rows[0].status, "sent");
   } finally { logs.restore(); }
 });
 
