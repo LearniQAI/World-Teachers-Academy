@@ -212,6 +212,8 @@ export interface OutboxStore {
   loadLead(leadId: string): Promise<LeadForSync | null>;
   markSent(id: string, status: number): Promise<void>;
   markFailed(id: string, opts: { status: number | null; error: string; dead: boolean; nextAttemptAt: Date }): Promise<void>;
+  /** Puts 'dead' rows back in the queue (automatic recovery after an outage). */
+  reviveDead?(limit: number): Promise<number>;
 }
 
 export interface ProcessSummary {
@@ -221,6 +223,8 @@ export interface ProcessSummary {
   dead: number;
   /** True when the queue itself could not be read (e.g. database down). */
   claimFailed?: boolean;
+  /** Dead rows re-queued because LeadsMind accepted a lead again in this run. */
+  revived?: number;
 }
 
 /** Delivers due outbox rows. Never throws; returns counts for logging/tests. */
@@ -293,6 +297,17 @@ export async function processOutbox(
     } catch (err) {
       // The lease on the row expires and it is retried; nothing is lost.
       console.error(`[leadsmind] could not update outbox ${row.id}:`, err instanceof Error ? err.name : "unknown");
+    }
+  }
+
+  // LeadsMind is reachable again: give rows that had given up during the
+  // outage a fresh start, without anyone pressing "retry dead".
+  if (summary.sent > 0 && store.reviveDead) {
+    try {
+      summary.revived = await store.reviveDead(100);
+      if (summary.revived) console.info(`[leadsmind] LeadsMind reachable again: ${summary.revived} dead rows re-queued`);
+    } catch (err) {
+      console.error("[leadsmind] could not re-queue dead rows:", err instanceof Error ? err.name : "unknown");
     }
   }
   return summary;

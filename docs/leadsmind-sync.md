@@ -95,7 +95,7 @@ runs on production deployments only (the team is on Pro) and sends
 
 | Scenario | What happens | Action needed |
 | --- | --- | --- |
-| LeadsMind down or slow | Leads queue and retry with back-off. After 12 failed attempts they become `dead` (alerted). | Usually none. After a long outage, use `retry_dead`. |
+| LeadsMind down or slow, even for days | Leads queue and retry with back-off. After 12 failed attempts they become `dead`, which triggers an alert. As soon as LeadsMind accepts a lead again, dead rows are re-queued automatically (up to 100 per run). | None. `retry_dead` is still available. |
 | Sync paused (`LEADSMIND_DISABLED=true`) | Applicants unaffected, and leads queue. | Unset it; everything queued is sent. |
 | Site rolled back to the pre-integration release | Applicants unaffected. Leads are saved in `leads` but not queued. | Re-deploy the integration. The next run's catch-up queues them (no age limit). |
 | Queue insert failed | Lead saved, not queued | Automatic: the next run's catch-up queues it. |

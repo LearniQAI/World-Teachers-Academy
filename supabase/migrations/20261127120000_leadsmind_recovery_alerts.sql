@@ -77,6 +77,29 @@ as $$
          updated_at = now();
 $$;
 
+-- Automatic recovery after a prolonged outage: once a delivery succeeds again,
+-- rows that had given up ('dead') are put back in the queue, so recovery does
+-- not depend on someone pressing "retry dead". Bounded per call.
+create or replace function public.revive_dead_leadsmind_outbox(p_limit int default 100)
+returns int
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  changed int;
+begin
+  update public.leadsmind_outbox
+     set status = 'pending', attempts = 0, next_attempt_at = now(), locked_until = null
+   where id in (select id from public.leadsmind_outbox where status = 'dead'
+                 order by created_at limit greatest(1, least(p_limit, 1000)));
+  get diagnostics changed = row_count;
+  return changed;
+end;
+$$;
+
+revoke all on function public.revive_dead_leadsmind_outbox(int) from public, anon, authenticated;
+grant execute on function public.revive_dead_leadsmind_outbox(int) to service_role;
 revoke all on function public.preview_missing_leadsmind_leads(text, timestamptz) from public, anon, authenticated;
 revoke all on function public.leadsmind_outbox_health(int) from public, anon, authenticated;
 revoke all on function public.record_leadsmind_alert(text, text, boolean) from public, anon, authenticated;

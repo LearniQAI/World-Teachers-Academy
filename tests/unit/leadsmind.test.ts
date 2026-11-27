@@ -250,6 +250,25 @@ test("recovery: after max attempts the row is kept as 'dead', not deleted", asyn
   }
 });
 
+test("automatic recovery: a successful send re-queues dead rows; no success, no revive", async () => {
+  const logs = captureLogs();
+  try {
+    let revived = 0;
+    const ok = memoryStore(lead, [newRow("a")]);
+    ok.reviveDead = async () => { revived++; return 7; };
+    const s1 = await processOutbox(ok, { config: baseConfig, fetchImpl: fakeFetch([200]) });
+    assert.equal(s1.revived, 7);
+    assert.equal(revived, 1);
+    const down = memoryStore(lead, [newRow("b")]);
+    down.reviveDead = async () => { revived++; return 7; };
+    const s2 = await processOutbox(down, { config: baseConfig, fetchImpl: fakeFetch([503]) });
+    assert.equal(s2.revived, undefined);
+    assert.equal(revived, 1, "not called while LeadsMind still fails");
+  } finally {
+    logs.restore();
+  }
+});
+
 test("rate limit: a 429 defers the rest of the batch and never marks rows dead", async () => {
   const logs = captureLogs();
   try {

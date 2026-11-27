@@ -72,6 +72,12 @@ export const supabaseOutboxStore: OutboxStore = {
       .eq("id", id);
     if (error) throw new Error(`markFailed failed (${error.code ?? "unknown"})`);
   },
+
+  async reviveDead(limit) {
+    const { data, error } = await supabaseServiceRole.rpc("revive_dead_leadsmind_outbox", { p_limit: limit });
+    if (error) throw new Error(`reviveDead failed (${error.code ?? "unknown"})`);
+    return typeof data === "number" ? data : 0;
+  },
 };
 
 /**
